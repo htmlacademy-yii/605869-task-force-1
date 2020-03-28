@@ -13,14 +13,44 @@
         const ACTION_DONE = 'action_done';
         const ACTION_REFUSE = 'action_refuse';
 
-        public $formData = [];
-        public $requiredFields = [];
-        public $map = [];
+        private $idPerformer = [];
+        private $idCustomer = [];
+        private $status = [];
+        private $statuses = [];
+        private $action = [];
 
-        public function __construct($formData, $requiredFields)
+        public function __construct($idPerformer, $idCustomer)
         {
-            $this->formData = $formData;
-            $this->requiredFields = $requiredFields;
+            $this->idPerformer = $idPerformer;
+            $this->idCustomer = $idCustomer;
+        }
+
+        public function getNextStatus ($status)
+        {
+            switch ($status) {
+                case 'new':
+                    $statuses [action_respond] = 'status_in_work';
+                    $statuses[action_cancel] = 'status_cancel';
+                    break;
+                case 'status_in_work':
+                    $statuses [action_refuse] = 'status_failed';
+                    $statuses[action_done] = 'status_performed';
+                    break;
+                    
+                default:
+                    $statuses = [] ;
+                    break;
+            }
+            return $statuses;
+        }
+
+        public function changeStatus ()
+        {
+            $status = $Task -> status;
+            $action = $Task -> action;
+            $statuses = $this -> getNextStatus($status);
+            (isset($statuses)) ? $status = $statuses[$action] : $status;
+            return $status;
         }
 
 
