@@ -79,29 +79,29 @@
                     $status = '';
                     break;
             }
-/*            $status = $this->status;
-            if ($status == 'STATUS_NEW') // если у задания статус: новое задание
-            {
-                if ($action == 'ACTION_RESPOND')  // если исполнитель откликается на задание
-                {
-                    $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
-                }
-                elseif ($action == 'ACTION_CANCEL') //если заказчик отменяет  задание
-                {
-                    $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
-                }
-            }
-            elseif ($status == 'STATUS_IN_WORK') // если задание находится в статусе: в работе
-            {
-                if ($action == 'ACTION_REFUSE') // если исполнитель отказывается от задания
-                {
-                    $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
-                }
-                elseif ($action == 'ACTION_DONE') // если заказчик переводит задание в статус: выполнено
-                {
-                    $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
-                }
-            }*/
+//            $status = $this->status;
+//            if ($status == 'STATUS_NEW') // если у задания статус: новое задание
+//            {
+//                if ($action == 'ACTION_RESPOND')  // если исполнитель откликается на задание
+//                {
+//                    $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
+//                }
+//                elseif ($action == 'ACTION_CANCEL') //если заказчик отменяет  задание
+//                {
+//                    $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
+//                }
+//            }
+//            elseif ($status == 'STATUS_IN_WORK') // если задание находится в статусе: в работе
+//            {
+//                if ($action == 'ACTION_REFUSE') // если исполнитель отказывается от задания
+//                {
+//                    $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
+//                }
+//                elseif ($action == 'ACTION_DONE') // если заказчик переводит задание в статус: выполнено
+//                {
+//                    $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
+//                }
+//            }
             return $status;
         }
         /**
