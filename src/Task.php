@@ -1,6 +1,11 @@
 <?php
     namespace TaskForce\src;
 
+    /**
+     * класс для определения списков действий и статусов, и выполнения базовой работы с ними
+     * Class Task
+     * @package TaskForce\src
+     */
     class Task
     {
         /**
@@ -20,12 +25,12 @@
         const ACTION_REFUSE = 'action_refuse'; //действие по отказу от задания (выполняет исполнитель), переводит задание в статус "Провалено"
         /**
          * id исполнителя
-         * @var integer
+         * @var int
          */
         private int $idPerformer;
         /**
          * id заказчика
-         * @var integer
+         * @var int
          */
         private int $idCustomer;
         /**
@@ -46,54 +51,101 @@
          */
         public function __construct($idPerformer, $idCustomer)
         {
-            $idPerformer = $this->idPerformer;
-            $idCustomer = $this->idCustomer;
+            $this->idPerformer = $idPerformer;
+           $this->idCustomer = $idCustomer;
         }
 
         /**
-         * метод принимающий статус и возвращающий массив статусов в которые можно перейти из этого статуса
-         * @param $status
+         * метод принимающий действие и возвращающий статус в который перейдет задание
          * @param $action
-         * @return array
+         * @return string
          */
-        public function getNextStatus ($status, $action)
+        public function getNextStatus ($action)
         {
-            if ($status == 'new') // если узадания статус: новое задание
+            switch ($action) {
+                case 'ACTION_RESPOND':
+                    $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
+                    break;
+                case 'ACTION_CANCEL':
+                    $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
+                    break;
+                case 'ACTION_REFUSE':
+                    $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
+                    break;
+                case 'ACTION_DONE':
+                    $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
+                    break;
+                default:
+                    $status = '';
+                    break;
+            }
+/*            $status = $this->status;
+            if ($status == 'STATUS_NEW') // если у задания статус: новое задание
             {
-                if ($action == 'action_respond')  // если исполнитель откликается на задание
+                if ($action == 'ACTION_RESPOND')  // если исполнитель откликается на задание
                 {
-                    return ['action' => 'откликнуться на задание',
-                        'status' => 'статус задания: в работе']; // задание переходит в статус: в работе
+                    $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
                 }
-                elseif ($action == 'action_cancel') //если заказчик отменяет  задание
+                elseif ($action == 'ACTION_CANCEL') //если заказчик отменяет  задание
                 {
-                    return ['action' => 'отменить задание',
-                        'status' => 'статус задания: отменено']; // задание переходит в статус: отменено
+                    $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
                 }
             }
-            elseif ($status == 'in_work') // если задание находится в статусе: в работе
+            elseif ($status == 'STATUS_IN_WORK') // если задание находится в статусе: в работе
             {
-                if ($action == 'action_refuse') // если исполнитель отказывается от задания
+                if ($action == 'ACTION_REFUSE') // если исполнитель отказывается от задания
                 {
-                    return ['action' => 'отказаться от задания',
-                        'status' => 'статус задания: провалено']; // задание переходит в статус: провалено
+                    $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
                 }
-                elseif ($action == 'action_done') // если заказчик переводит задание в статус: выполнено
+                elseif ($action == 'ACTION_DONE') // если заказчик переводит задание в статус: выполнено
                 {
-                    return ['action' => 'задание выполнено',
-                        'status' => 'статус задания: выполнено']; // задание переходит в статус: выполнено
+                    $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
                 }
-            }
+            }*/
+            return $status;
         }
         /**
-         * метод для перевода задания из одного статуса в другой
-         * @return array|string
+         * метод возвращающий карту статусов
+         * @return array
          */
-        public function changeStatus ()
+        private function getStatusMap()
+        {
+            return ['new' => 'Новый',
+                'cancel' => 'Отменен',
+                'in_work' => 'В работе',
+                'performed' => 'Выполнено',
+                'failed' => 'Провалено'];
+        }
+        /**
+         * метод возвращающий карту действий
+         * @return array
+         */
+        private function getActionMap()
+        {
+            return ['action_cancel' => 'Отменить',
+                'action_respond' => 'Откликнуться',
+                'action_done' => 'Ввыполнено',
+                'action_refuse' => 'Отказаться'];
+        }
+
+        /**
+         * метод возвращающий возможные действия к текущему статусу
+         * @return array
+         */
+        private function getAvailableActions()
         {
             $status = $this->status;
-            $action = $this->action;
-            $status = $this -> getNextStatus($status, $action);
-            return $status;
+            switch ($status) {
+                case 'STATUS_NEW':
+                    $action = ['ACTION_RESPOND', 'ACTION_CANCEL'];
+                    break;
+                case 'STATUS_IN_WORK':
+                    $action = ['ACTION_DONE', 'ACTION_REFUSE'];
+                    break;
+                default:
+                    $action = [];
+                    break;
+            }
+            return $action;
         }
     }
