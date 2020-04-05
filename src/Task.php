@@ -46,15 +46,14 @@
         /**
          * Task constructor.
          * конструктор для получения id исполнителя и id заказчика
-         * @param $idPerformer integer
-         * @param $idCustomer integer
+         * @param $idPerformer int
+         * @param $idCustomer int
          */
         public function __construct($idPerformer, $idCustomer)
         {
             $this->idPerformer = $idPerformer;
            $this->idCustomer = $idCustomer;
         }
-
         /**
          * метод принимающий действие и возвращающий статус в который перейдет задание
          * @param $action
@@ -63,45 +62,22 @@
         public function getNextStatus ($action)
         {
             switch ($action) {
-                case 'ACTION_RESPOND':
+                case 'action_respond':
                     $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
                     break;
-                case 'ACTION_CANCEL':
+                case 'action_cancel':
                     $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
                     break;
-                case 'ACTION_REFUSE':
+                case 'action_refuse':
                     $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
                     break;
-                case 'ACTION_DONE':
+                case 'action_done':
                     $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
                     break;
                 default:
-                    $status = '';
+                    $status = $this->status;
                     break;
             }
-//            $status = $this->status;
-//            if ($status == 'STATUS_NEW') // если у задания статус: новое задание
-//            {
-//                if ($action == 'ACTION_RESPOND')  // если исполнитель откликается на задание
-//                {
-//                    $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
-//                }
-//                elseif ($action == 'ACTION_CANCEL') //если заказчик отменяет  задание
-//                {
-//                    $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
-//                }
-//            }
-//            elseif ($status == 'STATUS_IN_WORK') // если задание находится в статусе: в работе
-//            {
-//                if ($action == 'ACTION_REFUSE') // если исполнитель отказывается от задания
-//                {
-//                    $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
-//                }
-//                elseif ($action == 'ACTION_DONE') // если заказчик переводит задание в статус: выполнено
-//                {
-//                    $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
-//                }
-//            }
             return $status;
         }
         /**
@@ -110,11 +86,13 @@
          */
         private function getStatusMap()
         {
-            return ['new' => 'Новый',
-                'cancel' => 'Отменен',
-                'in_work' => 'В работе',
-                'performed' => 'Выполнено',
-                'failed' => 'Провалено'];
+            return [
+                self::STATUS_NEW => 'Новый',
+                self::STATUS_CANCEL => 'Отменен',
+                self::STATUS_IN_WORK => 'В работе',
+                self::STATUS_PERFORMED => 'Выполнено',
+                self::STATUS_FAILED => 'Провалено'
+            ];
         }
         /**
          * метод возвращающий карту действий
@@ -122,20 +100,20 @@
          */
         private function getActionMap()
         {
-            return ['action_cancel' => 'Отменить',
-                'action_respond' => 'Откликнуться',
-                'action_done' => 'Ввыполнено',
-                'action_refuse' => 'Отказаться'];
+            return [
+                self::ACTION_CANCEL => 'Отменить',
+                self::ACTION_RESPOND => 'Откликнуться',
+                self::ACTION_DONE => 'Ввыполнено',
+                self::ACTION_REFUSE => 'Отказаться'
+            ];
         }
-
         /**
          * метод возвращающий возможные действия к текущему статусу
          * @return array
          */
         private function getAvailableActions()
         {
-            $status = $this->status;
-            switch ($status) {
+            switch ($this->status) {
                 case 'STATUS_NEW':
                     $action = ['ACTION_RESPOND', 'ACTION_CANCEL'];
                     break;
@@ -143,7 +121,7 @@
                     $action = ['ACTION_DONE', 'ACTION_REFUSE'];
                     break;
                 default:
-                    $action = [];
+                    $action = $this->action;
                     break;
             }
             return $action;
