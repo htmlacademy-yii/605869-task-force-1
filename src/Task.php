@@ -27,22 +27,22 @@
          * id исполнителя
          * @var int
          */
-        private int $idPerformer;
+        private $idPerformer;
         /**
          * id заказчика
          * @var int
          */
-        private int $idCustomer;
+        private $idCustomer;
         /**
          * статус
          * @var string
          */
-        private string $status;
+        private $status;
         /**
          * действие с заданием
          * @var string
          */
-        private string $action; //действие
+        private $action; //действие
         /**
          * Task constructor.
          * конструктор для получения id исполнителя и id заказчика
