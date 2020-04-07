@@ -44,6 +44,11 @@
          */
         private $action; //действие
         /**
+         * возможные действия к текущему статусу
+         * @var array
+         */
+        private $availableActions;
+        /**
          * Task constructor.
          * конструктор для получения id исполнителя и id заказчика
          * @param $idPerformer int
@@ -68,10 +73,10 @@
                 case self::ACTION_CANCEL:
                     $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
                     break;
-                case 'action_refuse':
+                case self::ACTION_REFUSE:
                     $status = self::STATUS_FAILED; // задание переходит в статус: провалено
                     break;
-                case 'action_done':
+                case self::ACTION_DONE:
                     $status = self::ACTION_RESPOND; // задание переходит в статус: выполнено
                     break;
                 default:
@@ -115,15 +120,15 @@
         {
             switch ($this->status) {
                 case self::STATUS_NEW:
-                    $action = [self::ACTION_RESPOND, self::ACTION_CANCEL];
+                    $availableActions = [self::ACTION_RESPOND, self::ACTION_CANCEL];
                     break;
                 case self::STATUS_IN_WORK:
-                    $action = [self::ACTION_DONE, self::ACTION_REFUSE];
+                    $availableActions = [self::ACTION_DONE, self::ACTION_REFUSE];
                     break;
                 default:
-                    $action = $this->action;
+                    $availableActions = $this->action;
                     break;
             }
-            return $action;
+            return $availableActions;
         }
     }
