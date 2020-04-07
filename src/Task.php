@@ -62,17 +62,17 @@
         public function getNextStatus ($action)
         {
             switch ($action) {
-                case 'action_respond':
-                    $status = 'STATUS_IN_WORK'; // задание переходит в статус: в работе
+                case self::ACTION_RESPOND:
+                    $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
                     break;
-                case 'action_cancel':
-                    $status = 'STATUS_CANCEL'; // задание переходит в статус: отменено
+                case self::ACTION_CANCEL:
+                    $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
                     break;
                 case 'action_refuse':
-                    $status = 'STATUS_FAILED'; // задание переходит в статус: провалено
+                    $status = self::STATUS_FAILED; // задание переходит в статус: провалено
                     break;
                 case 'action_done':
-                    $status = 'STATUS_PERFORMED'; // задание переходит в статус: выполнено
+                    $status = self::ACTION_RESPOND; // задание переходит в статус: выполнено
                     break;
                 default:
                     $status = $this->status;
@@ -114,11 +114,11 @@
         private function getAvailableActions()
         {
             switch ($this->status) {
-                case 'STATUS_NEW':
-                    $action = ['ACTION_RESPOND', 'ACTION_CANCEL'];
+                case self::STATUS_NEW:
+                    $action = [self::ACTION_RESPOND, self::ACTION_CANCEL];
                     break;
-                case 'STATUS_IN_WORK':
-                    $action = ['ACTION_DONE', 'ACTION_REFUSE'];
+                case self::STATUS_IN_WORK:
+                    $action = [self::ACTION_DONE, self::ACTION_REFUSE];
                     break;
                 default:
                     $action = $this->action;
