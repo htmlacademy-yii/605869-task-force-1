@@ -1,5 +1,5 @@
 <?php
-require_once "vendor/autoload.php";
+require_once "../vendor/autoload.php";
 $idPerformer = 1;
 $idCustomer = 2;
 $strategy = new Task($idPerformer, $idCustomer);
