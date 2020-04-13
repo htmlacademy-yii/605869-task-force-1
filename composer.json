@@ -4,7 +4,7 @@
       "TaskForce\\": "src/"
     }
   },
-  "name": "IgorRusaleev/TaskForce",
+  "name": "igor-rusaleev/task-force",
   "description": "library",
   "minimum-stability": "stable",
   "license": "proprietary",
