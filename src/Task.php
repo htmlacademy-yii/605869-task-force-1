@@ -1,5 +1,5 @@
 <?php
-    namespace TaskForce\src;
+    namespace TaskForce;
 
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
