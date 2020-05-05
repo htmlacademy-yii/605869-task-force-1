@@ -1,6 +1,8 @@
 <?php
     namespace TaskForce;
 
+    use TaskForceAction\AbstractSelectingAction;
+
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
      * Class Task
@@ -24,8 +26,8 @@
         /**
          * @var AbstractSelectingAction $nameOfAction_cancel
          */
-
         private $nameOfAction_cancel; // имя 'Отменить'
+
         /**
          * @var abstractSelectingAction $nameOfAction_respond
          */
@@ -109,6 +111,10 @@
          * @var AbstractSelectingAction $action
          */
         private $action; //действие
+        /**
+         * @var AbstractSelectingAction $checkingStatus
+         */
+        protected $checkingStatus; //право на совершение действия
 
         /**
          * Task constructor.
@@ -133,9 +139,9 @@
             $idPerformer = $this->idPerformer;
             $idCustomer = $this->idCustomer;
             $idUser = $this->idUser;
-            $this->nameOfAction_cancel = $actionCancel->nameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->internalNameOfAction_cancel = $actionCancel->internalNameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->checkingUserOfAction_cancel = $actionCancel->checkingUserStatus($idPerformer, $idCustomer, $idUser);
+            $this->nameOfAction_cancel = $actionCancel->nameOfAction();
+            $this->internalNameOfAction_cancel = 'actionCancel';
+            $this->checkingStatus = $actionCancel->checkingUserStatus($idPerformer, $idCustomer, $idUser);
         }
 
         /**
@@ -147,9 +153,9 @@
             $idPerformer = $this->idPerformer;
             $idCustomer = $this->idCustomer;
             $idUser = $this->idUser;
-            $this->nameOfAction_respond = $actionRespond->nameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->internalNameOfAction_respond = $actionRespond->internalNameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->checkingUserOfAction_respond = $actionRespond->checkingUserStatus($idPerformer, $idCustomer, $idUser);
+            $this->nameOfAction_respond = $actionRespond->nameOfAction();
+            $this->internalNameOfAction_respond = 'actionRespond';
+            $this->checkingStatus = $actionRespond->checkingUserStatus($idPerformer, $idCustomer, $idUser);
         }
 
         /**
@@ -161,9 +167,9 @@
             $idPerformer = $this->idPerformer;
             $idCustomer = $this->idCustomer;
             $idUser = $this->idUser;
-            $this->nameOfAction_done = $actionDone->nameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->internalNameOfAction_done = $actionDone->internalNameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->checkingUserOfAction_done = $actionDone->checkingUserStatus($idPerformer, $idCustomer, $idUser);
+            $this->nameOfAction_done = $actionDone->nameOfAction();
+            $this->internalNameOfAction_done = 'actionDone';
+            $this->checkingStatus = $actionDone->checkingUserStatus($idPerformer, $idCustomer, $idUser);
         }
 
         /**
@@ -175,9 +181,9 @@
             $idPerformer = $this->idPerformer;
             $idCustomer = $this->idCustomer;
             $idUser = $this->idUser;
-            $this->nameOfAction_refuse = $actionRefuse->nameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->internalNameOfAction_refuse = $actionRefuse->internalNameOfAction($idPerformer, $idCustomer, $idUser);
-            $this->checkingUserOfAction_refuse = $actionRefuse->checkingUserStatus($idPerformer, $idCustomer, $idUser);
+            $this->nameOfAction_refuse = $actionRefuse->nameOfAction();
+            $this->internalNameOfAction_refuse = 'actionRefuse';
+            $this->checkingStatus = $actionRefuse->checkingUserStatus($idPerformer, $idCustomer, $idUser);
         }
 
         /**

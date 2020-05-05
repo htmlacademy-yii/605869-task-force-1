@@ -12,28 +12,27 @@ $status = 'new';
 $strategy = new \TaskForce\Task($idPerformer, $idCustomer, $idUser);
 
 /**
- * Передаём объект для возврата названия, внутреннего имени и для проверки прав при отмене
+ * Передаём объект для возврата названия и для проверки прав при отмене
  */
-$strategy->actionCancel(new \TaskForce\ActionCancel());
+$strategy->actionCancel(new \TaskForceAction\ActionCancel());
 
 /**
- * Передаём объект для возврата названия, внутреннего имени и для проверки прав при отклике
+ * Передаём объект для возврата названия и для проверки прав при отклике
  */
-$strategy->actionRespond(new \TaskForce\ActionRespond());
+$strategy->actionRespond(new  \TaskForceAction\ActionRespond());
 
 /**
- * Передаём объект для возврата названия, внутреннего имени и для проверки прав при завершении
+ * Передаём объект для возврата названия и для проверки прав при завершении
  */
-$strategy->actionDone(new \TaskForce\ActionDone());
+$strategy->actionDone(new \TaskForceAction\ActionDone());
 
 /**
- * Передаём объект для возврата названия, внутреннего имени и для проверки прав при отказе
+ * Передаём объект для возврата названия и для проверки прав при отказе
  */
-$strategy->actionRefuse(new \TaskForce\ActionRefuse());
+$strategy->actionRefuse(new  \TaskForceAction\ActionRefuse());
 
 // проверка
 
 $action = $strategy->getAvailableActions($status); // возвращение возможного действия к текущему статусу
-
 
 var_dump($strategy->getNextStatus($action)); //возвращающение статуса в который перейдет задание
