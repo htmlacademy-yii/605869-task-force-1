@@ -18,9 +18,6 @@ class ActionRefuse extends AbstractSelectingAction
     public $checkingStatus;
 
     /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
      * @return string|null
      * метод по возврату названия действия при отказе
      */
@@ -30,6 +27,19 @@ class ActionRefuse extends AbstractSelectingAction
         if ($this->$checkingStatus)
         {
             return 'Отказаться';
+        }
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function internalNameOfAction()
+    {
+        $checkingStatus = $this->checkingStatus;
+        if ($this->$checkingStatus)
+        {
+            return 'action_refuse';
         }
         return null;
     }

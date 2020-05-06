@@ -2,6 +2,10 @@
     namespace TaskForce;
 
     use TaskForceAction\AbstractSelectingAction;
+    use TaskForceAction\ActionCancel;
+    use TaskForceAction\ActionDone;
+    use TaskForceAction\ActionRefuse;
+    use TaskForceAction\ActionRespond;
 
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
@@ -18,70 +22,6 @@
         const STATUS_IN_WORK = 'in_work'; //статус задания находящегося в работе
         const STATUS_PERFORMED = 'performed'; //статус выполненного задания
         const STATUS_FAILED = 'failed'; //статус проваленного задания
-
-        /**
-         * переменные действий к заданиям
-         */
-
-        /**
-         * @var AbstractSelectingAction $nameOfAction_cancel
-         */
-        private $nameOfAction_cancel; // имя 'Отменить'
-
-        /**
-         * @var abstractSelectingAction $nameOfAction_respond
-         */
-        private $nameOfAction_respond; // имя 'Откликнуться'
-
-        /**
-         * @var AbstractSelectingAction $nameOfAction_done
-         */
-        private $nameOfAction_done; // имя 'Завершить'
-
-        /**
-         * @var AbstractSelectingAction $nameOfAction_refuse
-         */
-        private $nameOfAction_refuse; // имя 'Отказаться'
-
-        /**
-         * @var AbstractSelectingAction $internalNameOfAction_cancel
-         */
-        private $internalNameOfAction_cancel; // внутреннее имя 'action_cancel'
-
-        /**
-         * @var AbstractSelectingAction $internalNameOfAction_respond
-         */
-        private $internalNameOfAction_respond; // внутреннее имя 'action_respond'
-
-        /**
-         * @var AbstractSelectingAction $internalNameOfAction_done
-         */
-        private $internalNameOfAction_done; // внутреннее имя 'action_done'
-
-        /**
-         * @var AbstractSelectingAction $internalNameOfAction_refuse
-         */
-        private $internalNameOfAction_refuse; // внутреннее имя 'action_refuse'
-
-        /**
-         * @var AbstractSelectingAction $checkingUserOfAction_cancel
-         */
-        private $checkingUserOfAction_cancel; // проверка прав к действию по отмене
-
-        /**
-         * @var AbstractSelectingAction $checkingUserOfAction_respond
-         */
-        private $checkingUserOfAction_respond; // проверка прав к действию по отклику
-
-        /**
-         * @var AbstractSelectingAction $checkingUserOfAction_done
-         */
-        private $checkingUserOfAction_done; // проверка прав к действию по завершению
-
-        /**
-         * @var AbstractSelectingAction $checkingUserOfAction_refuse
-         */
-        private $checkingUserOfAction_refuse; // проверка прав к действию по отказу
 
         /**
          * id исполнителя
@@ -108,10 +48,6 @@
         private $status;
 
         /**
-         * @var AbstractSelectingAction $action
-         */
-        private $action; //действие
-        /**
          * @var AbstractSelectingAction $checkingStatus
          */
         protected $checkingStatus; //право на совершение действия
@@ -131,86 +67,30 @@
         }
 
         /**
-         * @param AbstractSelectingAction $actionCancel
-         * метод для возврата названия, внутреннего имени и для проверки прав к действию по отмене
+         * @return string|null
+         * метод возвращающий статус в который перейдет задание
          */
-        public function actionCancel(AbstractSelectingAction $actionCancel)
+        public function getNextStatus ()
         {
-            $idPerformer = $this->idPerformer;
-            $idCustomer = $this->idCustomer;
-            $idUser = $this->idUser;
-            $this->nameOfAction_cancel = $actionCancel->nameOfAction();
-            $this->internalNameOfAction_cancel = 'actionCancel';
-            $this->checkingStatus = $actionCancel->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        }
-
-        /**
-         * @param AbstractSelectingAction $actionRespond
-         * метод для возврата названия, внутреннего имени и для проверки прав к действию по отклику
-         */
-        public function actionRespond(AbstractSelectingAction $actionRespond)
-        {
-            $idPerformer = $this->idPerformer;
-            $idCustomer = $this->idCustomer;
-            $idUser = $this->idUser;
-            $this->nameOfAction_respond = $actionRespond->nameOfAction();
-            $this->internalNameOfAction_respond = 'actionRespond';
-            $this->checkingStatus = $actionRespond->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        }
-
-        /**
-         * @param AbstractSelectingAction $actionDone
-         * метод для возврата названия, внутреннего имени и для проверки прав к действию по завершению
-         */
-        public function actionDone(AbstractSelectingAction $actionDone)
-        {
-            $idPerformer = $this->idPerformer;
-            $idCustomer = $this->idCustomer;
-            $idUser = $this->idUser;
-            $this->nameOfAction_done = $actionDone->nameOfAction();
-            $this->internalNameOfAction_done = 'actionDone';
-            $this->checkingStatus = $actionDone->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        }
-
-        /**
-         * @param AbstractSelectingAction $actionRefuse
-         * метод для возврата названия, внутреннего имени и для проверки прав к действию по отказу
-         */
-        public function actionRefuse(AbstractSelectingAction $actionRefuse)
-        {
-            $idPerformer = $this->idPerformer;
-            $idCustomer = $this->idCustomer;
-            $idUser = $this->idUser;
-            $this->nameOfAction_refuse = $actionRefuse->nameOfAction();
-            $this->internalNameOfAction_refuse = 'actionRefuse';
-            $this->checkingStatus = $actionRefuse->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        }
-
-        /**
-         * @param $action
-         * @return string
-         * метод принимающий действие и возвращающий статус в который перейдет задание
-         */
-        public function getNextStatus ($action)
-        {
-            switch ($action) {
-                case $this->internalNameOfAction_respond:
-                    $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
-                    break;
-                case $this->internalNameOfAction_cancel:
-                    $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
-                    break;
-                case $this->internalNameOfAction_refuse:
-                    $status = self::STATUS_FAILED; // задание переходит в статус: провалено
-                    break;
-                case $this->internalNameOfAction_done:
-                    $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
-                    break;
-                default:
-                    $status = null;
-                    break;
+            foreach ($this->AvailableActions() as $availableAction)
+            {
+                if ($availableAction->internalNameOfAction() == 'action_respond')
+                {
+                    return ($status = self::STATUS_IN_WORK); // задание переходит в статус: в работе
+                }
+                elseif ($availableAction->internalNameOfAction() == 'action_cancel')
+                {
+                    return ($status = self::STATUS_CANCEL); // задание переходит в статус: отменено
+                }
+                elseif ($availableAction->internalNameOfAction() == 'action_refuse')
+                {
+                    return ($status = self::STATUS_FAILED); // задание переходит в статус: провалено
+                }
+                elseif ($availableAction->internalNameOfAction() == 'action_done')
+                {
+                    return ($status = self::STATUS_PERFORMED); // задание переходит в статус: выполнено
+                }
             }
-            return $status;
         }
         /**
          * метод возвращающий карту статусов
@@ -227,62 +107,33 @@
             ];
         }
 
-        /**
-         * @return string[]
+          /**
+         * @return array AbstractSelectingAction
          * метод возвращающий карту действий
          */
         private function getActionMap()
         {
-            $internalNameOfAction_cancel = $this->internalNameOfAction_cancel;
-            $internalNameOfAction_respond = $this->internalNameOfAction_respond;
-            $internalNameOfAction_done = $this->internalNameOfAction_done;
-            $internalNameOfAction_refuse = $this->internalNameOfAction_refuse;
-
-            $nameOfAction_cancel = $this->nameOfAction_cancel;
-            $nameOfAction_respond = $this->nameOfAction_respond;
-            $nameOfAction_done = $this->nameOfAction_done;
-            $nameOfAction_refuse = $this->nameOfAction_refuse;
-
             return [
-                "$internalNameOfAction_cancel" => "$nameOfAction_cancel",
-                "$internalNameOfAction_respond" => "$nameOfAction_respond",
-                "$internalNameOfAction_done" => "$nameOfAction_done",
-                "$internalNameOfAction_refuse" => "$nameOfAction_refuse"
+                (new ActionCancel()),
+                (new ActionRespond()),
+                (new ActionDone()),
+                (new ActionRefuse())
             ];
         }
 
         /**
-         * @param $status
-         * @return AbstractSelectingAction
+         * @return array|null AbstractSelectingAction
          * метод возвращающий возможные действия к текущему статусу
          */
-        public function getAvailableActions($status)
+        protected function AvailableActions()
         {
-            switch ($status) {
-                case self::STATUS_NEW:
-                    if ($this->checkingUserOfAction_respond)
-                    {
-                        $action = $this->internalNameOfAction_respond;
-                    }
-                    elseif ($this->checkingUserOfAction_cancel)
-                    {
-                        $action = $this->internalNameOfAction_cancel;
-                    }
-                    break;
-                case self::STATUS_IN_WORK:
-                    if ($this->checkingUserOfAction_done)
-                    {
-                        $action = $this->internalNameOfAction_done;
-                    }
-                    elseif ($this->checkingUserOfAction_refuse)
-                    {
-                        $action = $this->internalNameOfAction_refuse;
-                    }
-                    break;
-                default:
-                    $action = null;
-                    break;
+            if ($this->status == self::STATUS_NEW)
+            {
+                return ([new ActionRespond(), new ActionCancel()]);
             }
-            return $action;
+            elseif ($this->status == self::STATUS_IN_WORK)
+            {
+                return ([new ActionDone(),new ActionRefuse()]);
+            }
         }
     }

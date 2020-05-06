@@ -18,9 +18,6 @@ class ActionRespond extends AbstractSelectingAction
     public $checkingStatus;
 
     /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
      * @return string|null
      * метод по возврату названия действия при отклике
      */
@@ -35,6 +32,19 @@ class ActionRespond extends AbstractSelectingAction
     }
 
     /**
+     * @return string|null
+     */
+    public function internalNameOfAction()
+    {
+        $checkingStatus = $this->checkingStatus;
+        if ($this->$checkingStatus)
+        {
+            return 'action_respond';
+        }
+        return null;
+    }
+
+    /**
      * @param $idPerformer
      * @param $idCustomer
      * @param $idUser
@@ -43,6 +53,6 @@ class ActionRespond extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return ($idPerformer == $idUser);
+        return ($this->checkingStatus = ($idPerformer == $idUser));
     }
 }

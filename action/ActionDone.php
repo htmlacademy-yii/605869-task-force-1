@@ -18,9 +18,6 @@ class ActionDone extends AbstractSelectingAction
     public $checkingStatus;
 
     /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
      * @return string|null
      * метод по возврату названия действия при завершении
      */
@@ -35,6 +32,19 @@ class ActionDone extends AbstractSelectingAction
     }
 
     /**
+     * @return string|null
+     */
+    public function internalNameOfAction()
+    {
+        $checkingStatus = $this->checkingStatus;
+        if ($this->$checkingStatus)
+        {
+            return 'action_done';
+        }
+        return null;
+    }
+
+    /**
      * @param $idPerformer
      * @param $idCustomer
      * @param $idUser
@@ -43,6 +53,6 @@ class ActionDone extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return ($idCustomer == $idUser);
+        return ($this->checkingStatus = ($idCustomer == $idUser));
     }
 }
