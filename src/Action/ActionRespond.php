@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TaskForceAction;
+namespace TaskForce\Action;
 
 
 /**
@@ -16,7 +16,6 @@ class ActionRespond extends AbstractSelectingAction
      * право на совершение действия
      */
     public $checkingStatus;
-
     /**
      * @return string|null
      * метод по возврату названия действия при отклике
@@ -30,7 +29,6 @@ class ActionRespond extends AbstractSelectingAction
         }
         return null;
     }
-
     /**
      * @return string|null
      */
@@ -43,7 +41,6 @@ class ActionRespond extends AbstractSelectingAction
         }
         return null;
     }
-
     /**
      * @param $idPerformer
      * @param $idCustomer

@@ -1,11 +1,12 @@
 <?php
     namespace TaskForce;
 
-    use TaskForceAction\AbstractSelectingAction;
-    use TaskForceAction\ActionCancel;
-    use TaskForceAction\ActionDone;
-    use TaskForceAction\ActionRefuse;
-    use TaskForceAction\ActionRespond;
+
+    use TaskForce\Action\AbstractSelectingAction;
+    use TaskForce\Action\ActionCancel;
+    use TaskForce\Action\ActionDone;
+    use TaskForce\Action\ActionRefuse;
+    use TaskForce\Action\ActionRespond;
 
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
@@ -45,7 +46,7 @@
          * статус
          * @var string
          */
-        private $status;
+        public $status;
 
         /**
          * @var AbstractSelectingAction $checkingStatus
@@ -121,19 +122,23 @@
             ];
         }
 
+
         /**
-         * @return array|null AbstractSelectingAction
-         * метод возвращающий возможные действия к текущему статусу
+         * Метод возвращающий возможные действия к текущему статусу
+         * @return AbstractSelectingAction[]
+         * @throws \Exception
          */
         protected function AvailableActions()
         {
             if ($this->status == self::STATUS_NEW)
             {
-                return ([new ActionRespond(), new ActionCancel()]);
+                return [new ActionRespond(), new ActionCancel()];
             }
             elseif ($this->status == self::STATUS_IN_WORK)
             {
-                return ([new ActionDone(),new ActionRefuse()]);
+                return [new ActionDone(),new ActionRefuse()];
+            } else {
+                throw new \Exception("Неожиданный татус задачи ".$this->status);
             }
         }
     }

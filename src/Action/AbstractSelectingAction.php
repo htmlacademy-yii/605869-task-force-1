@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TaskForceAction;
+namespace TaskForce\Action;
 
 
 /**
@@ -9,7 +9,6 @@ namespace TaskForceAction;
  * @package TaskForceAction
  * абстрактный класс действий
  */
-
 abstract class AbstractSelectingAction
 {
     abstract public function nameOfAction(); //метод для возврата названия
