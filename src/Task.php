@@ -3,10 +3,10 @@
 
 
     use TaskForce\Action\AbstractSelectingAction;
-    use TaskForce\Action\ActionCancel;
-    use TaskForce\Action\ActionDone;
-    use TaskForce\Action\ActionRefuse;
-    use TaskForce\Action\ActionRespond;
+    use TaskForce\Action\Cancel;
+    use TaskForce\Action\Done;
+    use TaskForce\Action\Refuse;
+    use TaskForce\Action\Respond;
 
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
@@ -49,11 +49,6 @@
         public $status;
 
         /**
-         * @var AbstractSelectingAction $checkingStatus
-         */
-        protected $checkingStatus; //право на совершение действия
-
-        /**
          * Task constructor.
          * конструктор для получения id исполнителя и id заказчика
          * @param $idPerformer int
@@ -68,31 +63,37 @@
         }
 
         /**
-         * @return string|null
+         * @return string
+         * @throws \Exception
          * метод возвращающий статус в который перейдет задание
          */
         public function getNextStatus ()
         {
             foreach ($this->AvailableActions() as $availableAction)
             {
-                if ($availableAction->internalNameOfAction() == 'action_respond')
+                $idPerformer = $this->idPerformer;
+                $idCustomer = $this->idCustomer;
+                $idUser = $this->idUser;
+                if ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_respond')
                 {
-                    return ($status = self::STATUS_IN_WORK); // задание переходит в статус: в работе
+                    $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
                 }
-                elseif ($availableAction->internalNameOfAction() == 'action_cancel')
+                elseif ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_cancel')
                 {
-                    return ($status = self::STATUS_CANCEL); // задание переходит в статус: отменено
+                    $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
                 }
-                elseif ($availableAction->internalNameOfAction() == 'action_refuse')
+                elseif ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_refuse')
                 {
-                    return ($status = self::STATUS_FAILED); // задание переходит в статус: провалено
+                    $status = self::STATUS_FAILED; // задание переходит в статус: провалено
                 }
-                elseif ($availableAction->internalNameOfAction() == 'action_done')
+                elseif ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_done')
                 {
-                    return ($status = self::STATUS_PERFORMED); // задание переходит в статус: выполнено
+                    $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
                 }
             }
+            return $status;
         }
+
         /**
          * метод возвращающий карту статусов
          * @return array
@@ -115,13 +116,12 @@
         private function getActionMap()
         {
             return [
-                (new ActionCancel()),
-                (new ActionRespond()),
-                (new ActionDone()),
-                (new ActionRefuse())
+                (new Cancel()),
+                (new Respond()),
+                (new Done()),
+                (new Refuse())
             ];
         }
-
 
         /**
          * Метод возвращающий возможные действия к текущему статусу
@@ -132,11 +132,11 @@
         {
             if ($this->status == self::STATUS_NEW)
             {
-                return [new ActionRespond(), new ActionCancel()];
+                return [new Respond(), new Cancel()];
             }
             elseif ($this->status == self::STATUS_IN_WORK)
             {
-                return [new ActionDone(),new ActionRefuse()];
+                return [new Done(),new Refuse()];
             } else {
                 throw new \Exception("Неожиданный татус задачи ".$this->status);
             }

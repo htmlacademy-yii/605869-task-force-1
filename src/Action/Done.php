@@ -5,42 +5,45 @@ namespace TaskForce\Action;
 
 
 /**
- * Class ActionDone
+ * Class Done
  * @package TaskForceAction
  * Класс наследуется от абстрактного, возвращает действие "Завершить"
  */
-class ActionDone extends AbstractSelectingAction
+class Done extends AbstractSelectingAction
 {
     /**
-     * @var AbstractSelectingAction $checkingStatus
-     * право на совершение действия
-     */
-    public $checkingStatus;
-    /**
+     * @param $idPerformer
+     * @param $idCustomer
+     * @param $idUser
      * @return string|null
-     * метод по возврату названия действия при завершении
+     * метод возвращающий внутреннее имя действия
      */
-    public function nameOfAction()
+    public function nameOfAction($idPerformer, $idCustomer, $idUser)
     {
-        $checkingStatus = $this->checkingStatus;
+        $checkingStatus = $this->checkingUserStatus($idPerformer, $idCustomer, $idUser);
         if ($this->$checkingStatus)
         {
             return 'Завершить';
         }
         return null;
     }
+
     /**
+     * @param $idPerformer
+     * @param $idCustomer
+     * @param $idUser
      * @return string|null
+     * метод возвращающий внутреннее имя действия
      */
-    public function internalNameOfAction()
+        public function internalNameOfAction($idPerformer, $idCustomer, $idUser)
     {
-        $checkingStatus = $this->checkingStatus;
-        if ($this->$checkingStatus)
+        if ($this->checkingUserStatus($idPerformer, $idCustomer, $idUser))
         {
             return 'action_done';
         }
         return null;
     }
+
     /**
      * @param $idPerformer
      * @param $idCustomer
@@ -50,6 +53,6 @@ class ActionDone extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return ($this->checkingStatus = ($idCustomer == $idUser));
+        return $idCustomer == $idUser;
     }
 }
