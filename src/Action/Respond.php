@@ -12,14 +12,32 @@ namespace TaskForce\Action;
 class Respond extends AbstractSelectingAction
 {
     /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
+     * id исполнителя
+     * @var int
+     */
+    protected $idPerformer;
+
+    /**
+     * id заказчика
+     * @var int
+     */
+    protected $idCustomer;
+
+    /**
+     * id текущего пользователя
+     * @var int
+     */
+    protected $idUser;
+
+    /**
      * @return string|null
      * метод возвращающий внутреннее имя действия
      */
-    public function nameOfAction($idPerformer, $idCustomer, $idUser)
+    public function nameOfAction()
     {
+        $idPerformer = $this->idPerformer;
+        $idCustomer = $this->idCustomer;
+        $idUser = $this->idUser;
         $checkingStatus = $this->checkingUserStatus($idPerformer, $idCustomer, $idUser);
         if ($this->$checkingStatus)
         {
@@ -29,14 +47,14 @@ class Respond extends AbstractSelectingAction
     }
 
     /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
      * @return string|null
      * метод возвращающий внутреннее имя действия
      */
-    public function internalNameOfAction($idPerformer, $idCustomer, $idUser)
+    public function internalNameOfAction()
     {
+        $idPerformer = $this->idPerformer;
+        $idCustomer = $this->idCustomer;
+        $idUser = $this->idUser;
         if ($this->checkingUserStatus($idPerformer, $idCustomer, $idUser))
         {
             return 'action_respond';

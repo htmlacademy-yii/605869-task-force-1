@@ -28,25 +28,30 @@
          * id исполнителя
          * @var int
          */
-        private $idPerformer;
+        protected $idPerformer;
 
         /**
          * id заказчика
          * @var int
          */
-        private $idCustomer;
+        protected $idCustomer;
 
         /**
          * id текущего пользователя
          * @var int
          */
-        private $idUser;
+        protected $idUser;
 
         /**
          * статус
          * @var string
          */
         public $status;
+
+        /**
+         * @var AbstractSelectingAction[]
+         */
+        public $action; //действие
 
         /**
          * Task constructor.
@@ -63,30 +68,31 @@
         }
 
         /**
+         * @param $action
          * @return string
-         * @throws \Exception
          * метод возвращающий статус в который перейдет задание
          */
-        public function getNextStatus ()
+        public function getNextStatus ($action)
         {
-            foreach ($this->AvailableActions() as $availableAction)
+            $AvailableActions = $this->action;
+            foreach ($this->$AvailableActions as $availableAction)
             {
                 $idPerformer = $this->idPerformer;
                 $idCustomer = $this->idCustomer;
                 $idUser = $this->idUser;
-                if ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_respond')
+                if ($availableAction->internalNameOfAction() == 'action_respond')
                 {
                     $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
                 }
-                elseif ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_cancel')
+                elseif ($availableAction->internalNameOfAction() == 'action_cancel')
                 {
                     $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
                 }
-                elseif ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_refuse')
+                elseif ($availableAction->internalNameOfAction() == 'action_refuse')
                 {
                     $status = self::STATUS_FAILED; // задание переходит в статус: провалено
                 }
-                elseif ($availableAction->internalNameOfAction($idPerformer, $idCustomer, $idUser) == 'action_done')
+                elseif ($availableAction->internalNameOfAction() == 'action_done')
                 {
                     $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
                 }
@@ -132,11 +138,11 @@
         {
             if ($this->status == self::STATUS_NEW)
             {
-                return [new Respond(), new Cancel()];
+                return $action = [new Respond(), new Cancel()];
             }
             elseif ($this->status == self::STATUS_IN_WORK)
             {
-                return [new Done(),new Refuse()];
+                return $action = [new Done(),new Refuse()];
             } else {
                 throw new \Exception("Неожиданный татус задачи ".$this->status);
             }
