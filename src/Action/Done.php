@@ -35,31 +35,16 @@ class Done extends AbstractSelectingAction
      */
     public function nameOfAction()
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
-        $checkingStatus = $this->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        if ($this->$checkingStatus)
-        {
-            return 'Завершить';
-        }
-        return null;
+        return 'Завершить';
     }
 
     /**
      * @return string|null
      * метод возвращающий внутреннее имя действия
      */
-        public function internalNameOfAction()
+    public function internalNameOfAction()
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
-        if ($this->checkingUserStatus($idPerformer, $idCustomer, $idUser))
-        {
-            return 'action_done';
-        }
-        return null;
+        return 'action_done';
     }
 
     /**
@@ -71,6 +56,7 @@ class Done extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return $idCustomer == $idUser;
+        if ($idUser !== $idPerformer) return true;
+        else return false;
     }
 }

@@ -35,15 +35,7 @@ class Cancel extends AbstractSelectingAction
      */
     public function nameOfAction()
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
-        $checkingStatus = $this->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        if ($this->$checkingStatus)
-        {
-            return 'Отменить';
-        }
-        return null;
+        return 'Отменить';
     }
 
     /**
@@ -52,14 +44,7 @@ class Cancel extends AbstractSelectingAction
      */
     public function internalNameOfAction()
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
-        if ($this->checkingUserStatus($idPerformer, $idCustomer, $idUser))
-        {
-            return 'action_cancel';
-        }
-        return null;
+        return 'action_cancel';
     }
 
     /**
@@ -71,6 +56,7 @@ class Cancel extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return $idCustomer == $idUser;
+        if ($idUser !== $idPerformer) return true;
+        else return false;
     }
 }

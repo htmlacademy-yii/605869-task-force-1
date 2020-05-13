@@ -35,15 +35,7 @@ class Refuse extends AbstractSelectingAction
      */
     public function nameOfAction()
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
-        $checkingStatus = $this->checkingUserStatus($idPerformer, $idCustomer, $idUser);
-        if ($this->$checkingStatus)
-        {
-            return 'Отказаться';
-        }
-        return null;
+        return 'Отказаться';
     }
 
     /**
@@ -52,14 +44,7 @@ class Refuse extends AbstractSelectingAction
      */
     public function internalNameOfAction()
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
-        if ($this->checkingUserStatus($idPerformer, $idCustomer, $idUser))
-        {
-            return 'action_refuse';
-        }
-        return null;
+        return 'action_refuse';
     }
 
     /**
@@ -71,6 +56,7 @@ class Refuse extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return $idPerformer == $idUser;
+        if ($idUser !== $idCustomer) return true;
+        else return false;
     }
 }
