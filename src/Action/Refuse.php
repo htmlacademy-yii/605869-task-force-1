@@ -56,7 +56,6 @@ class Refuse extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        if ($idUser !== $idCustomer) return true;
-        else return false;
+        return ($idUser !== $idCustomer);
     }
 }

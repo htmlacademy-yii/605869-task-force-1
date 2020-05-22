@@ -56,7 +56,6 @@ class Cancel extends AbstractSelectingAction
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        if ($idUser !== $idPerformer) return true;
-        else return false;
+        return ($idUser !== $idPerformer);
     }
 }

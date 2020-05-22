@@ -74,8 +74,7 @@
          */
         public function getNextStatus ($action)
         {
-            $AvailableActions = $this->action;
-            foreach ($this->$AvailableActions as $availableAction)
+            foreach ($this->action as $availableAction)
             {
                 $idPerformer = $this->idPerformer;
                 $idCustomer = $this->idCustomer;
