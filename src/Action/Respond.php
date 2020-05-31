@@ -31,7 +31,7 @@ class Respond extends AbstractSelectingAction
 
     /**
      * @return string|null
-     * метод возвращающий внутреннее имя действия
+     * метод - для человекопонятного названия действия
      */
     public function nameOfAction()
     {
@@ -40,7 +40,7 @@ class Respond extends AbstractSelectingAction
 
     /**
      * @return string|null
-     * метод возвращающий внутреннее имя действия
+     * метод - для машинного названия действия
      */
     public function internalNameOfAction()
     {
