@@ -15,19 +15,19 @@ class Respond extends AbstractSelectingAction
      * id исполнителя
      * @var int
      */
-    protected $idPerformer;
+    public $idPerformer;
 
     /**
      * id заказчика
      * @var int
      */
-    protected $idCustomer;
+    public $idCustomer;
 
     /**
      * id текущего пользователя
      * @var int
      */
-    protected $idUser;
+    public $idUser;
 
     /**
      * @return string|null

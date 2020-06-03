@@ -28,19 +28,19 @@
          * id исполнителя
          * @var int
          */
-        protected $idPerformer;
+        public $idPerformer;
 
         /**
          * id заказчика
          * @var int
          */
-        protected $idCustomer;
+        public $idCustomer;
 
         /**
          * id текущего пользователя
          * @var int
          */
-        protected $idUser;
+        public $idUser;
 
         /**
          * статус
@@ -49,7 +49,7 @@
         public $status;
 
         /**
-         * @var AbstractSelectingAction[]
+         * @var string AbstractSelectingAction
          */
         public $action; //действие
 
@@ -68,35 +68,28 @@
         }
 
         /**
-         * @param $action
          * @return string
          * метод возвращающий статус в который перейдет задание
          */
-        public function getNextStatus ($action)
+        public function getNextStatus ()
         {
-            foreach ($this->action as $availableAction)
-            {
-                $idPerformer = $this->idPerformer;
-                $idCustomer = $this->idCustomer;
-                $idUser = $this->idUser;
-                if ($availableAction->internalNameOfAction() == 'action_respond')
+            $action = $this->action;
+                if (((new Respond())->internalNameOfAction()) == $action)
                 {
-                    $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
+                    return $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
                 }
-                elseif ($availableAction->internalNameOfAction() == 'action_cancel')
+                elseif (((new Cancel())->internalNameOfAction()) == $action)
                 {
-                    $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
+                    return $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
                 }
-                elseif ($availableAction->internalNameOfAction() == 'action_refuse')
+                elseif (((new Refuse())->internalNameOfAction()) == $action)
                 {
-                    $status = self::STATUS_FAILED; // задание переходит в статус: провалено
+                    return $status = self::STATUS_FAILED; // задание переходит в статус: провалено
                 }
-                elseif ($availableAction->internalNameOfAction() == 'action_done')
+                elseif (((new Done())->internalNameOfAction()) == $action)
                 {
-                    $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
+                    return $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
                 }
-            }
-            return $status;
         }
 
         /**
@@ -129,19 +122,36 @@
         }
 
         /**
-         * Метод возвращающий возможные действия к текущему статусу
-         * @return AbstractSelectingAction[]
+         * Метод возвращающий возможное действия к текущему статусу
+         * @return string
          * @throws \Exception
          */
-        protected function AvailableActions()
+        public function getAvailableAction()
         {
+            $idPerformer = $this->idPerformer;
+            $idCustomer = $this->idCustomer;
+            $idUser = $this->idUser;
             if ($this->status == self::STATUS_NEW)
             {
-                return $action = [new Respond(), new Cancel()];
+                if ((new Respond())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
+                {
+                    return $action = 'action_respond';
+                }
+                elseif ((new Cancel())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
+                {
+                    return $action = 'action_cancel';
+                }
             }
             elseif ($this->status == self::STATUS_IN_WORK)
             {
-                return $action = [new Done(),new Refuse()];
+                if ((new Done())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
+                {
+                    return $action = 'action_done';
+                }
+                elseif ((new Refuse())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
+                {
+                    return $action = 'action_refuse';
+                }
             } else {
                 throw new \Exception("Неожиданный татус задачи ".$this->status);
             }
