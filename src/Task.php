@@ -49,9 +49,14 @@
         public $status;
 
         /**
-         * @var string AbstractSelectingAction
+         * @var array AbstractSelectingAction
          */
-        public $action; //действие
+        public $actions = []; //действия которое можно выполнить из текущего статуса
+
+        /**
+         * @var string
+         */
+        public $availableAction; // действие которое выполняется из текущего статуса
 
         /**
          * Task constructor.
@@ -73,23 +78,24 @@
          */
         public function getNextStatus ()
         {
-            $action = $this->action;
-                if (((new Respond())->internalNameOfAction()) == $action)
-                {
-                    return $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
-                }
-                elseif (((new Cancel())->internalNameOfAction()) == $action)
-                {
-                    return $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
-                }
-                elseif (((new Refuse())->internalNameOfAction()) == $action)
-                {
-                    return $status = self::STATUS_FAILED; // задание переходит в статус: провалено
-                }
-                elseif (((new Done())->internalNameOfAction()) == $action)
-                {
-                    return $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
-                }
+            $availableAction = $this->getAvailableAction();
+            if ($availableAction == 'action_respond')
+            {
+                $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
+            }
+            elseif ($availableAction == 'action_cancel')
+            {
+                $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
+            }
+            elseif ($availableAction == 'action_refuse')
+            {
+                $status = self::STATUS_FAILED; // задание переходит в статус: провалено
+            }
+            elseif ($availableAction == 'action_done')
+            {
+                $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
+            }
+            return $status;
         }
 
         /**
@@ -122,38 +128,41 @@
         }
 
         /**
-         * Метод возвращающий возможное действия к текущему статусу
-         * @return string
+         * Метод возвращающий возможные действия к текущему статусу
+         * @return array
          * @throws \Exception
+         */
+        public function availableAction()
+        {
+            if ($this->status == self::STATUS_NEW)
+            {
+                return $actions = [new Respond(), new Cancel()];
+            }
+            elseif ($this->status == self::STATUS_IN_WORK)
+            {
+                return $actions = [new Done(),new Refuse()];
+            } else {
+                throw new \Exception("Неожиданный татус задачи ".$this->status);
+            }
+        }
+
+        /**
+         * Метод возвращающий действие к текущему статусу
+         * @return string
          */
         public function getAvailableAction()
         {
             $idPerformer = $this->idPerformer;
             $idCustomer = $this->idCustomer;
             $idUser = $this->idUser;
-            if ($this->status == self::STATUS_NEW)
+            $actions = $this->availableAction();
+            foreach ($actions as $action)
             {
-                if ((new Respond())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
+
+                if ($action->checkingUserStatus($idPerformer, $idCustomer, $idUser))
                 {
-                    return $action = 'action_respond';
+                    return $availableAction = $action->internalNameOfAction();
                 }
-                elseif ((new Cancel())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
-                {
-                    return $action = 'action_cancel';
-                }
-            }
-            elseif ($this->status == self::STATUS_IN_WORK)
-            {
-                if ((new Done())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
-                {
-                    return $action = 'action_done';
-                }
-                elseif ((new Refuse())->checkingUserStatus($idPerformer, $idCustomer, $idUser))
-                {
-                    return $action = 'action_refuse';
-                }
-            } else {
-                throw new \Exception("Неожиданный татус задачи ".$this->status);
             }
         }
     }
