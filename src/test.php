@@ -12,6 +12,4 @@ $strategy = new  \TaskForce\Task($idPerformer, $idCustomer, $idUser);
 $strategy->status = \TaskForce\Task::STATUS_IN_WORK;
 
 // проверка
-
-var_dump($strategy->getAvailableAction()); //возвращающение статуса в который перейдет задание
-//print_r(assert($strategy->getAvailableAction() == 'action_refuse'));
+assert($strategy->getAvailableAction() == 'action_refuse');

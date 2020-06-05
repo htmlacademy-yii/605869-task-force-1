@@ -12,24 +12,6 @@ namespace TaskForce\Action;
 class Refuse extends AbstractSelectingAction
 {
     /**
-     * id исполнителя
-     * @var int
-     */
-    public $idPerformer;
-
-    /**
-     * id заказчика
-     * @var int
-     */
-    public $idCustomer;
-
-    /**
-     * id текущего пользователя
-     * @var int
-     */
-    public $idUser;
-
-    /**
      * @return string|null
      * метод - для человекопонятного названия действия
      */
