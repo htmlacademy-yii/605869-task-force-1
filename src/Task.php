@@ -161,7 +161,7 @@
 
                 if ($action->checkingUserStatus($idPerformer, $idCustomer, $idUser))
                 {
-                    return $availableAction = $action->internalNameOfAction();
+                    return $action->internalNameOfAction();
                 }
             }
         }
