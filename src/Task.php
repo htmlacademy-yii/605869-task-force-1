@@ -1,6 +1,13 @@
 <?php
     namespace TaskForce;
 
+
+    use TaskForce\Action\AbstractSelectingAction;
+    use TaskForce\Action\Cancel;
+    use TaskForce\Action\Done;
+    use TaskForce\Action\Refuse;
+    use TaskForce\Action\Respond;
+
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
      * Class Task
@@ -16,75 +23,81 @@
         const STATUS_IN_WORK = 'in_work'; //статус задания находящегося в работе
         const STATUS_PERFORMED = 'performed'; //статус выполненного задания
         const STATUS_FAILED = 'failed'; //статус проваленного задания
-        /**
-         * константы действий к заданиям
-         */
-        const ACTION_CANCEL = 'action_cancel'; //действие по отмене задания (выполняет заказчик)
-        const ACTION_RESPOND = 'action_respond'; //действие по отклику на задание (выполняет исполнитель)
-        const ACTION_DONE = 'action_done'; //действие по переводу задания в статус "Выполнено" (выполняет заказчик)
-        const ACTION_REFUSE = 'action_refuse'; //действие по отказу от задания (выполняет исполнитель), переводит задание в статус "Провалено"
+
         /**
          * id исполнителя
          * @var int
          */
-        private $idPerformer;
+        public $idPerformer;
+
         /**
          * id заказчика
          * @var int
          */
-        private $idCustomer;
+        public $idCustomer;
+
+        /**
+         * id текущего пользователя
+         * @var int
+         */
+        public $idUser;
+
         /**
          * статус
          * @var string
          */
-        private $status;
+        public $status;
+
         /**
-         * действие с заданием
+         * @var array AbstractSelectingAction
+         */
+        public $actions = []; //действия которое можно выполнить из текущего статуса
+
+        /**
          * @var string
          */
-        private $action; //действие
-        /**
-         * возможные действия к текущему статусу
-         * @var array
-         */
-        private $availableActions;
+        public $availableAction; // действие которое выполняется из текущего статуса
+
         /**
          * Task constructor.
          * конструктор для получения id исполнителя и id заказчика
          * @param $idPerformer int
          * @param $idCustomer int
+         * @param $idUser int
          */
-        public function __construct($idPerformer, $idCustomer)
+        public function __construct($idPerformer, $idCustomer, $idUser)
         {
             $this->idPerformer = $idPerformer;
-           $this->idCustomer = $idCustomer;
+            $this->idCustomer = $idCustomer;
+            $this->idUser = $idUser;
         }
+
         /**
-         * метод принимающий действие и возвращающий статус в который перейдет задание
-         * @param $action
          * @return string
+         * метод возвращающий статус в который перейдет задание
          */
-        public function getNextStatus ($action)
+        public function getNextStatus ()
         {
-            switch ($action) {
-                case self::ACTION_RESPOND:
-                    $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
-                    break;
-                case self::ACTION_CANCEL:
-                    $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
-                    break;
-                case self::ACTION_REFUSE:
-                    $status = self::STATUS_FAILED; // задание переходит в статус: провалено
-                    break;
-                case self::ACTION_DONE:
-                    $status = self::ACTION_RESPOND; // задание переходит в статус: выполнено
-                    break;
-                default:
-                    $status = $this->status;
-                    break;
+            $availableAction = $this->getAvailableAction();
+            if ($availableAction == 'action_respond')
+            {
+                $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
+            }
+            elseif ($availableAction == 'action_cancel')
+            {
+                $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
+            }
+            elseif ($availableAction == 'action_refuse')
+            {
+                $status = self::STATUS_FAILED; // задание переходит в статус: провалено
+            }
+            elseif ($availableAction == 'action_done')
+            {
+                $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
             }
             return $status;
         }
+
         /**
          * метод возвращающий карту статусов
          * @return array
@@ -99,36 +112,57 @@
                 self::STATUS_FAILED => 'Провалено'
             ];
         }
-        /**
+
+          /**
+         * @return array AbstractSelectingAction
          * метод возвращающий карту действий
-         * @return array
          */
         private function getActionMap()
         {
             return [
-                self::ACTION_CANCEL => 'Отменить',
-                self::ACTION_RESPOND => 'Откликнуться',
-                self::ACTION_DONE => 'Ввыполнено',
-                self::ACTION_REFUSE => 'Отказаться'
+                (new Cancel()),
+                (new Respond()),
+                (new Done()),
+                (new Refuse())
             ];
         }
+
         /**
-         * метод возвращающий возможные действия к текущему статусу
+         * Метод возвращающий возможные действия к текущему статусу
          * @return array
+         * @throws \Exception
          */
-        private function getAvailableActions()
+        public function availableAction()
         {
-            switch ($this->status) {
-                case self::STATUS_NEW:
-                    $availableActions = [self::ACTION_RESPOND, self::ACTION_CANCEL];
-                    break;
-                case self::STATUS_IN_WORK:
-                    $availableActions = [self::ACTION_DONE, self::ACTION_REFUSE];
-                    break;
-                default:
-                    $availableActions = $this->action;
-                    break;
+            if ($this->status == self::STATUS_NEW)
+            {
+                return $actions = [new Respond(), new Cancel()];
             }
-            return $availableActions;
+            elseif ($this->status == self::STATUS_IN_WORK)
+            {
+                return $actions = [new Done(),new Refuse()];
+            } else {
+                throw new \Exception("Неожиданный татус задачи ".$this->status);
+            }
+        }
+
+        /**
+         * Метод возвращающий действие к текущему статусу
+         * @return string
+         */
+        public function getAvailableAction()
+        {
+            $idPerformer = $this->idPerformer;
+            $idCustomer = $this->idCustomer;
+            $idUser = $this->idUser;
+            $actions = $this->availableAction();
+            foreach ($actions as $action)
+            {
+
+                if ($action->checkingUserStatus($idPerformer, $idCustomer, $idUser))
+                {
+                    return $action->internalNameOfAction();
+                }
+            }
         }
     }

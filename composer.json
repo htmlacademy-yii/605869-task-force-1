@@ -1,17 +1,17 @@
 {
-  "autoload": {
-    "psr-4": {
-      "TaskForce\\": "src/"
-    }
-  },
-  "name": "igor-rusaleev/task-force",
-  "description": "library",
-  "minimum-stability": "stable",
-  "license": "proprietary",
-  "authors": [
-    {
-      "name": "Igor Rusaleev",
-      "email": "igor.rusaleev@list.ru"
-    }
-  ]
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    },
+    "name": "igor-rusaleev/task-force",
+    "description": "library",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Igor Rusaleev",
+            "email": "igor.rusaleev@list.ru"
+        }
+    ]
 }
