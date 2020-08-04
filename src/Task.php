@@ -1,12 +1,14 @@
 <?php
-    namespace TaskForce;
+    declare(strict_types=1);
 
+    namespace TaskForce;
 
     use TaskForce\Action\AbstractSelectingAction;
     use TaskForce\Action\Cancel;
     use TaskForce\Action\Done;
     use TaskForce\Action\Refuse;
     use TaskForce\Action\Respond;
+    use TaskForce\ex\StatusExistsException;
 
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
@@ -64,19 +66,32 @@
          * @param $idPerformer int
          * @param $idCustomer int
          * @param $idUser int
+         * @param $status string
+         * @throws StatusExistsException
          */
-        public function __construct($idPerformer, $idCustomer, $idUser)
+        public function __construct(int $idPerformer, int $idCustomer, int $idUser, string $status)
         {
             $this->idPerformer = $idPerformer;
             $this->idCustomer = $idCustomer;
             $this->idUser = $idUser;
-        }
+//            проверка статуса передаваемого в конструктор, на существование
+//            если передаваемый статус не существует, то выбрасывается исключение
+                if (self::STATUS_CANCEL !== $status ||
+                    self::STATUS_FAILED !==$status ||
+                    self::STATUS_IN_WORK !== $status ||
+                    self::STATUS_NEW !== $status ||
+                    self::STATUS_PERFORMED !== $status)
+                {
+                    throw new StatusExistsException("Неожиданный cтатус задачи ". $status);
+                }
+                else $this->status = $status;
+            }
 
         /**
          * @return string
          * метод возвращающий статус в который перейдет задание
          */
-        public function getNextStatus ()
+        public function getNextStatus (): string
         {
             $availableAction = $this->getAvailableAction();
             if ($availableAction == 'action_respond')
@@ -102,7 +117,7 @@
          * метод возвращающий карту статусов
          * @return array
          */
-        private function getStatusMap()
+        private function getStatusMap(): array
         {
             return [
                 self::STATUS_NEW => 'Новый',
@@ -117,7 +132,7 @@
          * @return array AbstractSelectingAction
          * метод возвращающий карту действий
          */
-        private function getActionMap()
+        private function getActionMap(): array
         {
             return [
                 (new Cancel()),
@@ -132,7 +147,7 @@
          * @return array
          * @throws \Exception
          */
-        public function availableAction()
+        public function availableAction():?array
         {
             if ($this->status == self::STATUS_NEW)
             {
@@ -142,7 +157,7 @@
             {
                 return $actions = [new Done(),new Refuse()];
             } else {
-                throw new \Exception("Неожиданный татус задачи ".$this->status);
+                throw new StatusExistsException("Неожиданный cтатус задачи ".$this->status);
             }
         }
 
@@ -150,7 +165,7 @@
          * Метод возвращающий действие к текущему статусу
          * @return string
          */
-        public function getAvailableAction()
+        public function getAvailableAction():string
         {
             $idPerformer = $this->idPerformer;
             $idCustomer = $this->idCustomer;
@@ -158,7 +173,6 @@
             $actions = $this->availableAction();
             foreach ($actions as $action)
             {
-
                 if ($action->checkingUserStatus($idPerformer, $idCustomer, $idUser))
                 {
                     return $action->internalNameOfAction();
