@@ -8,7 +8,7 @@
     use TaskForce\Action\Done;
     use TaskForce\Action\Refuse;
     use TaskForce\Action\Respond;
-    use TaskForce\ex\StatusExistsException;
+    use TaskForce\Exception\StatusExistsException;
 
     /**
      * класс для определения списков действий и статусов, и выполнения базовой работы с ними
@@ -76,16 +76,17 @@
             $this->idUser = $idUser;
 //            проверка статуса передаваемого в конструктор, на существование
 //            если передаваемый статус не существует, то выбрасывается исключение
-                if (self::STATUS_CANCEL !== $status ||
-                    self::STATUS_FAILED !==$status ||
-                    self::STATUS_IN_WORK !== $status ||
-                    self::STATUS_NEW !== $status ||
-                    self::STATUS_PERFORMED !== $status)
+                if (in_array($status,
+                    [self::STATUS_CANCEL,
+                    self::STATUS_FAILED,
+                    self::STATUS_IN_WORK,
+                    self::STATUS_NEW,
+                    self::STATUS_PERFORMED]))
                 {
-                    throw new StatusExistsException("Неожиданный cтатус задачи ". $status);
+                    $this->status = $status;
                 }
-                else $this->status = $status;
-            }
+                else throw new StatusExistsException("Неожиданный cтатус задачи ". $status);
+        }
 
         /**
          * @return string

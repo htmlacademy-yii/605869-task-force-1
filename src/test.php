@@ -3,7 +3,7 @@ declare(strict_types=1);
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 use TaskForce\Task;
-use TaskForce\ex\StatusExistsException;
+use TaskForce\Exception\StatusExistsException;
 
 require_once "../vendor/autoload.php";
 
@@ -19,7 +19,7 @@ try {
     $strategy = new  \TaskForce\Task($idPerformer, $idCustomer, $idUser, $status);
     $strategy->availableAction();
 }
-catch (\TaskForce\ex\StatusExistsException $e) {
+catch (\TaskForce\Exception\StatusExistsException $e) {
     error_log("Ошибка статуса: " . $e->getMessage());
 }
 
