@@ -1,17 +1,13 @@
 {
-    "autoload": {
-        "psr-4": {
-            "TaskForce\\": "src/"
-        }
-    },
     "name": "igor-rusaleev/task-force",
     "description": "library",
-    "minimum-stability": "stable",
-    "license": "proprietary",
+    "type": "project",
+    "license": "MIT",
     "authors": [
         {
             "name": "Igor Rusaleev",
             "email": "igor.rusaleev@list.ru"
         }
-    ]
+    ],
+    "require": {}
 }
