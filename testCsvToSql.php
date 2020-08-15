@@ -6,13 +6,12 @@ use TaskForce\Exception\SourceFileException;
 
 use TaskForce\Import\ImportCsvToSql;
 
-try
-{
+try {
     ImportCsvToSql::createSql(__DIR__ . '/data/categories.csv',
         ['name', 'icon'],
         'categories');
     ImportCsvToSql::createSql(__DIR__ . '/data/cities.csv',
-        ['city','lat','long'],
+        ['city', 'lat', 'long'],
         'cities');
     ImportCsvToSql::createSql(__DIR__ . '/data/opinions.csv',
         ['dt_add', 'rate', 'description', 'task_id'],
@@ -29,14 +28,10 @@ try
     ImportCsvToSql::createSql(__DIR__ . '/data/users.csv',
         ['email', 'name', 'password', 'dt_add'],
         'users');
-}
-catch (SourceFileException $e)
-{
+} catch (SourceFileException $e) {
     error_log("Не удалось обработать csv файл: " . $e->getMessage());
     print("Не удалось обработать csv файл: " . $e->getMessage());
-}
-catch (FileFormatException $e)
-{
+} catch (FileFormatException $e) {
     error_log("Неверная форма файла импорта: " . $e->getMessage());
     print("Неверная форма файла импорта: " . $e->getMessage());
 }

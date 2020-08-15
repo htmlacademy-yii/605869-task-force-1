@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace TaskForce\Import;
+
 use TaskForce\Exception\FileFormatException;
 use TaskForce\Exception\SourceFileException;
 use TaskForce\Import\CsvReader;
@@ -22,7 +23,7 @@ class ImportCsvToSql
         $loader->checkFile();
         $records = $loader->getData();
         $sqlFileName = preg_replace('/csv$/', 'sql', $fileName);
-        $writer = new SqlWriter($sqlFileName, $columns,$tableName);
+        $writer = new SqlWriter($sqlFileName, $columns, $tableName);
         $writer->writeFile($records);
         print ("Файл " . $sqlFileName . " успешно создан");
         print ("\n");

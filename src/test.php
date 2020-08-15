@@ -2,6 +2,7 @@
 declare(strict_types=1);
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
+
 use TaskForce\Task;
 use TaskForce\Exception\StatusExistsException;
 
@@ -18,8 +19,7 @@ try {
      */
     $strategy = new  \TaskForce\Task($idPerformer, $idCustomer, $idUser, $status);
     $strategy->availableAction();
-}
-catch (\TaskForce\Exception\StatusExistsException $e) {
+} catch (\TaskForce\Exception\StatusExistsException $e) {
     error_log("Ошибка статуса: " . $e->getMessage());
 }
 

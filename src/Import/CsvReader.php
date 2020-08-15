@@ -31,40 +31,31 @@ class CsvReader
      */
     public function checkFile(): void
     {
-        if (!$this->validateColumns($this->columns))
-        {
+        if (!$this->validateColumns($this->columns)) {
             throw new FileFormatException("Заданы неверные заголовки столбцов");
         }
-        if (!file_exists($this->filename))
-        {
+        if (!file_exists($this->filename)) {
             throw new SourceFileException("Файл не существует");
         }
-        try
-        {
+        try {
             $this->fileObject = new SplFileObject($this->filename);
-        }
-        catch (\RuntimeException $exception)
-        {
+        } catch (\RuntimeException $exception) {
             throw new SourceFileException("Не удалось открыть файл на чтение");
         }
-        if ($this->fileObject->getExtension() !== 'csv')
-        {
+        if ($this->fileObject->getExtension() !== 'csv') {
             throw new SourceFileException("Недопустимое расширение файла");
         }
-        if ($this->fileObject->getSize() === 0)
-        {
+        if ($this->fileObject->getSize() === 0) {
             throw new SourceFileException("пустой файл");
         }
 
         $header_data = $this->getHeaderData();
 
-        if ($header_data !== $this->columns)
-        {
+        if ($header_data !== $this->columns) {
             throw new FileFormatException("Исходный файл не содержит необходимых столбцов");
         }
 
-        foreach ($this->getNextLine() as $line)
-        {
+        foreach ($this->getNextLine() as $line) {
             $this->result = $line;
         }
     }
@@ -91,9 +82,8 @@ class CsvReader
      */
     private function getNextLine(): ?iterable
     {
-        $result =null;
-        while (!$this->fileObject->eof())
-        {
+        $result = null;
+        while (!$this->fileObject->eof()) {
             yield $this->fileObject->fgetcsv();
         }
     }
@@ -102,21 +92,16 @@ class CsvReader
      * @param $columns
      * @return bool
      */
-    private function validateColumns ($columns): bool
+    private function validateColumns($columns): bool
     {
         $result = true;
-        if (count($columns))
-        {
-            foreach ($columns as $column)
-            {
-                if (!is_string($column))
-                {
+        if (count($columns)) {
+            foreach ($columns as $column) {
+                if (!is_string($column)) {
                     $result = false;
                 }
             }
-        }
-        else
-        {
+        } else {
             $result = false;
         }
         return $result;

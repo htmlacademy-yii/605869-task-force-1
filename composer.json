@@ -1,18 +1,18 @@
 {
-    "autoload": {
-        "psr-4": {
-            "TaskForce\\": "src/"
-        }
-    },
-    "name": "igor-rusaleev/task-force",
-    "description": "library",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Igor Rusaleev",
-            "email": "igor.rusaleev@list.ru"
-        }
-    ],
-    "require": {}
+  "autoload": {
+    "psr-4": {
+      "TaskForce\\": "src/"
+    }
+  },
+  "name": "igor-rusaleev/task-force",
+  "description": "library",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Igor Rusaleev",
+      "email": "igor.rusaleev@list.ru"
+    }
+  ],
+  "require": {}
 }

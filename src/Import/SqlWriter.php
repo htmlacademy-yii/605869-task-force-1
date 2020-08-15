@@ -32,25 +32,19 @@ class SqlWriter
      */
     public function writeFile(array $data): void
     {
-        try
-        {
+        try {
             $this->fileObject = new SplFileObject($this->filename, 'w');
-        }
-        catch (\RuntimeException $exception)
-        {
+        } catch (\RuntimeException $exception) {
             throw new SourceFileException("Не удалось открыть файл на чтение");
         }
 
         $text = "INSERT INTO " . $this->tableName . " (" . implode(",", $this->columns) . ") VALUES";
 
-        foreach ($data as $row)
-        {
-            if (is_array($row))
-            {
+        foreach ($data as $row) {
+            if (is_array($row)) {
                 $text .= "\n(";
                 $values = "";
-                for ($i =0; $i < count($row); $i++)
-                {
+                for ($i = 0; $i < count($row); $i++) {
                     $values .= "'" . $row[$i] . "'";
                 }
                 $values = substr($values, 0, strlen($values) - 1);
