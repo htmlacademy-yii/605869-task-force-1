@@ -1,0 +1,1 @@
+INSERT INTO users (email,name,password,dt_add) VALUES;

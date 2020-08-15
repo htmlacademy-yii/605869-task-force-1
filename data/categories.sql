@@ -1,0 +1,1 @@
+INSERT INTO categories (name,icon) VALUES;

@@ -1,0 +1,1 @@
+INSERT INTO profiles (address,bd,about,phone,skype,user_id,city_id) VALUES;

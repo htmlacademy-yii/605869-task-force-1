@@ -34,7 +34,7 @@ class SqlWriter
     {
         try
         {
-            $this->fileObject = new SplFileObject($this->filename);
+            $this->fileObject = new SplFileObject($this->filename, 'w');
         }
         catch (\RuntimeException $exception)
         {
@@ -58,7 +58,7 @@ class SqlWriter
             }
         }
 
-        $text = substr($text, 0, strlen($text) - 1 . ";");
+        $text = rtrim($text, ',') . ';';
         $this->fileObject->fwrite($text);
     }
 }

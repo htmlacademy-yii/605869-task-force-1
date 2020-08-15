@@ -1,0 +1,1 @@
+INSERT INTO tasks (dt_add,category_id,description,expire,name,address,budget,lat,long) VALUES;

@@ -1,4 +1,9 @@
 {
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    },
     "name": "igor-rusaleev/task-force",
     "description": "library",
     "type": "project",

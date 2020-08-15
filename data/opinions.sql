@@ -1,0 +1,1 @@
+INSERT INTO opinions (dt_add,rate,description,task_id) VALUES;
