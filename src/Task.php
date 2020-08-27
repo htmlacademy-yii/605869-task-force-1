@@ -160,13 +160,10 @@ class Task
      */
     public function getAvailableAction(): string
     {
-        $idPerformer = $this->idPerformer;
-        $idCustomer = $this->idCustomer;
-        $idUser = $this->idUser;
         $actions = $this->availableAction();
         foreach ($actions as $action) {
-            if ($action->checkingUserStatus($idPerformer, $idCustomer, $idUser)) {
-                return $action->internalNameOfAction();
+            if ($action->checkingUserStatus($this->idPerformer, $this->idCustomer, $this->idUser)) {
+                return $action->getActionCode();
             }
         }
     }

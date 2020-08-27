@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace TaskForce\Import;
+namespace TaskForce\Converter;
 
 use TaskForce\Exception\FileFormatException;
 use TaskForce\Exception\SourceFileException;
 use SplFileObject;
 
-class ImportCsvToSql
+class CsvToSqlConverter
 {
     /**
      * @var SplFileObject
@@ -72,40 +72,44 @@ class ImportCsvToSql
     public function checkFile(string $filename, array $columns): void
     {
         if (!$this->validateColumns($columns)) {
-            throw new FileFormatException("Заданы неверные заголовки столбцов");
+            throw new FileFormatException('Заданы неверные заголовки столбцов');
         }
 
         if (!file_exists($filename)) {
-            throw new SourceFileException("Файл (" . $filename . ") не существует");
+            throw new SourceFileException('Файл (' . $filename . ') не существует');
         }
 
         try {
             $this->fileObject = new SplFileObject($filename);
         } catch (\RuntimeException $exception) {
-            throw new SourceFileException("Не удалось открыть файл (" . $filename . ") на чтение");
+            throw new SourceFileException('Не удалось открыть файл (' . $filename . ') на чтение');
         }
 
         if ($this->fileObject->getExtension() !== 'csv') {
-            throw new SourceFileException("Недопустимое расширение файла (" . $filename . ")");
+            throw new SourceFileException('Недопустимое расширение файла (' . $filename . ')');
         }
 
         if ($this->fileObject->getSize() === 0) {
-            throw new SourceFileException("пустой файл(" . $filename . ")");
+            throw new SourceFileException('пустой файл(' . $filename . ')');
         }
 
-        $header_data = $this->getHeaderData();
+        $headerData = $this->getHeaderData();
 
-        if ($header_data !== $columns) {
-            throw new FileFormatException("Исходный файл(" . $filename . ") не содержит необходимых столбцов");
+        if ($headerData !== $columns) {
+            throw new FileFormatException('Исходный файл(' . $filename . ') не содержит необходимых столбцов');
         }
 
         foreach ($this->getNextLine() as $line) {
             $val = $line;
-            $dataString = implode(', ', array_map(function($item) {
-                return "'{$item}'";
+            if(implode($val) == null) {
+                continue;
+            } else {
+                $dataString = implode(', ', array_map(function($item) {
+                    return "'{$item}'";
                 }, $val));
-            $dataString = sprintf('(%s)', $dataString);
-            $this->data[] = $dataString;
+                $dataString = sprintf('(%s)', $dataString);
+                $this->data[] = $dataString;
+            }
         }
     }
 
@@ -170,7 +174,7 @@ class ImportCsvToSql
         try {
             $this->fileObjectSql = new SplFileObject($sqlFileName, 'w');
         } catch (\RuntimeException $exception) {
-            throw new SourceFileException("Не удалось открыть файл (" . $sqlFileName . ") на запись");
+            throw new SourceFileException('Не удалось открыть файл (' . $sqlFileName . ') на запись');
         }
 
 //        $value = array_map(function ($row) {
@@ -199,7 +203,7 @@ class ImportCsvToSql
 
         $this->fileObjectSql->fwrite($sqlQuery);
 
-        print ("Файл (" . $sqlFileName . ") успешно создан");
+        print ('Файл (' . $sqlFileName . ') успешно создан');
         print ("\n");
     }
 }
