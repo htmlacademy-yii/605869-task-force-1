@@ -177,22 +177,6 @@ class CsvToSqlConverter
             throw new SourceFileException('Не удалось открыть файл (' . $sqlFileName . ') на запись');
         }
 
-//        $value = array_map(function ($row) {
-//            $values = "";
-//            if (is_array($row)) {
-//                for ($i = 0; $i < count($row); $i++) {
-//                    $values .= "'" . $row[$i] . "'";
-//                }
-//            }
-//            return $values;
-//            },
-//            $this->data
-//        );
-//        foreach ($value as $val) {
-//            print ($val);
-//            print ("\n");
-//        }
-
 //        создание запроса на добавление в таблицу
         $sqlQuery = sprintf(
             "INSERT INTO %s (%s) " . PHP_EOL ."VALUES " . PHP_EOL . "%s;",
