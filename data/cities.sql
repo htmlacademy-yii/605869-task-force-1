@@ -1,4 +1,4 @@
-INSERT INTO data/citie (﻿city,lat,long) 
+INSERT INTO cities (﻿city,lat,long) 
 VALUES 
 ('Абаза', '52.6517296', '90.0885929'), 
 ('Абакан', '53.7223661', '91.4437792'), 

@@ -49,6 +49,7 @@ class CsvToSqlConverter
      * @var string
      */
     private $tableName;
+    private $filename;
 
     /**
      * ImportCsvToSql constructor.
@@ -60,7 +61,7 @@ class CsvToSqlConverter
         $this->filename = $filename;
         $this->columns = $columns;
         $this->sqlFileName = preg_replace('/csv$/', 'sql', $filename);
-        $this->tableName = rtrim($filename, '.csv');
+        $this->tableName = rtrim((ltrim($filename, 'data/')), '.csv') . 's';
     }
 
     /**
@@ -100,13 +101,14 @@ class CsvToSqlConverter
         }
 
         foreach ($this->getNextLine() as $line) {
-            $val = $line;
-            if(implode($val) == null) {
+            $values = $line;
+            if(implode($values) == null) {
                 continue;
             } else {
                 $dataString = implode(', ', array_map(function($item) {
                     return "'{$item}'";
-                }, $val));
+                    },
+                    $values));
                 $dataString = sprintf('(%s)', $dataString);
                 $this->data[] = $dataString;
             }
@@ -128,6 +130,7 @@ class CsvToSqlConverter
     private function getHeaderData(): array
     {
         $this->fileObject->rewind();
+
         return $this->fileObject->fgetcsv();
     }
 
@@ -140,6 +143,8 @@ class CsvToSqlConverter
         while (!$this->fileObject->eof()) {
             yield $this->fileObject->fgetcsv();
         }
+
+        return $result;
     }
 
     /**

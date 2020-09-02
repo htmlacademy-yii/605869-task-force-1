@@ -1,4 +1,4 @@
-INSERT INTO data/replie (dt_add,price,description,task_id,user_id) 
+INSERT INTO replies (dt_add,price,description,task_id,user_id) 
 VALUES 
 ('2019-05-09', '1', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.
 

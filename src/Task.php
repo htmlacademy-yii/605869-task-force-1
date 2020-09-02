@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TaskForce;
 
+use Exception;
 use TaskForce\Action\AbstractSelectingAction;
 use TaskForce\Action\Cancel;
 use TaskForce\Action\Done;
@@ -51,7 +52,7 @@ class Task
     public $status;
 
     /**
-     * @var array AbstractSelectingAction
+     * @var AbstractSelectingAction[]
      */
     public $actions = []; //действия которое можно выполнить из текущего статуса
 
@@ -63,10 +64,10 @@ class Task
     /**
      * Task constructor.
      * конструктор для получения id исполнителя и id заказчика
-     * @param $idPerformer int
-     * @param $idCustomer int
-     * @param $idUser int
-     * @param $status string
+     * @param int $idPerformer
+     * @param int $idCustomer
+     * @param int $idUser
+     * @param string $status
      * @throws StatusExistsException
      */
     public function __construct(int $idPerformer, int $idCustomer, int $idUser, string $status)
@@ -86,27 +87,21 @@ class Task
             ])) {
             $this->status = $status;
         } else {
-            throw new StatusExistsException("Неожиданный cтатус задачи " . $status);
+            throw new StatusExistsException('Неожиданный cтатус задачи ' . $status);
         }
     }
 
     /**
-     * @return string
      * метод возвращающий статус в который перейдет задание
+     * @return string|null
+     * @throws Exception
      */
-    public function getNextStatus(): string
+    public function getNextStatus(): ?string
     {
         $availableAction = $this->getAvailableAction();
-        if ($availableAction == 'action_respond') {
-            $status = self::STATUS_IN_WORK; // задание переходит в статус: в работе
-        } elseif ($availableAction == 'action_cancel') {
-            $status = self::STATUS_CANCEL; // задание переходит в статус: отменено
-        } elseif ($availableAction == 'action_refuse') {
-            $status = self::STATUS_FAILED; // задание переходит в статус: провалено
-        } elseif ($availableAction == 'action_done') {
-            $status = self::STATUS_PERFORMED; // задание переходит в статус: выполнено
-        }
-        return $status;
+        $map = $this->getActionStatusMap();
+
+        return $map[$availableAction] ?? null;
     }
 
     /**
@@ -141,7 +136,7 @@ class Task
     /**
      * Метод возвращающий возможные действия к текущему статусу
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function availableAction(): ?array
     {
@@ -150,15 +145,16 @@ class Task
         } elseif ($this->status == self::STATUS_IN_WORK) {
             return $actions = [new Done(), new Refuse()];
         } else {
-            throw new StatusExistsException("Неожиданный cтатус задачи " . $this->status);
+            throw new StatusExistsException('Неожиданный cтатус задачи ' . $this->status);
         }
     }
 
     /**
      * Метод возвращающий действие к текущему статусу
-     * @return string
+     * @return string|null
+     * @throws Exception
      */
-    public function getAvailableAction(): string
+    public function getAvailableAction(): ?string
     {
         $actions = $this->availableAction();
         foreach ($actions as $action) {
@@ -166,5 +162,20 @@ class Task
                 return $action->getActionCode();
             }
         }
+
+        return null;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getActionStatusMap()
+    {
+        return [
+            (new Respond())->getActionCode() => self::STATUS_IN_WORK,
+            (new Cancel())->getActionCode() => self::STATUS_CANCEL,
+            (new Refuse())->getActionCode() => self::STATUS_FAILED,
+            (new Done())->getActionCode() => self::STATUS_PERFORMED
+        ];
     }
 }

@@ -1,4 +1,4 @@
-INSERT INTO data/profile (address,bd,about,phone,skype,user_id,city_id) 
+INSERT INTO profiles (address,bd,about,phone,skype,user_id,city_id) 
 VALUES 
 ('38737 Moose Avenue', '1989-11-11', 'In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.', ''), 
 ('64574473047', 'high-level', '3', '25'), 

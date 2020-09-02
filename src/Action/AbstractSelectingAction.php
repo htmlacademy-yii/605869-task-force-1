@@ -12,11 +12,12 @@ namespace TaskForce\Action;
  */
 abstract class AbstractSelectingAction
 {
-    abstract public function getActionTitle(
-    ); //метод - для человекопонятного названия действия ("Отменить", "Откликнуться")
+    abstract public function getActionTitle();
+    //метод - для человекопонятного названия действия ("Отменить", "Откликнуться")
 
-    abstract public function getActionCode(
-    ); // метод - для машинного названия действия ("action_cancel", "action_respond")
+    abstract public function getActionCode();
+    // метод - для машинного названия действия ("action_cancel", "action_respond")
 
-    abstract public function checkingUserStatus($idPerformer, $idCustomer, $idUser); //метод для проверки прав
+    abstract public function checkingUserStatus($idPerformer, $idCustomer, $idUser);
+    //метод для проверки прав
 }

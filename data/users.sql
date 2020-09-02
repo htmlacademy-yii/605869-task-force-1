@@ -1,4 +1,4 @@
-INSERT INTO data/user (email,name,password,dt_add) 
+INSERT INTO users (email,name,password,dt_add) 
 VALUES 
 ('kbuttress0@1und1.de', 'Karrie Buttress', 'JcfoKBYAB4k', '2019-08-10'), 
 ('baymer1@hp.com', 'Bob Aymer', 'ZEE54kg', '2018-12-21'), 

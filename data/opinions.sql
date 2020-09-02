@@ -1,4 +1,4 @@
-INSERT INTO data/opinion (dt_add,rate,description,task_id) 
+INSERT INTO opinions (dt_add,rate,description,task_id) 
 VALUES 
 ('2019-08-19', '3', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
 
