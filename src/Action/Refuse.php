@@ -15,7 +15,7 @@ class Refuse extends AbstractSelectingAction
      * @return string|null
      * метод - для человекопонятного названия действия
      */
-    public function nameOfAction()
+    public function getActionTitle()
     {
         return 'Отказаться';
     }
@@ -24,7 +24,7 @@ class Refuse extends AbstractSelectingAction
      * @return string|null
      * метод - для машинного названия действия
      */
-    public function internalNameOfAction()
+    public function getActionCode()
     {
         return 'action_refuse';
     }
