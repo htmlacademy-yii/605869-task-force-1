@@ -5,24 +5,26 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "specialization".
+ * This is the model class for table "replies".
  *
  * @property int $id
+ * @property int $task_id
  * @property int $user_id
- * @property int $category_id
+ * @property float $price
+ * @property string $description
+ * @property string $dt_add
  *
- * @property Profiles[] $profiles
- * @property Category $category
+ * @property Task $task
  * @property User $user
  */
-class specialization extends \yii\db\ActiveRecord
+class Replies extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'specialization';
+        return 'replies';
     }
 
     /**
@@ -31,9 +33,12 @@ class specialization extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'category_id'], 'required'],
-            [['user_id', 'category_id'], 'integer'],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['task_id', 'user_id', 'price', 'description'], 'required'],
+            [['task_id', 'user_id'], 'integer'],
+            [['price'], 'number'],
+            [['description'], 'string'],
+            [['dt_add'], 'safe'],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -45,29 +50,22 @@ class specialization extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'task_id' => 'Task ID',
             'user_id' => 'User ID',
-            'category_id' => 'Category ID',
+            'price' => 'Price',
+            'description' => 'Description',
+            'dt_add' => 'Dt Add',
         ];
     }
 
     /**
-     * Gets query for [[Profiles]].
+     * Gets query for [[Task]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getProfiles()
+    public function getTask()
     {
-        return $this->hasMany(Profiles::className(), ['specialization_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Category]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategory()
-    {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+        return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
 
     /**

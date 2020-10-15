@@ -15,7 +15,7 @@ use Yii;
  * @property User $recipient
  * @property User $sender
  */
-class message extends \yii\db\ActiveRecord
+class Message extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

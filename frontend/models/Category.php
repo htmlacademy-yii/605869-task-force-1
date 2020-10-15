@@ -5,22 +5,23 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "status".
+ * This is the model class for table "category".
  *
  * @property int $id
  * @property string $name
- * @property string $translate
+ * @property string $icon
  *
+ * @property Specialization[] $specializations
  * @property Task[] $tasks
  */
-class status extends \yii\db\ActiveRecord
+class Category extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'status';
+        return 'category';
     }
 
     /**
@@ -29,8 +30,8 @@ class status extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'translate'], 'required'],
-            [['name', 'translate'], 'string', 'max' => 45],
+            [['name', 'icon'], 'required'],
+            [['name', 'icon'], 'string', 'max' => 45],
         ];
     }
 
@@ -42,8 +43,18 @@ class status extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'translate' => 'Translate',
+            'icon' => 'Icon',
         ];
+    }
+
+    /**
+     * Gets query for [[Specializations]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSpecializations()
+    {
+        return $this->hasMany(Specialization::className(), ['category_id' => 'id']);
     }
 
     /**
@@ -53,6 +64,6 @@ class status extends \yii\db\ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Task::className(), ['status_id' => 'id']);
+        return $this->hasMany(Task::className(), ['category_id' => 'id']);
     }
 }
