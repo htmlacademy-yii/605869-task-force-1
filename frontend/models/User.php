@@ -12,6 +12,7 @@ use Yii;
  * @property string $email
  * @property string $password
  * @property string $dt_add
+ * @property int $role
  *
  * @property Message[] $messages
  * @property Message[] $messages0
@@ -22,8 +23,13 @@ use Yii;
  * @property Task[] $tasks
  * @property Task[] $tasks0
  */
-class user extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord
 {
+    /**
+     * константы ролей
+     */
+    const ROLE_EXECUTOR = '1'; // роль: исполнитель
+    const ROLE_CUSTOMER = '2'; // роль: заказчик
     /**
      * {@inheritdoc}
      */
@@ -38,8 +44,9 @@ class user extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'password'], 'required'],
+            [['name', 'email', 'password', 'role'], 'required'],
             [['dt_add'], 'safe'],
+            [['role'], 'integer'],
             [['name', 'email'], 'string', 'max' => 45],
             [['password'], 'string', 'max' => 64],
         ];
@@ -56,6 +63,7 @@ class user extends \yii\db\ActiveRecord
             'email' => 'Email',
             'password' => 'Password',
             'dt_add' => 'Dt Add',
+            'role' => 'Role',
         ];
     }
 
