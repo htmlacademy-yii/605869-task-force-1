@@ -33,7 +33,7 @@ use Yii;
  * @property User $executor
  * @property Status $status
  */
-class task extends \yii\db\ActiveRecord
+class Task extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

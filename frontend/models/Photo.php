@@ -13,7 +13,7 @@ use Yii;
  *
  * @property User $user
  */
-class photo extends \yii\db\ActiveRecord
+class Photo extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

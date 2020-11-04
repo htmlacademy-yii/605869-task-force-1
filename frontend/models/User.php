@@ -12,6 +12,7 @@ use Yii;
  * @property string $email
  * @property string $password
  * @property string $dt_add
+ * @property int $role
  *
  * @property Message[] $messages
  * @property Message[] $messages0
@@ -19,13 +20,12 @@ use Yii;
  * @property Profiles[] $profiles
  * @property Replies[] $replies
  * @property Specialization[] $specializations
- * @property Task[] $tasks
- * @property Task[] $tasks0
+ * @property Task[] $ownedTasks
+ * @property Task[] $executedTasks
  */
-class user extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
+    /**     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -38,8 +38,9 @@ class user extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'password'], 'required'],
+            [['name', 'email', 'password', 'role'], 'required'],
             [['dt_add'], 'safe'],
+            [['role'], 'integer'],
             [['name', 'email'], 'string', 'max' => 45],
             [['password'], 'string', 'max' => 64],
         ];
@@ -56,6 +57,7 @@ class user extends \yii\db\ActiveRecord
             'email' => 'Email',
             'password' => 'Password',
             'dt_add' => 'Dt Add',
+            'role' => 'Role',
         ];
     }
 
@@ -96,7 +98,7 @@ class user extends \yii\db\ActiveRecord
      */
     public function getProfiles()
     {
-        return $this->hasMany(Profiles::className(), ['user_id' => 'id']);
+        return $this->hasOne(Profiles::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -124,7 +126,7 @@ class user extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getOwnedTasks()
     {
         return $this->hasMany(Task::className(), ['customer_id' => 'id']);
     }
@@ -134,8 +136,13 @@ class user extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getExecutedTasks()
     {
         return $this->hasMany(Task::className(), ['executor_id' => 'id']);
+    }
+
+    function getAvatar()
+    {
+        return $this->profiles->avatar ?? '/img/account.png';
     }
 }
