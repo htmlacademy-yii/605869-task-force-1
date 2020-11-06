@@ -38,11 +38,11 @@ class Task extends \yii\db\ActiveRecord
     /**
      * константы статусов заданий
      */
-    const STATUS_NEW = '1'; //статус нового задания
-    const STATUS_CANCEL = '2'; //статус отмененного задания
-    const STATUS_IN_WORK = '3'; //статус задания находящегося в работе
-    const STATUS_COMPLETED = '4'; //статус выполненного задания
-    const STATUS_FAILED = '5'; //статус проваленного задания
+    const STATUS_NEW = 1; //статус нового задания
+    const STATUS_CANCEL = 2; //статус отмененного задания
+    const STATUS_IN_WORK = 3; //статус задания находящегося в работе
+    const STATUS_COMPLETED = 4; //статус выполненного задания
+    const STATUS_FAILED = 5; //статус проваленного задания
 
     /**
      * {@inheritdoc}
