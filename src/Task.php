@@ -21,11 +21,11 @@ class Task
     /**
      * константы статусов заданий
      */
-    const STATUS_NEW = 'new'; //статус нового задания
-    const STATUS_CANCEL = 'cancel'; //статус отмененного задания
-    const STATUS_IN_WORK = 'in_work'; //статус задания находящегося в работе
-    const STATUS_PERFORMED = 'performed'; //статус выполненного задания
-    const STATUS_FAILED = 'failed'; //статус проваленного задания
+    const STATUS_NEW = '1'; //статус нового задания
+    const STATUS_CANCEL = '2'; //статус отмененного задания
+    const STATUS_IN_WORK = '3'; //статус задания находящегося в работе
+    const STATUS_COMPLETED = '4'; //статус выполненного задания
+    const STATUS_FAILED = '5'; //статус проваленного задания
 
     /**
      * id исполнителя
@@ -83,7 +83,7 @@ class Task
                 self::STATUS_FAILED,
                 self::STATUS_IN_WORK,
                 self::STATUS_NEW,
-                self::STATUS_PERFORMED
+                self::STATUS_COMPLETED
             ])) {
             $this->status = $status;
         } else {
@@ -114,7 +114,7 @@ class Task
             self::STATUS_NEW => 'Новый',
             self::STATUS_CANCEL => 'Отменен',
             self::STATUS_IN_WORK => 'В работе',
-            self::STATUS_PERFORMED => 'Выполнено',
+            self::STATUS_COMPLETED => 'Выполнено',
             self::STATUS_FAILED => 'Провалено'
         ];
     }
@@ -175,7 +175,7 @@ class Task
             (new Respond())->getActionCode() => self::STATUS_IN_WORK,
             (new Cancel())->getActionCode() => self::STATUS_CANCEL,
             (new Refuse())->getActionCode() => self::STATUS_FAILED,
-            (new Done())->getActionCode() => self::STATUS_PERFORMED
+            (new Done())->getActionCode() => self::STATUS_COMPLETED
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Task;
 use frontend\models\User;
 
 /**
@@ -17,6 +16,7 @@ class UsersController extends \yii\web\Controller
     public function actionIndex()
     {
         $users = User::find()->where(['role' => '1'])->all();
+
         return $this->render('index', [
             'users' => $users,
         ]);

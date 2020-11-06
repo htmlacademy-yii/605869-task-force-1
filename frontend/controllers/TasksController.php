@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use TaskForce\Task;
+use frontend\models\Task;
 
 /**
  * Class tasksController
@@ -15,7 +15,7 @@ class TasksController extends \yii\web\Controller
      */
     public function actionIndex()
     {
-        $tasks = \frontend\models\Task::find()->where(['status_id' => 1])->all();
+        $tasks = Task::find()->where(['status_id' => Task::STATUS_NEW])->all();
 
         return $this->render('index', [
             'tasks' => $tasks,
