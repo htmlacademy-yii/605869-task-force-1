@@ -5,24 +5,22 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "opinions".
+ * This is the model class for table "file".
  *
  * @property int $id
- * @property string|null $dt_add
- * @property int|null $rate
+ * @property string $name
  * @property int $task_id
- * @property string|null $comment
  *
  * @property Task $task
  */
-class opinions extends \yii\db\ActiveRecord
+class File extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'opinions';
+        return 'file';
     }
 
     /**
@@ -31,10 +29,9 @@ class opinions extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dt_add'], 'safe'],
-            [['rate', 'task_id'], 'integer'],
-            [['task_id'], 'required'],
-            [['comment'], 'string'],
+            [['name', 'task_id'], 'required'],
+            [['task_id'], 'integer'],
+            [['name'], 'string', 'max' => 128],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
@@ -46,10 +43,8 @@ class opinions extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'dt_add' => 'Dt Add',
-            'rate' => 'Rate',
+            'name' => 'Name',
             'task_id' => 'Task ID',
-            'comment' => 'Comment',
         ];
     }
 
