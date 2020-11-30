@@ -3,6 +3,8 @@
 namespace frontend\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "user".
@@ -17,13 +19,13 @@ use Yii;
  * @property Message[] $messages
  * @property Message[] $messages0
  * @property Photo[] $photos
- * @property Profiles[] $profiles
+ * @property Profiles $profiles
  * @property Replies[] $replies
  * @property Specialization[] $specializations
  * @property Task[] $ownedTasks
  * @property Task[] $executedTasks
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord
 {
     /**     * {@inheritdoc}
      */
@@ -64,7 +66,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Messages]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getMessages()
     {
@@ -74,7 +76,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Messages0]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getMessages0()
     {
@@ -84,7 +86,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Photos]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPhotos()
     {
@@ -94,7 +96,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Profiles]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getProfiles()
     {
@@ -104,7 +106,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Replies]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getReplies()
     {
@@ -114,7 +116,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Specializations]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSpecializations()
     {
@@ -124,7 +126,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Tasks]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getOwnedTasks()
     {
@@ -134,7 +136,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Tasks0]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getExecutedTasks()
     {
@@ -145,4 +147,10 @@ class User extends \yii\db\ActiveRecord
     {
         return $this->profiles->avatar ?? '/img/account.png';
     }
+
+    /**
+     * Gets query for [[Specialization]].
+     *
+     * @return ActiveQuery
+     */
 }
