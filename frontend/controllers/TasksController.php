@@ -14,16 +14,6 @@ use yii\web\Controller;
 class TasksController extends Controller
 {
     /**
-     * @param Action $action
-     * @return bool
-     */
-    public function beforeAction($action)
-    {
-        $this->enableCsrfValidation = false;
-        return true;
-    }
-
-    /**
      * @return string
      */
     public function actionIndex()
