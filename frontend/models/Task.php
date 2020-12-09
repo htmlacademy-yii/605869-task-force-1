@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "task".
@@ -33,7 +34,7 @@ use Yii;
  * @property User $executor
  * @property Status $status
  */
-class Task extends \yii\db\ActiveRecord
+class Task extends ActiveRecord
 {
     /**
      * константы статусов заданий
@@ -100,7 +101,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Files]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getFiles()
     {
@@ -110,7 +111,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Opinions]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getOpinions()
     {
@@ -120,7 +121,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Replies]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getReplies()
     {
@@ -130,7 +131,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Category]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCategory()
     {
@@ -140,7 +141,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[City]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCity()
     {
@@ -150,7 +151,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Customer]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCustomer()
     {
@@ -160,7 +161,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Executor]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getExecutor()
     {
@@ -170,7 +171,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Status]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getStatus()
     {

@@ -2,24 +2,27 @@
 
 namespace frontend\controllers;
 
-use frontend\models\User;
+use frontend\models\UserFiltersForm;
+use Yii;
+use yii\base\Action;
+use yii\web\Controller;
 
 /**
  * Class usersController
  * @package frontend\controllers
  */
-class UsersController extends \yii\web\Controller
+class UsersController extends Controller
 {
     /**
      * @return string
      */
     public function actionIndex()
     {
-        $users = User::find()->where(['role' => '1'])->all();
+        $filters = new UserFiltersForm();
+        $filters->load(Yii::$app->request->post());
+        $users = $filters->getList();
 
-        return $this->render('index', [
-            'users' => $users,
-        ]);
+        return $this->render('index', ['users' => $users, 'filters' => $filters]);
     }
 
 }
