@@ -1,102 +1,105 @@
 <?php
 
-namespace frontend\models;
+    namespace frontend\models;
 
-use Yii;
-
-/**
- * This is the model class for table "profiles".
- *
- * @property int $id
- * @property string|null $address
- * @property string|null $bd
- * @property string|null $about
- * @property string|null $phone
- * @property string|null $telegram
- * @property int|null $counter_failed_tasks
- * @property int $specialization_id
- * @property int $city_id
- * @property string|null $avatar
- * @property int $user_id
- *
- * @property City $city
- * @property Specialization $specialization
- * @property User $user
- */
-class Profiles extends \yii\db\ActiveRecord
-{
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'profiles';
-    }
+    use yii\db\ActiveQuery;
+    use yii\db\ActiveRecord;
 
     /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['bd'], 'safe'],
-            [['about'], 'string'],
-            [['counter_failed_tasks', 'specialization_id', 'city_id', 'user_id'], 'integer'],
-            [['specialization_id', 'city_id', 'user_id'], 'required'],
-            [['address', 'phone', 'telegram', 'avatar'], 'string', 'max' => 45],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
-            [['specialization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Specialization::className(), 'targetAttribute' => ['specialization_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'address' => 'Address',
-            'bd' => 'Bd',
-            'about' => 'About',
-            'phone' => 'Phone',
-            'telegram' => 'Telegram',
-            'counter_failed_tasks' => 'Counter Failed Tasks',
-            'specialization_id' => 'Specialization ID',
-            'city_id' => 'City ID',
-            'avatar' => 'Avatar',
-            'user_id' => 'User ID',
-        ];
-    }
-
-    /**
-     * Gets query for [[City]].
+     * This is the model class for table "profiles".
      *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCity()
-    {
-        return $this->hasOne(City::className(), ['id' => 'city_id']);
-    }
-
-    /**
-     * Gets query for [[Specialization]].
+     * @property int $id
+     * @property string|null $address
+     * @property string|null $bd
+     * @property string|null $about
+     * @property string|null $phone
+     * @property string|null $email
+     * @property int|null $counter_failed_tasks
+     * @property int $specialization_id
+     * @property int $city_id
+     * @property string|null $avatar
+     * @property int $user_id
+     * @property string|null $skype
      *
-     * @return \yii\db\ActiveQuery
+     * @property City $city
+     * @property Specialization $specialization
+     * @property User $user
      */
-    public function getSpecialization()
+    class Profiles extends ActiveRecord
     {
-        return $this->hasOne(Specialization::className(), ['id' => 'specialization_id']);
-    }
+        /**
+         * {@inheritdoc}
+         */
+        public static function tableName(): string
+        {
+            return 'profiles';
+        }
 
-    /**
-     * Gets query for [[User]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        /**
+         * {@inheritdoc}
+         */
+        public function rules(): array
+        {
+            return [
+                [['bd'], 'safe'],
+                [['about'], 'string'],
+                [['counter_failed_tasks', 'specialization_id', 'city_id', 'user_id'], 'integer'],
+                [['specialization_id', 'city_id', 'user_id'], 'required'],
+                [['address', 'phone', 'email', 'avatar', 'skype'], 'string', 'max' => 45],
+                [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+                [['specialization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Specialization::className(), 'targetAttribute' => ['specialization_id' => 'id']],
+                [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            ];
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function attributeLabels(): array
+        {
+            return [
+                'id' => 'ID',
+                'address' => 'Address',
+                'bd' => 'Bd',
+                'about' => 'About',
+                'phone' => 'Phone',
+                'email' => 'Email',
+                'counter_failed_tasks' => 'Counter Failed Tasks',
+                'specialization_id' => 'Specialization ID',
+                'city_id' => 'City ID',
+                'avatar' => 'Avatar',
+                'user_id' => 'User ID',
+                'skype' => 'Skype',
+            ];
+        }
+
+        /**
+         * Gets query for [[City]].
+         *
+         * @return ActiveQuery
+         */
+        public function getCity(): ActiveQuery
+        {
+            return $this->hasOne(City::className(), ['id' => 'city_id']);
+        }
+
+        /**
+         * Gets query for [[Specialization]].
+         *
+         * @return ActiveQuery
+         */
+        public function getSpecialization(): ActiveQuery
+        {
+            return $this->hasOne(Specialization::className(), ['id' => 'specialization_id']);
+        }
+
+        /**
+         * Gets query for [[User]].
+         *
+         * @return ActiveQuery
+         */
+        public function getUser(): ActiveQuery
+        {
+            return $this->hasOne(User::className(), ['id' => 'user_id']);
+        }
     }
-}
