@@ -9,6 +9,7 @@
     use frontend\models\User;
     use frontend\models\UserFiltersForm;
     use frontend\widgets\LastActivityWidget;
+    use frontend\widgets\StarRatingWidget;
     use yii\helpers\BaseUrl;
     use yii\helpers\Html;
     use yii\widgets\ActiveForm;
@@ -37,69 +38,35 @@
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <a href="#"><img src="<?= $user->getAvatar(); ?>" width="65" height="65" alt="аватар" /></a>
-                    <?php
-                        if ($user->executedTasks)
-                        {
-                            ?>
-                            <span><?= count($user->executedTasks); ?> <?= WordHelper::pluralForm($user->getExecutedTasks()->count(), 'задание', 'задания', 'заданий'); ?></span>
-                            <?php
-                        } else
-                        {
-                            ?>
-                            <span><?= 'нет заданий'; ?></span>
-                            <?php
-                        }
-                        if (count($user->opinions))
-                        {
-                            if (count($user->opinions) == 3 || count($user->opinions) == 4)
-                            {
-                                ?>
-                                <span><?= count($user->opinions); ?> отзыва</span>
-                                <?php
-                            } else
-                            {
-                                ?>
-                                <span><?= count($user->opinions); ?> <?= WordHelper::pluralForm($user->getExecutedTasks()->count(), 'отзыв', 'отзыва', 'отзывов'); ?></span>
-                                <?php
-                            }
-                        } else
-                        {
-                            ?>
-                            <span><?= 'нет отзывов'; ?></span>
-                            <?php
-                        }
-                    ?>
+                    <?php if ($user->executedTasks): ?>
+                    <span><?= count($user->executedTasks); ?> <?= WordHelper::pluralForm($user->getExecutedTasks()->count(), 'задание', 'задания', 'заданий'); ?></span>
+                    <?php else: ?>
+                    <span><?= 'нет заданий'; ?></span>
+                    <?php endif; ?>
+
+                    <?php if (count($user->opinions)): ?>
+
+                        <?php if (count($user->opinions) == 3 || count($user->opinions) == 4): ?>
+                            <span><?= count($user->opinions); ?> отзыва</span>
+                        <?php else: ?>
+                            <span><?= count($user->opinions); ?> <?= WordHelper::pluralForm($user->getExecutedTasks()->count(), 'отзыв', 'отзыва', 'отзывов'); ?></span>
+                        <?php endif; ?>
+
+                    <?php else: ?>
+                        <span><?= 'нет отзывов'; ?></span>
+                    <?php endif; ?>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
                     <p class="link-name"><a href="<?= BaseUrl::to(['users/view/', 'id' => $user->id]); ?>" class="link-regular"><?= $user->name; ?></a></p>
-                    <?php
-                        for ($x = 0; $x++ < round($user->getRating());)
-                        {
-                            ?>
-                            <span></span>
-                            <?php
-                        }
-                    ?>
-                    <?php
-                        for ($x = round($user->getRating()); $x++ < 5;)
-                        {
-                            ?>
-                            <span class="star-disabled"></span>
-                            <?php
-                        }
-                    ?>
-                    <?php
-                        if ($user->getRating())
-                        {
-                    ?>
-                            <b><?= round($user->getRating(), 2); ?></b>
-                    <?php
-                        }
-                    ?>
+<!--                    звезды рейтинга-->
+                    <?= StarRatingWidget::widget(['user' => $user]); ?>
+                    <?php if ($user->getRating()): ?>
+                    <b><?= round($user->getRating(), 2); ?></b>
+                    <?php endif; ?>
                     <p class="user__search-content"><?= $user->getProfiles()->about ?? null; ?></p>
                 </div>
                 <span class="new-task__time">
-                Был на сайте:<br><?= LastActivityWidget::widget(['user'=>$user]); ?>
+                Был на сайте <?= LastActivityWidget::widget(['user'=>$user]); ?>
             </span>
             </div>
             <div class="link-specialization user__search-link--bottom">
