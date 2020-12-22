@@ -31,7 +31,7 @@
         {
             $user = User::findOne($id);
             if (!$user) {
-                throw new NotFoundHttpException("Задание с ID {$id} не существует!");
+                throw new NotFoundHttpException("Пользователь не найден");
             }
 
             return $this->render('view', ['user' => $user]);

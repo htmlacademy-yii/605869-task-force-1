@@ -2,7 +2,7 @@
 
 namespace frontend\models;
 
-use app\models\FavoriteUser;
+use frontend\models\FavoriteUser;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

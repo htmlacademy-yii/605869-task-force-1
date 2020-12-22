@@ -84,16 +84,6 @@
         }
 
         /**
-         * Gets query for [[Specialization]].
-         *
-         * @return ActiveQuery
-         */
-        public function getSpecialization(): ActiveQuery
-        {
-            return $this->hasOne(Specialization::className(), ['id' => 'specialization_id']);
-        }
-
-        /**
          * Gets query for [[User]].
          *
          * @return ActiveQuery

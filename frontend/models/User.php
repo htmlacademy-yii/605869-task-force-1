@@ -169,10 +169,6 @@
             return (new \DateTime())->diff(new \DateTime($this->profiles->bd))->y;
         }
 
-        public function getLastActivity()
-        {
-            return $this->last_activity_datetime;
-        }
 
         /**
          * @return bool|int|string|null
