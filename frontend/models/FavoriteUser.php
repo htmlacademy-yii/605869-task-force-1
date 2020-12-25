@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace frontend\models;
 
 use frontend\models\User;
 use yii\db\ActiveQuery;

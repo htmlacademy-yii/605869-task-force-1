@@ -1,18 +1,16 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
+    /* @var $this View */
+    /* @var $content string */
 
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use frontend\assets\AppAsset;
-use frontend\assets\TaskForceAsset;
-use common\widgets\Alert;
+    use yii\helpers\Html;
+    use frontend\assets\AppAsset;
+    use frontend\assets\TaskForceAsset;
+    use yii\web\View;
 
-AppAsset::register($this);
-TaskForceAsset::register($this);
+
+    AppAsset::register($this);
+    TaskForceAsset::register($this);
 
 ?>
 <?php $this->beginPage() ?>
@@ -33,7 +31,7 @@ TaskForceAsset::register($this);
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
-                <a href="index.html">
+                <a href="<?= Yii::$app->homeUrl; ?>">
                     <svg class="page-header__logo-image" id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
                         <title>taskforce_logo2-01</title>
                         <g>
@@ -63,10 +61,10 @@ TaskForceAsset::register($this);
             <div class="header__nav">
                 <ul class="header-nav__list site-list">
                     <li class="site-list__item">
-                        <a href="#">Задания</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/index']); ?>">Задания</a>
                     </li>
                     <li class="site-list__item">
-                        <a href="#">Исполнители</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
                     </li>
                     <li class="site-list__item">
                         <a href="#">Создать задание</a>
@@ -146,13 +144,13 @@ TaskForceAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="">Задания</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/index']); ?>">Задания</a>
                     </li>
                     <li class="links__item">
                         <a href="">Мой профиль</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Исполнители</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
                         <a href="">Регистрация</a>
