@@ -153,7 +153,7 @@
                         <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Регистрация</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['registration/index']); ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>

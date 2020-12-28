@@ -15,6 +15,19 @@
     use yii\widgets\ActiveForm;
 
     $this->title = 'Task Force';
+
+$searchFormConfig = [
+    'options'=>
+        [
+            'class'=>'search-task__form',
+            'name'=>'users',
+            'method'=>'post'
+        ], 'fieldConfig'=>
+        [
+            'template' => "{input}\n{label}",
+            'options' => ['tag' => false]
+        ]
+];
 ?>
 
 <section class="user__search">
@@ -79,21 +92,7 @@
 </section>
 <section  class="search-task">
     <div class="search-task__wrapper">
-        <?php $form = ActiveForm::begin(
-            [
-                'options'=>
-                    [
-                        'class'=>'search-task__form',
-                        'name'=>'users',
-                        'method'=>'post'
-                    ], 'fieldConfig'=>
-                [
-                    'template' => "{input}\n{label}",
-                    'options' => ['tag' => false]
-                ]
-            ]);
-        ?>
-
+        <?php $form = ActiveForm::begin($searchFormConfig); ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
             <?= $form->field($filters, 'categories', ['template' => "{input}",])

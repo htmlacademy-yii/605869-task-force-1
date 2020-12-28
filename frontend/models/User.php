@@ -44,7 +44,7 @@
         public function rules()
         {
             return [
-                [['name', 'email', 'password', 'role'], 'required'],
+                [['name', 'email', 'password'], 'required'],
                 [['dt_add'], 'safe'],
                 [['role'], 'integer'],
                 [['name', 'email'], 'string', 'max' => 45],
