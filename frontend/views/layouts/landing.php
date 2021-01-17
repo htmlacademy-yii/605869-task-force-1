@@ -2,15 +2,23 @@
 
 /* @var $this View */
 /* @var $content string */
+/* @var $model UserLoginForm */
 
+use frontend\models\UserLoginForm;
 use yii\helpers\Html;
 use frontend\assets\AppAsset;
 use frontend\assets\TaskForceAsset;
 use yii\web\View;
-
+use yii\widgets\ActiveForm;
+	
 AppAsset::register($this);
 TaskForceAsset::register($this);
 
+$formConfig = [
+    'method' => 'post',
+    'action' => '/landing/login',
+    'enableAjaxValidation' => true,
+];
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -23,15 +31,14 @@ TaskForceAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="landing">
 <?php $this->beginBody() ?>
-
 <div class="table-layout">
-    <header class="page-header">
-        <div class="main-container page-header__container">
-            <div class="page-header__logo">
-                <a href="<?= Yii::$app->urlManager->createUrl(['landing/index']); ?>">
-                    <svg class="page-header__logo-image" id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
+    <header class=" page-header--index">
+        <div class="main-container page-header__container page-header__container--index">
+            <div class="page-header__logo--index">
+                <a>
+                    <svg class="logo-image--index" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
                         <title>taskforce_logo2-01</title>
                         <g>
                             <g>
@@ -56,77 +63,20 @@ TaskForceAsset::register($this);
                         </g>
                     </svg>
                 </a>
+               <p>Работа там, где ты!</p>
             </div>
-            <div class="header__nav">
-                <ul class="header-nav__list site-list">
-                    <li class="site-list__item">
-                        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/index']); ?>">Задания</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Создать задание</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a>Мой профиль</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
-            </div>
-            <div class="header__lightbulb"></div>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-            </div>
-            <div class="header__account">
-                <a class="header__account-photo">
-                    <img src="./img/user-photo.png"
-                         width="43" height="44"
-                         alt="Аватар пользователя">
+            <div class="header__account--index">
+                <a href="#" class="header__account-enter open-modal" data-for="enter-form">
+                    <span>Вход</span></a>
+                или
+                <a href="<?= Yii::$app->urlManager->createUrl(['registration/index']); ?>" class="header__account-registration">
+                    Регистрация
                 </a>
-                <span class="header__account-name">
-                 Василий
-                </span>
-            </div>
-            <div class="account__pop-up">
-                <ul class="account__pop-up-list">
-                    <li>
-                        <a href="#">Мои задания</a>
-                    </li>
-                    <li>
-                        <a href="#">Настройки</a>
-                    </li>
-                    <li>
-                        <a href="#">Выход</a>
-                    </li>
-                </ul>
             </div>
         </div>
     </header>
-    <main class="page-main">
-        <div class="main-container page-container">
-            <?= $content; ?>
-        </div>
+    <main>
+        <?= $content; ?>
     </main>
     <footer class="page-footer">
         <div class="main-container page-footer__container">
@@ -163,17 +113,67 @@ TaskForceAsset::register($this);
                 </ul>
             </div>
             <div class="page-footer__copyright">
-                <a>
+                <a href="https://htmlacademy.ru">
                     <img class="copyright-logo"
-                         src="./img/academy-logo.png"
+                         src="/img/academy-logo.png"
                          width="185" height="63"
                          alt="Логотип HTML Academy">
                 </a>
             </div>
         </div>
     </footer>
+    <section class="modal enter-form form-modal" id="enter-form">
+        <h2>Вход на сайт</h2>
+        <?php $form = ActiveForm::begin($formConfig) ?>
+        <p>
+<!--            --><?//= Html::activeLabel($model, 'email', [
+//                'class' => 'form-modal-description',
+//                'for' => "enter-email"
+//            ]); ?>
+            <?= $form->field($model, 'username', [
+                'inputOptions' => [
+                    'class' => 'enter-form-email input input-middle',
+//                    'rows' => '1',
+//                    'type' => "email",
+//                    'name' => 'enter-email',
+//                    'id' => 'enter-email',
+                    ]
+            ])->textInput(); ?>
+        </p>
+        <p>
+<!--            --><?//= Html::activeLabel($model, 'password', [
+//                'class' => 'form-modal-description',
+//                'for' => "enter-password"
+//            ]); ?>
+            <?= $form->field($model, 'password', [
+                'inputOptions' => [
+                    'class' => 'enter-form-email input input-middle',
+//                    'rows' => '1',
+//                    'type' => "password",
+//                    'name' => 'enter-password',
+//                    'id' => 'enter-password',
+                    ]
+            ])->passwordInput(); ?>
+        </p>
+        <?= Html::submitButton('Войти', ['class' => 'button']); ?>
+        
+        <?php ActiveForm::end(); ?>
+        
+<!--        <form action="#" method="post">-->
+<!--            <p>-->
+<!--                <label class="form-modal-description" for="enter-email">Email</label>-->
+<!--                <input class="enter-form-email input input-middle" type="email" name="enter-email" id="enter-email">-->
+<!--            </p>-->
+<!--            <p>-->
+<!--                <label class="form-modal-description" for="enter-password">Пароль</label>-->
+<!--                <input class="enter-form-email input input-middle" type="password" name="enter-email" id="enter-password">-->
+<!--            </p>-->
+<!--            <button class="button" type="submit">Войти</button>-->
+<!--        </form>-->
+        <button class="form-modal-close" type="button">Закрыть</button>
+    </section>
 </div>
-
+<div class="overlay"></div>
 <?php $this->endBody() ?>
 </body>
 </html>

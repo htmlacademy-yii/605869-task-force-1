@@ -6,8 +6,8 @@
 use frontend\models\Task;
 use frontend\models\TaskFiltersForm;
 use frontend\widgets\EstimatedTimeWidget;
-    use yii\helpers\BaseUrl;
-    use yii\helpers\Html;
+use yii\helpers\BaseUrl;
+use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Task Force';

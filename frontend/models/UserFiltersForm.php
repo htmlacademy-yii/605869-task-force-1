@@ -2,7 +2,6 @@
 
 namespace frontend\models;
 
-use frontend\models\FavoriteUser;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

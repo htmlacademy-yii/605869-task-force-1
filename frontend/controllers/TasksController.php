@@ -12,7 +12,7 @@ use yii\web\NotFoundHttpException;
  * Class tasksController
  * @package frontend\controllers
  */
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
 	/**
 	 * @return string

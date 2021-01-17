@@ -12,7 +12,7 @@ use yii\web\NotFoundHttpException;
  * Class usersController
  * @package frontend\controllers
  */
-class UsersController extends Controller
+class UsersController extends SecuredController
 {
 	/**
 	 * @return string
