@@ -5,8 +5,8 @@ namespace frontend\controllers;
 use frontend\models\User;
 use frontend\models\UserFiltersForm;
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 
 /**
  * Class usersController
@@ -21,11 +21,13 @@ class UsersController extends SecuredController
 	{
 		$filters = new UserFiltersForm();
 		$filters->load(Yii::$app->request->post());
-		$users = $filters->getList();
 
-		return $this->render('index', ['users' => $users, 'filters' => $filters]);
+		return $this->render('index', [
+			'dataProvider' => $filters->getDataProvider(),
+			'filters' => $filters
+		]);
 	}
-
+	
 	public function actionView($id)
 	{
 		$user = User::findOne($id);

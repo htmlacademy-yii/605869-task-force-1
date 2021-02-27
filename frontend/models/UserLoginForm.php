@@ -2,7 +2,7 @@
 
 namespace frontend\models;
 
-use common\models\LoginForm;
+use Yii;
 use yii\base\Model;
 
 class UserLoginForm extends Model
@@ -24,6 +24,7 @@ class UserLoginForm extends Model
 		return [
             [['email', 'password'], 'safe'],
             [['email', 'password'], 'required'],
+            [['email'], 'email'],
             ['password', 'validatePassword'],
         ];
 	}
@@ -38,10 +39,20 @@ class UserLoginForm extends Model
 		}
 	}
 	
+	public function login()
+	{
+		if ($this->validate()) {
+			return Yii::$app->user->login($this->getUser());
+		}
+	}
+	
+	/**
+	 * @return User|null
+	 */
 	public function getUser()
 	{
 		if ($this->_user === null) {
-			$this->_user = User::findOne(['email' => $this->email]);
+			$this->_user = User::find()->where(['email' => $this->email])->one();
 		}
 		
 		return $this->_user;

@@ -1,16 +1,19 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $filters TaskFiltersForm*/
-/* @var $tasks Task[] */
+/* @var $dataProvider ActiveDataProvider */
+/* @var $task Task */
 
 use frontend\models\Task;
 use frontend\models\TaskFiltersForm;
 use frontend\widgets\EstimatedTimeWidget;
+use yii\data\ActiveDataProvider;
 use yii\helpers\BaseUrl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
-$this->title = 'Task Force';
+use yii\widgets\LinkPager;
+	
+	$this->title = 'Task Force';
 
 $searchFormConfig = [
     'options'=>[
@@ -28,7 +31,7 @@ $searchFormConfig = [
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <?php foreach ($tasks as $task): ?>
+        <?php foreach ($dataProvider->getModels() as $task): ?>
             <div class="new-task__card">
                 <div class="new-task__title">
                     <a href="<?= BaseUrl::to(['tasks/view/', 'id' => $task->id]); ?>" class="link-regular"><h2><?= $task->name; ?></h2></a>
@@ -43,13 +46,18 @@ $searchFormConfig = [
         <?php endforeach; ?>
     </div>
     <div class="new-task__pagination">
-        <ul class="new-task__pagination-list">
-            <li class="pagination__item"><a href="#"></a></li>
-            <li class="pagination__item pagination__item--current"><a>1</a></li>
-            <li class="pagination__item"><a href="#">2</a></li>
-            <li class="pagination__item"><a href="#">3</a></li>
-            <li class="pagination__item"><a href="#"></a></li>
-        </ul>
+                <?php echo LinkPager::widget([
+                'pagination' => $dataProvider->getPagination(),
+                 //Css option for container
+                'options' => ['class' => 'new-task__pagination-list'],
+               //Current Active option value
+                'activePageCssClass' => 'pagination__item--current',
+                'pageCssClass' => 'pagination__item',
+                'nextPageCssClass' => 'pagination__item',
+                'prevPageCssClass' => 'pagination__item',
+                'nextPageLabel' => '',
+                'prevPageLabel' => '',
+        ]);?>
     </div>
 </section>
 <section  class="search-task">

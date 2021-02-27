@@ -13,8 +13,8 @@ class LandingController extends UnsecuredController
 	
 	public function actionIndex()
 	{
-//		$model = new UserLoginForm();
-		$model = new LoginForm();
+		$model = new UserLoginForm();
+//		$model = new LoginForm();
 		if ($model->load(Yii::$app->request->post()) && $model->login()) {
 			return $this->redirect('/tasks');
 		} else {
@@ -26,19 +26,19 @@ class LandingController extends UnsecuredController
 		return $this->render('index', ['model' => $model, 'tasks' => $tasks]);
 	}
 	
-	public function actionLogin()
-	{
-		$model = new UserLoginForm();
-		
-		if (Yii::$app->request->getIsPost()) {
-			$this->model->load(Yii::$app->request->post());
-			if ($this->model->validate()) {
-				Yii::$app->user->login($this->model->getUser());
-				
-				return $this->redirect('/tasks', ['model' => $model]);
-			}
-		}
-		
-		return $this->goHome();
-	}
+//	public function actionLogin()
+//	{
+//		$model = new UserLoginForm();
+//
+//		if (Yii::$app->request->getIsPost()) {
+//			$this->model->load(Yii::$app->request->post());
+//			if ($this->model->validate()) {
+//				Yii::$app->user->login($this->model->getUser());
+//
+//				return $this->redirect('/tasks', ['model' => $model]);
+//			}
+//		}
+//
+//		return $this->goHome();
+//	}
 }

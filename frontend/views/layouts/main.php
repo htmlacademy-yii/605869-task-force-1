@@ -100,12 +100,12 @@ TaskForceAsset::register($this);
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="./img/user-photo.png"
+                    <img src="<?= Yii::$app->user->getIdentity()->getAvatar(); ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 Василий
+                 <?= Html::encode(Yii::$app->user->getIdentity()->name) ?>
                 </span>
             </div>
             <div class="account__pop-up">
@@ -117,7 +117,7 @@ TaskForceAsset::register($this);
                         <a href="#">Настройки</a>
                     </li>
                     <li>
-                        <a href="#">Выход</a>
+                        <a data-method="post" href="<?= Yii::$app->urlManager->createUrl(['site/logout']); ?>">Выход</a>
                     </li>
                 </ul>
             </div>

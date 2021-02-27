@@ -21,9 +21,8 @@ class TasksController extends SecuredController
 	{
 		$filters = new TaskFiltersForm();
 		$filters->load(Yii::$app->request->post());
-		$tasks = $filters->getList();
 
-		return $this->render('index', ['tasks' => $tasks, 'filters' => $filters]);
+		return $this->render('index', ['dataProvider' => $filters->getDataProvider(), 'filters' => $filters]);
 	}
 
 	/**

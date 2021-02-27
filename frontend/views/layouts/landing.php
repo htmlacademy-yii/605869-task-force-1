@@ -2,14 +2,11 @@
 
 /* @var $this View */
 /* @var $content string */
-/* @var $model UserLoginForm */
 
-use frontend\models\UserLoginForm;
 use yii\helpers\Html;
 use frontend\assets\AppAsset;
 use frontend\assets\TaskForceAsset;
 use yii\web\View;
-use yii\widgets\ActiveForm;
 	
 AppAsset::register($this);
 TaskForceAsset::register($this);
@@ -122,56 +119,6 @@ $formConfig = [
             </div>
         </div>
     </footer>
-    <section class="modal enter-form form-modal" id="enter-form">
-        <h2>Вход на сайт</h2>
-        <?php $form = ActiveForm::begin($formConfig) ?>
-        <p>
-<!--            --><?//= Html::activeLabel($model, 'email', [
-//                'class' => 'form-modal-description',
-//                'for' => "enter-email"
-//            ]); ?>
-            <?= $form->field($model, 'username', [
-                'inputOptions' => [
-                    'class' => 'enter-form-email input input-middle',
-//                    'rows' => '1',
-//                    'type' => "email",
-//                    'name' => 'enter-email',
-//                    'id' => 'enter-email',
-                    ]
-            ])->textInput(); ?>
-        </p>
-        <p>
-<!--            --><?//= Html::activeLabel($model, 'password', [
-//                'class' => 'form-modal-description',
-//                'for' => "enter-password"
-//            ]); ?>
-            <?= $form->field($model, 'password', [
-                'inputOptions' => [
-                    'class' => 'enter-form-email input input-middle',
-//                    'rows' => '1',
-//                    'type' => "password",
-//                    'name' => 'enter-password',
-//                    'id' => 'enter-password',
-                    ]
-            ])->passwordInput(); ?>
-        </p>
-        <?= Html::submitButton('Войти', ['class' => 'button']); ?>
-        
-        <?php ActiveForm::end(); ?>
-        
-<!--        <form action="#" method="post">-->
-<!--            <p>-->
-<!--                <label class="form-modal-description" for="enter-email">Email</label>-->
-<!--                <input class="enter-form-email input input-middle" type="email" name="enter-email" id="enter-email">-->
-<!--            </p>-->
-<!--            <p>-->
-<!--                <label class="form-modal-description" for="enter-password">Пароль</label>-->
-<!--                <input class="enter-form-email input input-middle" type="password" name="enter-email" id="enter-password">-->
-<!--            </p>-->
-<!--            <button class="button" type="submit">Войти</button>-->
-<!--        </form>-->
-        <button class="form-modal-close" type="button">Закрыть</button>
-    </section>
 </div>
 <div class="overlay"></div>
 <?php $this->endBody() ?>

@@ -2,9 +2,9 @@
 
 namespace frontend\models;
 
-
 use Yii;
 use yii\base\Model;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 
 class TaskFiltersForm extends Model
@@ -57,7 +57,7 @@ class TaskFiltersForm extends Model
         ];
     }
 
-    public function getList()
+    public function getDataProvider()
     {
         $query = Task::find()->alias('t');
 
@@ -86,6 +86,11 @@ class TaskFiltersForm extends Model
             $query->andWhere(['like', 't.name', $this->search]);
         }
 
-        return $query->all();
+		return new ActiveDataProvider([
+			'query' => $query,
+			'pagination' => [
+				'pageSize' => 5
+			]
+	  	]);
     }
 }
