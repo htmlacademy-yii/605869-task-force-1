@@ -12,7 +12,7 @@ use yii\web\NotFoundHttpException;
  * Class tasksController
  * @package frontend\controllers
  */
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
 	/**
 	 * @return string
@@ -21,9 +21,8 @@ class TasksController extends Controller
 	{
 		$filters = new TaskFiltersForm();
 		$filters->load(Yii::$app->request->post());
-		$tasks = $filters->getList();
 
-		return $this->render('index', ['tasks' => $tasks, 'filters' => $filters]);
+		return $this->render('index', ['dataProvider' => $filters->getDataProvider(), 'filters' => $filters]);
 	}
 
 	/**

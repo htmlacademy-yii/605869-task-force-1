@@ -2,9 +2,9 @@
 
 namespace frontend\models;
 
-use frontend\models\FavoriteUser;
 use Yii;
 use yii\base\Model;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 
 class UserFiltersForm extends Model
@@ -43,7 +43,7 @@ class UserFiltersForm extends Model
         return ArrayHelper::map($categories, 'id', 'name');
     }
 
-    public function getList()
+    public function getDataProvider()
     {
         $query = User::find()->alias('u');
 
@@ -85,6 +85,11 @@ class UserFiltersForm extends Model
             $query->andWhere(['like', 'u.name', $this->search]);
         }
 
-        return $query->all();
+		return new ActiveDataProvider([
+			'query' => $query,
+			'pagination' => [
+				'pageSize' => 5
+			]
+	  	]);
     }
 }

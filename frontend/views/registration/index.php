@@ -12,13 +12,10 @@ use frontend\models\UserFiltersForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 	
-	$formConfig = [
+$formConfig = [
     'method' => 'post',
-    'options' => [
-        'class' => 'registration__user-form form-create',
-    ],
+    'options' => ['class' => 'registration__user-form form-create',],
 ];
-
 ?>
 
 <section class="registration__user">

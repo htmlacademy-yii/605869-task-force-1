@@ -5,14 +5,14 @@ namespace frontend\controllers;
 use frontend\models\User;
 use frontend\models\UserFiltersForm;
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 
 /**
  * Class usersController
  * @package frontend\controllers
  */
-class UsersController extends Controller
+class UsersController extends SecuredController
 {
 	/**
 	 * @return string
@@ -21,11 +21,13 @@ class UsersController extends Controller
 	{
 		$filters = new UserFiltersForm();
 		$filters->load(Yii::$app->request->post());
-		$users = $filters->getList();
 
-		return $this->render('index', ['users' => $users, 'filters' => $filters]);
+		return $this->render('index', [
+			'dataProvider' => $filters->getDataProvider(),
+			'filters' => $filters
+		]);
 	}
-
+	
 	public function actionView($id)
 	{
 		$user = User::findOne($id);

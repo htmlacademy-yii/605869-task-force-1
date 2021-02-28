@@ -8,8 +8,10 @@ use Yii;
 use frontend\models\City;
 use frontend\models\RegistrationForm;
 
-class RegistrationController extends Controller
+class RegistrationController extends UnsecuredController
 {
+	public $layout = 'registration';
+	
     public function actionIndex()
     {
         $model = new RegistrationForm();

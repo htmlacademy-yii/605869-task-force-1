@@ -1,20 +1,21 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var UserFiltersForm $filters */
-    /**
-     * @var $users User[]
-     */
+/* @var $this yii\web\View */
+/* @var $filters UserFiltersForm */
+/* @var $user User */
+/* @var $dataProvider ActiveDataProvider */
 
-    use frontend\helpers\WordHelper;
-    use frontend\models\User;
-    use frontend\models\UserFiltersForm;
-    use frontend\widgets\LastActivityWidget;
-    use frontend\widgets\StarRatingWidget;
-    use yii\helpers\BaseUrl;
-    use yii\helpers\Html;
-    use yii\widgets\ActiveForm;
-
-    $this->title = 'Task Force';
+use frontend\helpers\WordHelper;
+use frontend\models\User;
+use frontend\models\UserFiltersForm;
+use frontend\widgets\LastActivityWidget;
+use frontend\widgets\StarRatingWidget;
+use yii\data\ActiveDataProvider;
+use yii\helpers\BaseUrl;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\widgets\LinkPager;
+	
+$this->title = 'Task Force';
 
 $searchFormConfig = [
     'options'=>
@@ -31,22 +32,7 @@ $searchFormConfig = [
 ?>
 
 <section class="user__search">
-    <div class="user__search-link">
-        <p>Сортировать по:</p>
-        <ul class="user__search-list">
-            <li class="user__search-item user__search-item--current">
-                <a href="#" class="link-regular">Рейтингу</a>
-            </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Числу заказов</a>
-            </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Популярности</a>
-            </li>
-        </ul>
-    </div>
-
-    <?php foreach ($users as $user): ?>
+    <?php foreach ($dataProvider->getModels() as $user): ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
@@ -89,6 +75,20 @@ $searchFormConfig = [
             </div>
         </div>
     <?php endforeach; ?>
+    <div class="new-task__pagination">
+                <?php echo LinkPager::widget([
+                'pagination' => $dataProvider->getPagination(),
+                 //Css option for container
+                'options' => ['class' => 'new-task__pagination-list'],
+               //Current Active option value
+                'activePageCssClass' => 'pagination__item--current',
+                'pageCssClass' => 'pagination__item',
+                'nextPageCssClass' => 'pagination__item',
+                'prevPageCssClass' => 'pagination__item',
+                'nextPageLabel' => '',
+                'prevPageLabel' => '',
+        ]);?>
+    </div>
 </section>
 <section  class="search-task">
     <div class="search-task__wrapper">

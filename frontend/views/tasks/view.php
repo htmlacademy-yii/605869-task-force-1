@@ -1,15 +1,17 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $task Task*/
+/* @var $this yii\web\View */
+/* @var $task Task*/
+/* @var $pages Task*/
 
-    use frontend\models\Task;
-    use frontend\widgets\EstimatedTimeWidget;
-    use frontend\widgets\StarRatingWidget;
-    use frontend\widgets\TimeOnSiteWidget;
-    use yii\helpers\BaseUrl;
-    use yii\helpers\Html;
 
-    $this->title = 'Task Force';
+use frontend\models\Task;
+use frontend\widgets\EstimatedTimeWidget;
+use frontend\widgets\StarRatingWidget;
+use frontend\widgets\TimeOnSiteWidget;
+use yii\helpers\BaseUrl;
+use yii\helpers\Html;
+
+$this->title = 'Task Force';
 ?>
 
 <section class="content-view">
