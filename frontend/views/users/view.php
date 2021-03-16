@@ -9,7 +9,7 @@
     use yii\helpers\BaseUrl;
     use yii\helpers\Html;
 
-    $this->title = 'Task Force';
+    $this->title = 'Исполнитель: ' . Html::encode($user->name);
 ?>
 
 <section class="content-view">

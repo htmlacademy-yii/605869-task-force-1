@@ -15,7 +15,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\LinkPager;
 	
-$this->title = 'Task Force';
+$this->title = 'Исполнители - Task Force';
 
 $searchFormConfig = [
     'options'=>

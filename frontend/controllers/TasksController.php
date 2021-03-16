@@ -2,10 +2,16 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Category;
+use frontend\models\City;
+use frontend\models\CreateTaskForm;
 use frontend\models\Task;
 use frontend\models\TaskFiltersForm;
+use frontend\models\User;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -38,5 +44,42 @@ class TasksController extends SecuredController
 		}
 
 		return $this->render('view', ['task' => $task]);
+	}
+	
+	public function actionCreate()
+	{
+		$categories = Category::find()->all();
+        $categoryList = ArrayHelper::map($categories, 'id', 'name');
+        $cities = City::find()->all();
+        $cityList = ArrayHelper::map($cities, 'id', 'name');
+		
+		if (Yii::$app->user->getIdentity()->role != User::ROLE_CUSTOMER) {
+			throw new ForbiddenHttpException('Страница доступна только для заказчиков');
+		}
+		
+		$model = new CreateTaskForm();
+//		var_dump(Yii::$app->request->isPost);
+		
+		if (Yii::$app->request->isPost) {
+//			var_dump(Yii::$app->request->post());
+			$model->load(Yii::$app->request->post());
+//			var_dump($model);
+			
+			if ($model->validate()) {
+				$task = $model->saveFields();
+				
+				return $this->redirect('tasks/view', ['id' => $task->id]);
+			}
+		}
+		
+		return $this->render(
+			'create',
+			[
+				'model' => $model,
+				'categoryList' => $categoryList,
+				'cities' => $cities,
+				'cityList' => $cityList
+			]
+		);
 	}
 }

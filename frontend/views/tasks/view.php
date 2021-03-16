@@ -11,7 +11,7 @@ use frontend\widgets\TimeOnSiteWidget;
 use yii\helpers\BaseUrl;
 use yii\helpers\Html;
 
-$this->title = 'Task Force';
+$this->title = 'Задание: ' . Html::encode($task->name);
 ?>
 
 <section class="content-view">
