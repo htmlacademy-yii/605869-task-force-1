@@ -21,8 +21,10 @@ class CreateTaskForm extends Model
     public $files;
     public $budget;
     public $expire;
-	
-	public function attributeLabels()
+    
+    public $task;
+    
+    public function attributeLabels()
     {
         return [
             'name' => 'Мне нужно',
@@ -39,7 +41,7 @@ class CreateTaskForm extends Model
      */
     public function rules()
     {
-    	return [
+        return [
             [['name', 'description', 'categoryId'], 'required', 'message' => 'Это поле должно быть заполнено.'],
             [['name', 'description', 'categoryId', 'files'], 'safe'],
             [['name', 'description'], 'trim'],
@@ -53,7 +55,7 @@ class CreateTaskForm extends Model
                 'targetAttribute' => 'id',
                 'message' => 'Задание должно принадлежать одной из категорий'
             ],
-			[['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 0],
+            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 0],
             ['budget', 'integer', 'min' => 0, 'tooSmall' => 'Бюджет не может быть меньше нуля'],
             ['expire', 'date', 'format' => 'php:Y-m-d'],
             ['expire', 'isDateInFuture'],
@@ -66,50 +68,59 @@ class CreateTaskForm extends Model
      */
     public function isDateInFuture($attribute): void
     {
-    	if (strtotime('now') > strtotime($this->$attribute)) {
-    		$this->addError($attribute, 'Дата окончания не может быть меньше даты начала задачи.');
-    	}
+        if (strtotime('now') > strtotime($this->$attribute)) {
+            $this->addError($attribute, 'Дата окончания не может быть меньше даты начала задачи.');
+        }
     }
-	
-	/**
-	 * @return Task|null
-	 * @throws Throwable
-	 * @throws Exception
-	 * @throws \yii\db\Exception
-	 */
+    
+    /**
+     * @return Task|null
+     * @throws Throwable
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
     public function saveFields(): ?Task
-	{
-		$task = new Task();
-		$task->name = $this->name;
-		$task->description = $this->description;
-		$task->category_id = $this->categoryId;
-		$task->budget = $this->budget;
-		$task->expire = $this->expire;
-		$task->customer_id = Yii::$app->user->getId();
-		
-		if (!$task->save()) {
-			return null;
-		}
-		
-		$this->files = UploadedFile::getInstances($this, 'files');
-		$src = Yii::getAlias('@app/uploads/') . $task->id;
-		
-		foreach ($this->files as $file) {
-			$transaction = File::getDb()->beginTransaction();
-			try {
-				FileHelper::createDirectory($src);
-				$file->saveAs($src . '/' . $file->name);
-				$newFile = new File();
-				$newFile->name = $file->name;
-				$newFile->task_id = $task->id;
-				$newFile->save();
-				$transaction->commit();
-			} catch (Throwable $e) {
-				$transaction->rollBack();
-				throw $e;
-			}
-		}
-		
-		return $task;
-	}
+    {
+        $task = new Task();
+        $task->name = $this->name;
+        $task->description = $this->description;
+        $task->category_id = $this->categoryId;
+        //@todo required from requrest
+        $task->city_id = 1;
+        $task->lat = 0;
+        $task->long = 0;
+        //MYSQL: status_id DEFAULT 1
+        //$task->status_id = Task::STATUS_NEW;
+        $task->budget = $this->budget;
+        $task->expire = $this->expire;
+        $task->customer_id = Yii::$app->user->getId();
+        
+        $this->task = $task;
+        
+        if (!$task->save()) {
+            return null;
+        }
+        
+        $this->files = UploadedFile::getInstances($this, 'files');
+        $src = Yii::getAlias('@app/uploads/') . $task->id;
+        
+        foreach ($this->files as $file) {
+            $transaction = File::getDb()->beginTransaction();
+            try {
+                FileHelper::createDirectory($src);
+                $file->saveAs($src . '/' . $file->name);
+                $newFile = new File();
+                $newFile->name = $file->name;
+                $newFile->task_id = $task->id;
+                $newFile->save();
+                $transaction->commit();
+            } catch (Throwable $e) {
+                $transaction->rollBack();
+                
+                return null;
+            }
+        }
+        
+        return $task;
+    }
 }

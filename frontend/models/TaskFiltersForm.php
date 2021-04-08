@@ -14,12 +14,11 @@ class TaskFiltersForm extends Model
     public $isRemote;
     public $dateInterval;
     public $search;
-
+    
     const INTERVAL_DAY = 1;
     const INTERVAL_WEEK = 7;
     const INTERVAL_MONTH = 30;
-
-
+    
     public function attributeLabels()
     {
         return [
@@ -30,7 +29,7 @@ class TaskFiltersForm extends Model
             'search' => 'Поиск по названию',
         ];
     }
-
+    
     public function rules()
     {
         return [
@@ -40,14 +39,14 @@ class TaskFiltersForm extends Model
             ['search', 'filter', 'filter' => 'trim'],
         ];
     }
-
+    
     public function getCategoriesList()
     {
         $categories = Category::find()->all();
-
+        
         return ArrayHelper::map($categories, 'id', 'name');
     }
-
+    
     public function getDateIntervalList()
     {
         return [
@@ -56,41 +55,43 @@ class TaskFiltersForm extends Model
             self::INTERVAL_MONTH => 'За месяц'
         ];
     }
-
+    
     public function getDataProvider()
     {
         $query = Task::find()->alias('t');
-
+        
         if ($this->categories) {
-            $query->andWhere(['category_id'=>$this->categories]);
+            $query->andWhere(['category_id' => $this->categories]);
         }
-
+        
         if ($this->withoutReplies) {
-            $query->join('LEFT JOIN', Replies::tableName() . ' r', 'r.task_id = t.id' )
+            $query->join('LEFT JOIN', Replies::tableName() . ' r', 'r.task_id = t.id')
                 ->groupBy('t.id')
                 ->having('count(r.id) = 0');
         }
-
+        
         if (!Yii::$app->user->getIsGuest() && !$this->isRemote) {
             $user = User::findOne(Yii::$app->user->identity->getId());
             if ($cityId = $user->profiles->city_id) {
-                $query->andWhere('t.city_id = :cityId', ['cityId' => $cityId]); //city_id - в настройках профиля обязательное значение
+                $query->andWhere('t.city_id = :cityId',
+                    ['cityId' => $cityId]); //city_id - в настройках профиля обязательное значение
             }
         }
-
+        
         if ($this->dateInterval) {
-            $query->andWhere( 'DATE(dt_add) >= DATE(NOW() - INTERVAL :interval DAY)', ['interval' => $this->dateInterval]);
+            $query->andWhere('DATE(dt_add) >= DATE(NOW() - INTERVAL :interval DAY)',
+                ['interval' => $this->dateInterval]);
         }
-
+        
         if ($this->search) {
             $query->andWhere(['like', 't.name', $this->search]);
         }
-
-		return new ActiveDataProvider([
-			'query' => $query,
-			'pagination' => [
-				'pageSize' => 5
-			]
-	  	]);
+        
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 5
+            ]
+        ]);
     }
 }

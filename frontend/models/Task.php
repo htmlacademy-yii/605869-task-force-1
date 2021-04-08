@@ -19,10 +19,10 @@ use yii\db\ActiveRecord;
  * @property int $customer_id
  * @property int $status_id
  * @property int $status_execution
- * @property int $replies_id
+ * @property int $replies_id //drop column
  * @property float $lat
  * @property float $long
- * @property int $executor_id
+ * @property int $executor_id //not required
  * @property string $dt_add
  *
  * @property File[] $files
@@ -44,7 +44,7 @@ class Task extends ActiveRecord
     const STATUS_IN_WORK = 3; //статус задания находящегося в работе
     const STATUS_COMPLETED = 4; //статус выполненного задания
     const STATUS_FAILED = 5; //статус проваленного задания
-
+    
     /**
      * {@inheritdoc}
      */
@@ -52,27 +52,79 @@ class Task extends ActiveRecord
     {
         return 'task';
     }
-
+    
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['name', 'category_id', 'city_id', 'budget', 'expire', 'description', 'customer_id', 'status_id', 'status_execution', 'replies_id', 'lat', 'long', 'executor_id'], 'required'],
-            [['category_id', 'city_id', 'customer_id', 'status_id', 'status_execution', 'replies_id', 'executor_id'], 'integer'],
+            [
+                [
+                    'name',
+                    'category_id',
+                    'city_id',
+                    'budget',
+                    'expire',
+                    'description',
+                    'customer_id',
+                ],
+                'required'
+            ],
+            [
+                [
+                    'category_id',
+                    'city_id',
+                    'customer_id',
+                    'status_id',
+                    'status_execution',
+                    'replies_id',
+                    'executor_id'
+                ],
+                'integer'
+            ],
             [['budget', 'lat', 'long'], 'number'],
             [['expire', 'dt_add'], 'safe'],
             [['description'], 'string'],
             [['name', 'address'], 'string', 'max' => 45],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
-            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => Status::className(), 'targetAttribute' => ['status_id' => 'id']],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Category::className(),
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::className(),
+                'targetAttribute' => ['city_id' => 'id']
+            ],
+            [
+                ['customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['customer_id' => 'id']
+            ],
+            [
+                ['executor_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['executor_id' => 'id']
+            ],
+            [
+                ['status_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Status::className(),
+                'targetAttribute' => ['status_id' => 'id']
+            ],
         ];
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -97,7 +149,7 @@ class Task extends ActiveRecord
             'dt_add' => 'Dt Add',
         ];
     }
-
+    
     /**
      * Gets query for [[Files]].
      *
@@ -107,7 +159,7 @@ class Task extends ActiveRecord
     {
         return $this->hasMany(File::className(), ['task_id' => 'id']);
     }
-
+    
     /**
      * Gets query for [[Opinions]].
      *
@@ -117,7 +169,7 @@ class Task extends ActiveRecord
     {
         return $this->hasMany(Opinions::className(), ['task_id' => 'id']);
     }
-
+    
     /**
      * Gets query for [[Replies]].
      *
@@ -127,7 +179,7 @@ class Task extends ActiveRecord
     {
         return $this->hasMany(Replies::className(), ['task_id' => 'id']);
     }
-
+    
     /**
      * Gets query for [[Category]].
      *
@@ -137,7 +189,7 @@ class Task extends ActiveRecord
     {
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
-
+    
     /**
      * Gets query for [[City]].
      *
@@ -147,7 +199,7 @@ class Task extends ActiveRecord
     {
         return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
-
+    
     /**
      * Gets query for [[Customer]].
      *
@@ -157,7 +209,7 @@ class Task extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'customer_id']);
     }
-
+    
     /**
      * Gets query for [[Executor]].
      *
@@ -167,7 +219,7 @@ class Task extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'executor_id']);
     }
-
+    
     /**
      * Gets query for [[Status]].
      *
