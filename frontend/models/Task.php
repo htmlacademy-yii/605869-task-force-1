@@ -18,7 +18,6 @@ use yii\db\ActiveRecord;
  * @property string $description
  * @property int $customer_id
  * @property int $status_id
- * @property int $status_execution
  * @property int $replies_id //drop column
  * @property float $lat
  * @property float $long
@@ -77,7 +76,6 @@ class Task extends ActiveRecord
                     'city_id',
                     'customer_id',
                     'status_id',
-                    'status_execution',
                     'replies_id',
                     'executor_id'
                 ],
@@ -141,8 +139,7 @@ class Task extends ActiveRecord
             'description' => 'Description',
             'customer_id' => 'Customer ID',
             'status_id' => 'Status ID',
-            'status_execution' => 'Status Execution',
-            'replies_id' => 'Replies ID',
+                        'replies_id' => 'Replies ID',
             'lat' => 'Lat',
             'long' => 'Long',
             'executor_id' => 'Executor ID',

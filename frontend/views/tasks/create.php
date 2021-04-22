@@ -1,16 +1,16 @@
 <?php
-/* @var $model CreateTaskForm */
-
-/* @var array $categoryList */
-/* @var $cities City */
-
-/* @var array $cityList */
-
-use frontend\models\City;
-use frontend\models\CreateTaskForm;
-use yii\widgets\ActiveForm;
-
-$this->title = 'Создать новую задачу - TaskForce';
+    /* @var $model CreateTaskForm */
+    
+    /* @var array $categoryList */
+    /* @var $cities City */
+    
+    /* @var array $cityList */
+    
+    use frontend\models\City;
+    use frontend\models\CreateTaskForm;
+    use yii\widgets\ActiveForm;
+    
+    $this->title = 'Создать новую задачу - TaskForce';
 ?>
 
 <section class="create__task">
@@ -34,7 +34,7 @@ $this->title = 'Создать новую задачу - TaskForce';
             ]); ?>
         
         <?= $form->field($model, 'name')
-            ->textarea(
+            ->textInput(
                 [
                     'class' => 'input textarea',
                     'rows' => 1,
@@ -102,7 +102,7 @@ $this->title = 'Создать новую задачу - TaskForce';
         <input class="input-navigation input-middle input" id="13" type="search" name="q"
                placeholder="Санкт-Петербург, Калининский район">
         <span>Укажите адрес исполнения, если задание требует присутствия</span>
-        
+
         <div class="create__price-time">
             <?= $form->field(
                 $model,
@@ -115,7 +115,7 @@ $this->title = 'Создать новую задачу - TaskForce';
                 ]
             )
                 ->label('Бюджет')
-                ->textarea(
+                ->textInput(
                     [
                         'rows' => 1,
                         'placeholder' => '1000',
@@ -164,23 +164,29 @@ $this->title = 'Создать новую задачу - TaskForce';
                     что всё в фокусе, а фото показывает объект со всех
                     ракурсов.</p>
             </div>
-            <?php if ($model->errors): ?>
-                <div class="warning-item warning-item--error">
-                    <h2>Ошибки заполнения формы</h2>
-                    <?php foreach ($model->getErrors() as $attribute => $messages): ?>
-                        <h3><?= $model->attributeLabels()[$attribute]; ?></h3>
-                        <p>
-                            <?php for ($i = 0; $i < count($messages); $i++): ?>
-                                
-                                <?= $messages[$i]; ?>
-                                
-                                <?= ($i < count($messages) - 1) ? '<br>' : ''; ?>
-                                
-                            <?php endfor; ?>
-                        </p>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+            <?php
+                if ($model->errors): ?>
+                    <div class="warning-item warning-item--error">
+                        <h2>Ошибки заполнения формы</h2>
+                        <?php
+                            foreach ($model->getErrors() as $attribute => $messages): ?>
+                                <h3><?= $model->attributeLabels()[$attribute]; ?></h3>
+                                <p>
+                                    <?php
+                                        for ($i = 0; $i < count($messages); $i++): ?>
+                                            
+                                            <?= $messages[$i]; ?>
+                                            
+                                            <?= ($i < count($messages) - 1) ? '<br>' : ''; ?>
+                                        
+                                        <?php
+                                        endfor; ?>
+                                </p>
+                            <?php
+                            endforeach; ?>
+                    </div>
+                <?php
+                endif; ?>
         </div>
     </div>
 </section>

@@ -12,7 +12,12 @@ use frontend\models\UserFiltersForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 	
-	$formConfig = [
+?>
+
+<section class="registration__user">
+    <h1>Регистрация аккаунта</h1>
+    <div class="registration-wrapper">
+		<?php $form = ActiveForm::begin([
 		'action' => '/signup/index',
 		'enableClientValidation' => true,
 		'fieldConfig' => [
@@ -24,16 +29,9 @@ use yii\widgets\ActiveForm;
 		'options' => [
 			'class' => 'registration__user-form form-create',
 		]
-	];
-
-?>
-
-<section class="registration__user">
-    <h1>Регистрация аккаунта</h1>
-    <div class="registration-wrapper">
-		<?php $form = ActiveForm::begin($formConfig); ?>
+	]); ?>
 		<?= $form->field($model, 'email')
-			->textarea(
+			->textInput(
 				[
 					'class' => 'input textarea',
 					'rows' => '1',
@@ -46,7 +44,7 @@ use yii\widgets\ActiveForm;
 		?>
 	
 		<?= $form->field($model, 'name')
-			->textarea(
+			->textInput(
 				[
 					'class' => 'input textarea',
 					'rows' => '1',

@@ -22,8 +22,6 @@ class CreateTaskForm extends Model
     public $budget;
     public $expire;
     
-    public $task;
-    
     public function attributeLabels()
     {
         return [
@@ -95,8 +93,6 @@ class CreateTaskForm extends Model
         $task->expire = $this->expire;
         $task->customer_id = Yii::$app->user->getId();
         
-        $this->task = $task;
-        
         if (!$task->save()) {
             return null;
         }
@@ -105,20 +101,12 @@ class CreateTaskForm extends Model
         $src = Yii::getAlias('@app/uploads/') . $task->id;
         
         foreach ($this->files as $file) {
-            $transaction = File::getDb()->beginTransaction();
-            try {
                 FileHelper::createDirectory($src);
                 $file->saveAs($src . '/' . $file->name);
                 $newFile = new File();
                 $newFile->name = $file->name;
                 $newFile->task_id = $task->id;
                 $newFile->save();
-                $transaction->commit();
-            } catch (Throwable $e) {
-                $transaction->rollBack();
-                
-                return null;
-            }
         }
         
         return $task;
