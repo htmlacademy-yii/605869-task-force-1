@@ -13,19 +13,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\LinkPager;
 	
-	$this->title = 'Task Force';
+	$this->title = 'Задания - Task Force';
 
-$searchFormConfig = [
-    'options'=>[
-        'class'=>'search-task__form',
-        'name'=>'test',
-        'method'=>'post'
-    ],
-    'fieldConfig' => [
-        'template' => "{input}\n{label}",
-        'options' => ['tag' => false]
-    ]
-];
 ?>
 
 <section class="new-task">
@@ -60,9 +49,21 @@ $searchFormConfig = [
         ]);?>
     </div>
 </section>
-<section  class="search-task">
+<section class="search-task">
     <div class="search-task__wrapper">
-        <?php $form = ActiveForm::begin($searchFormConfig);
+        <?php
+            $form = ActiveForm::begin([
+                'method' => 'get',
+                'options' => [
+                    'class' => 'search-task__form',
+                    'name' => 'test',
+                
+                ],
+                'fieldConfig' => [
+                    'template' => "{input}\n{label}",
+                    'options' => ['tag' => false]
+                ]
+            ]);
         ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>

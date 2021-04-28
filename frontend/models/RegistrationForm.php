@@ -28,15 +28,15 @@ class RegistrationForm extends Model
         ];
     }
 
-    public function attributeLabels()
-    {
-        return [
-            'email' => 'E-mail',
-            'name' => 'Имя',
-            'city' => 'Город',
-            'password' => 'Пароль',
-        ];
-    }
+//    public function attributeLabels()
+//    {
+//        return [
+//            'email' => 'E-mail',
+//            'name' => 'Имя',
+//            'city' => 'Город',
+//            'password' => 'Пароль',
+//        ];
+//    }
     public function createUser()
 	{
 		$transaction = Yii::$app->db->beginTransaction();

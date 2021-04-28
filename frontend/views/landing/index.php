@@ -11,7 +11,7 @@ use yii\helpers\Html;
  * @var $model LoginForm
  */
 
-$this->title = 'Task Force';
+$this->title = 'Landing - Task Force';
 ?>
 
 <div class="landing-container">

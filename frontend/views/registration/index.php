@@ -12,52 +12,79 @@ use frontend\models\UserFiltersForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 	
-$formConfig = [
-    'method' => 'post',
-    'options' => ['class' => 'registration__user-form form-create',],
-];
 ?>
 
 <section class="registration__user">
     <h1>Регистрация аккаунта</h1>
     <div class="registration-wrapper">
-        <?php $form = ActiveForm::begin($formConfig); ?>
-        <label for="16">Электронная почта</label>
-        <?= $form->field($model, 'email', [
-                'inputOptions' => [
-                    'class' => 'input textarea',
-                    'rows' => '1',
-                    'id' => '16',
-                    'placeholder' => 'kumarm@mail.ru',
-                    ]
-        ])->textInput(); ?>
-        <span>Введите валидный адрес электронной почты</span>
-        <label for="17">Ваше имя</label>
-        <?= $form->field($model, 'name', [
-                'inputOptions' => [
-                    'class' => 'input textarea',
-                    'rows' => '1',
-                    'id' => '17',
-                    'placeholder' => 'Мамедов Кумар',
-                ]
-        ])->textInput(); ?>
-        <span>Введите ваше имя и фамилию</span>
-        <label for="18">Город проживания</label>
-        <?= $form->field($model, 'city',  [
-                'inputOptions' => [
-                    'class' => 'multiple-select input town-select registration-town',
-                    'size' => '1',
-                    'id' => '18',
-                ]
-        ])->dropDownList($cityList); ?>
-        <span>Укажите город, чтобы находить подходящие задачи</span>
-        <label class="input-danger" for="19">Пароль</label>
-        <?= $form->field($model, 'password', [
-                'inputOptions' => ['class' => 'input textarea',
-                'id' => '19',
-                ],
-       ])->passwordInput(); ?>
-        <span>Длина пароля от 8 символов</span>
+		<?php $form = ActiveForm::begin([
+		'action' => '/signup/index',
+		'enableClientValidation' => true,
+		'fieldConfig' => [
+			'template' => "</br>{label}</br>{input}</br>{hint}</br>{error}",
+			'inputOptions' => ['class' => 'input textarea input-wide'],
+			'errorOptions' => ['tag' => 'span', 'class' => 'input-error'],
+			'hintOptions' => ['tag' => 'span'],
+		],
+		'options' => [
+			'class' => 'registration__user-form form-create',
+		]
+	]); ?>
+		<?= $form->field($model, 'email')
+			->textInput(
+				[
+					'class' => 'input textarea',
+					'rows' => '1',
+					'placeholder' => 'login@mail.ru',
+				]
+			)
+			->label('Электронная почта')
+			->hint('Введите валидный адрес электронной почты');
+	
+		?>
+	
+		<?= $form->field($model, 'name')
+			->textInput(
+				[
+					'class' => 'input textarea',
+					'rows' => '1',
+					'placeholder' => 'Имя и Фамилия',
+				]
+			)
+			->label('Ваше имя')
+			->hint('Введите ваше имя и фамилию');
+		?>
+	
+	
+	
+		<?= $form->field(
+			$model,
+			'city',
+			[
+				'inputOptions' => [
+					'class' => 'multiple-select input town-select registration-town',
+					'size' => '1',
+					'id' => '18',
+				]
+			]
+		)->dropDownList($cityList)->label('Город проживания')
+			->hint('Укажите город, чтобы находить подходящие задачи');
+		?>
+        
+		<?= $form->field(
+			$model,
+			'password',
+			[
+				'inputOptions' => [
+					'class' => 'input textarea',
+					'id' => '19',
+				],
+			]
+		)->passwordInput()
+			->label('Пароль')
+			->hint('Длина пароля от 8 символов');
+        ?>
+        
         <?= Html::button('Создать аккаунт', ['class' => 'button button__registration', 'type' => 'submit']); ?>
         <?php $form = ActiveForm::end(); ?>
     </div>

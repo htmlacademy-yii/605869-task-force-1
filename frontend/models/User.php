@@ -32,6 +32,9 @@
      */
     class User extends ActiveRecord implements IdentityInterface
     {
+    	const ROLE_CUSTOMER = 2;
+    	const ROLE_EXECUTOR = 1;
+    	
         /**     * {@inheritdoc}
          */
         public static function tableName()
