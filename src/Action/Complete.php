@@ -1,17 +1,16 @@
 <?php
 
-
 namespace TaskForce\Action;
 
-use frontend\models\Status;
 use frontend\models\Task;
+use Yii;
 
 /**
- * Class Refusal
+ * Class Done
  * @package TaskForceAction
- * Класс наследуется от абстрактного, возвращает действие "Отменить"
+ * Класс наследуется от абстрактного, возвращает действие "Завершить"
  */
-class Cancel extends AbstractSelectingAction
+class Complete extends AbstractSelectingAction
 {
     /**
      * @return string|null
@@ -20,11 +19,12 @@ class Cancel extends AbstractSelectingAction
     public function getActionTitle($task_id)
     {
         $task = Task::findOne($task_id);
-        if ($task->status_id == Status::STATUS_NEW) {
-            return 'Отменить';
+        
+        if (Yii::$app->user->identity->getId() === $task->customer_id) {
+            return 'Выполнено';
         }
-
-        return  null;
+        
+        return null;
     }
 
     /**
@@ -33,7 +33,7 @@ class Cancel extends AbstractSelectingAction
      */
     public function getActionCode()
     {
-        return 'cancel';
+        return 'complete';
     }
 
     /**
@@ -41,7 +41,7 @@ class Cancel extends AbstractSelectingAction
      * @param $idCustomer
      * @param $idUser
      * @return bool
-     * метод для проверки прав на совершение действия по отмене
+     * метод для проверки прав на совершение действия по завершению
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {

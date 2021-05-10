@@ -17,7 +17,7 @@ try {
     /**
      * Создаём объект для определения списков действий и статусов, и выполнения базовой работы с ними
      */
-    $strategy = new  \TaskForce\Task($idPerformer, $idCustomer, $idUser, $status);
+    $strategy = new  \TaskForce\Tasks($idPerformer, $idCustomer, $idUser, $status);
     $strategy->availableAction();
 } catch (\TaskForce\Exception\StatusExistsException $e) {
     error_log("Ошибка статуса: " . $e->getMessage());

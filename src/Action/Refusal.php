@@ -5,19 +5,19 @@ namespace TaskForce\Action;
 
 
 /**
- * Class Done
+ * Class Refuse
  * @package TaskForceAction
- * Класс наследуется от абстрактного, возвращает действие "Завершить"
+ * Класс наследуется от абстрактного, возвращает действие "Отказаться"
  */
-class Done extends AbstractSelectingAction
+class Refusal extends AbstractSelectingAction
 {
     /**
      * @return string|null
      * метод - для человекопонятного названия действия
      */
-    public function getActionTitle()
+    public function getActionTitle($task_id)
     {
-        return 'Завершить';
+        return 'Отказаться';
     }
 
     /**
@@ -26,7 +26,7 @@ class Done extends AbstractSelectingAction
      */
     public function getActionCode()
     {
-        return 'action_done';
+        return 'refusal';
     }
 
     /**
@@ -34,10 +34,10 @@ class Done extends AbstractSelectingAction
      * @param $idCustomer
      * @param $idUser
      * @return bool
-     * метод для проверки прав на совершение действия по завершению
+     * метод для проверки прав на совершение действия по отказу
      */
     public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
     {
-        return ($idUser !== $idPerformer);
+        return ($idUser !== $idCustomer);
     }
 }
