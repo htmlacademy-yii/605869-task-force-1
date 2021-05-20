@@ -17,9 +17,9 @@ class Cancel extends AbstractSelectingAction
      * @return string|null
      * метод - для человекопонятного названия действия
      */
-    public function getActionTitle($task_id)
+    public function getActionTitle($taskId)
     {
-        $task = Task::findOne($task_id);
+        $task = Task::findOne($taskId);
         if ($task->status_id == Status::STATUS_NEW) {
             return 'Отменить';
         }

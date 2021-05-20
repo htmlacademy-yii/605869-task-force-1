@@ -16,9 +16,9 @@ class Complete extends AbstractSelectingAction
      * @return string|null
      * метод - для человекопонятного названия действия
      */
-    public function getActionTitle($task_id)
+    public function getActionTitle($taskId)
     {
-        $task = Task::findOne($task_id);
+        $task = Task::findOne($taskId);
         
         if (Yii::$app->user->identity->getId() === $task->customer_id) {
             return 'Выполнено';

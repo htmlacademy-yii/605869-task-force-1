@@ -97,9 +97,9 @@ class Tasks
      * @return string|null
      * @throws Exception
      */
-    public function getNextStatus($task_id): ?string
+    public function getNextStatus($taskId): ?string
     {
-        $availableAction = $this->getAvailableAction($task_id);
+        $availableAction = $this->getAvailableAction($taskId);
         $map = $this->getActionStatusMap();
 
         return $map[$availableAction] ?? null;
@@ -154,12 +154,12 @@ class Tasks
      * @return string|null
      * @throws Exception
      */
-    public function getAvailableAction($task_id): ?array
+    public function getAvailableAction($taskId): ?array
     {
         $actions = $this->availableAction();
         foreach ($actions as $action) {
             if ($action->checkingUserStatus($this->idPerformer, $this->idCustomer, $this->idUser)) {
-                return [$action->getActionCode(), $action->getActionTitle($task_id)];
+                return [$action->getActionCode(), $action->getActionTitle($taskId)];
             }
         }
 

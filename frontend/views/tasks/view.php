@@ -8,7 +8,7 @@
     /* @var $completeTaskForm CompleteTaskForm */
     /* @var $replies Replies */
 
-    /* @var $user_id Yii */
+    /* @var $userId Yii */
 
 
     use frontend\models\CompleteTaskForm;
@@ -90,7 +90,7 @@
         if (count($task->replies)): ?>
             <div class="content-view__feedback">
                 <?php
-                    if ($user_id === $task->customer_id): ?>
+                    if ($userId === $task->customer_id): ?>
                         <h2>Отклики <span>(<?= count($task->replies); ?>)</span></h2>
                         <?php
                         foreach ($task->replies as $reply): ?>
@@ -162,7 +162,7 @@
             <div class="content-view__feedback">
                 <div class="content-view__feedback-wrapper">
                     <?php
-                        if ($reply->user_id === $user_id): ?>
+                        if ($reply->user_id === $userId): ?>
                             <h2>Ваш отклик на задание:</h2>
                             <div class="content-view__feedback-card">
                                 <div class="feedback-card__top">
@@ -222,7 +222,7 @@
 <!--модальное окно ОКЛИКНУТЬСЯ-->
 
 <?php
-    if (User::findOne($user_id)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
+    if (User::findOne($userId)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
         <section class="modal response-form form-modal" id="response-form">
             <h2>Отклик на задание</h2>
 
@@ -281,7 +281,7 @@
 
 <!--модальное окно ВЫПОЛНЕНО-->
 <?php
-    if ($user_id === $task->customer_id): ?>
+    if ($userId === $task->customer_id): ?>
         <section class="modal completion-form form-modal" id="complete-form">
             <h2>Завершение задания</h2>
             <p class="form-modal-description">Задание выполнено?</p>

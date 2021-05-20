@@ -1,18 +1,18 @@
 <?php
 
-    use frontend\models\Task;
-    use frontend\widgets\EstimatedTimeWidget;
-    use yii\helpers\StringHelper;
-    use common\models\LoginForm;
-    use yii\widgets\ActiveForm;
-    use yii\helpers\Html;
+use frontend\models\Task;
+use frontend\widgets\EstimatedTimeWidget;
+use yii\helpers\StringHelper;
+use common\models\LoginForm;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
-    /**
-     * @var $tasks Task[]
-     * @var $model LoginForm
-     */
+/**
+ * @var $tasks Task[]
+ * @var $model LoginForm
+ */
 
-    $this->title = 'Landing - Task Force';
+$this->title = 'Landing - Task Force';
 ?>
 
 <div class="landing-container">
@@ -109,24 +109,24 @@
         <div class="landing-bottom-container">
             <h2>Последние задания на сайте</h2>
             <?php
-                foreach ($tasks as $task): ?>
-                    <div class="landing-task">
-                        <div class="landing-task-top task-<?= $task->category->icon; ?>"></div>
-                        <div class="landing-task-description">
-                            <h3><a href="#" class="link-regular"><?= StringHelper::truncate($task->name, 20); ?></a>
-                            </h3>
-                            <p><?= StringHelper::truncate($task->description, 70); ?></p>
-                        </div>
-                        <div class="landing-task-info">
-                            <div class="task-info-left">
-                                <p><a href="#" class="link-regular"><?= $task->category->name; ?></a></p>
-                                <p><?= EstimatedTimeWidget::widget(['task' => $task]); ?></p>
-                            </div>
-                            <span><?= $task->budget; ?><b>₽</b></span>
-                        </div>
+            foreach ($tasks as $task): ?>
+                <div class="landing-task">
+                    <div class="landing-task-top task-<?= $task->category->icon; ?>"></div>
+                    <div class="landing-task-description">
+                        <h3><a href="#" class="link-regular"><?= StringHelper::truncate($task->name, 20); ?></a>
+                        </h3>
+                        <p><?= StringHelper::truncate($task->description, 70); ?></p>
                     </div>
-                <?
-                endforeach; ?>
+                    <div class="landing-task-info">
+                        <div class="task-info-left">
+                            <p><a href="#" class="link-regular"><?= $task->category->name; ?></a></p>
+                            <p><?= EstimatedTimeWidget::widget(['task' => $task]); ?></p>
+                        </div>
+                        <span><?= $task->budget; ?><b>₽</b></span>
+                    </div>
+                </div>
+            <?php
+            endforeach; ?>
         </div>
         <div class="landing-bottom-container">
             <a href="#" class="header__account-enter open-modal" data-for="enter-form">
@@ -140,7 +140,7 @@
 <section class="modal enter-form form-modal" id="enter-form">
     <h2>Вход на сайт</h2>
     <?php
-        $form = ActiveForm::begin(); ?>
+    $form = ActiveForm::begin(); ?>
     <p>
         <?= $form->field($model, 'email')->textInput(); ?>
     </p>
@@ -150,7 +150,7 @@
     <?= Html::submitButton('Войти', ['class' => 'button']); ?>
 
     <?php
-        ActiveForm::end(); ?>
+    ActiveForm::end(); ?>
 
     <button class="form-modal-close" type="button">Закрыть</button>
 </section>

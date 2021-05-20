@@ -15,7 +15,7 @@ class Refusal extends AbstractSelectingAction
      * @return string|null
      * метод - для человекопонятного названия действия
      */
-    public function getActionTitle($task_id)
+    public function getActionTitle($taskId)
     {
         return 'Отказаться';
     }

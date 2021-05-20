@@ -10,7 +10,7 @@ namespace TaskForce\Action;
  */
 abstract class AbstractSelectingAction
 {
-    abstract public function getActionTitle($task_id);
+    abstract public function getActionTitle($taskId);
     //метод - для человекопонятного названия действия ("Отменить", "Откликнуться")
 
     abstract public function getActionCode();

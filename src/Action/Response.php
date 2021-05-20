@@ -19,12 +19,12 @@
          * @return string|null
          * метод - для человекопонятного названия действия
          */
-        public function getActionTitle($task_id)
+        public function getActionTitle($taskId)
         {
             if (User::findOne(Yii::$app->user->identity->getId())->role === User::ROLE_EXECUTOR &&
                 empty(Replies::findAll(
                     [
-                        'task_id' => $task_id,
+                        'task_id' => $taskId,
                         'user_id' => Yii::$app->user->identity->getId()
                     ]
                 ))) {

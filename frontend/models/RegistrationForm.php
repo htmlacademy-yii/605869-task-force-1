@@ -64,6 +64,6 @@ class RegistrationForm extends Model
         
         $transaction->commit();
         
-        return true;
+        return $user;
 	}
 }
