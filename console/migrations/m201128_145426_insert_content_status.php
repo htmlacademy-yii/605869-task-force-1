@@ -12,10 +12,11 @@ class m201128_145426_insert_content_status extends Migration
      */
     public function safeUp()
     {
-        $this->insert('status', ['id' => '2','name' => 'cancel','translate' => 'Отменен']);
-        $this->insert('status', ['id' => '3','name' => 'in_work','translate' => 'В работе']);
-        $this->insert('status', ['id' => '4','name' => 'performed','translate' => 'Выполнено']);
-        $this->insert('status', ['id' => '5','name' => 'failed','translate' => 'Провалено']);
+        $this->insert('status', ['id' => '1', 'name' => 'cancel', 'translate' => 'Новое']);
+        $this->insert('status', ['id' => '2', 'name' => 'cancel', 'translate' => 'Отменено']);
+        $this->insert('status', ['id' => '3', 'name' => 'in_work', 'translate' => 'В работе']);
+        $this->insert('status', ['id' => '4', 'name' => 'performed', 'translate' => 'Выполнено']);
+        $this->insert('status', ['id' => '5', 'name' => 'failed', 'translate' => 'Провалено']);
     }
 
     /**
@@ -23,6 +24,7 @@ class m201128_145426_insert_content_status extends Migration
      */
     public function safeDown()
     {
+        $this->delete('status', ['id' => '1']);
         $this->delete('status', ['id' => '2']);
         $this->delete('status', ['id' => '3']);
         $this->delete('status', ['id' => '4']);

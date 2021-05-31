@@ -18,7 +18,6 @@ use yii\widgets\ActiveForm;
     <h1>Регистрация аккаунта</h1>
     <div class="registration-wrapper">
 		<?php $form = ActiveForm::begin([
-		'action' => '/signup/index',
 		'enableClientValidation' => true,
 		'fieldConfig' => [
 			'template' => "</br>{label}</br>{input}</br>{hint}</br>{error}",

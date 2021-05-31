@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use frontend\models\ResendVerificationEmailForm;
@@ -94,9 +95,12 @@ class SiteController extends Controller
         } else {
             $model->password = '';
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            return $this->render(
+                'login',
+                [
+                    'model' => $model,
+                ]
+            );
         }
     }
 
@@ -122,16 +126,22 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Спасибо, что связались с нами. Мы ответим вам как можно скорее.');
+                Yii::$app->session->setFlash(
+                    'success',
+                    'Спасибо, что связались с нами. Мы ответим вам как можно скорее.'
+                );
             } else {
                 Yii::$app->session->setFlash('error', 'Произошла ошибка при отправке вашего сообщения.');
             }
 
             return $this->refresh();
         } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
+            return $this->render(
+                'contact',
+                [
+                    'model' => $model,
+                ]
+            );
         }
     }
 
@@ -154,13 +164,19 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Спасибо за регистрацию. Пожалуйста, проверьте свой почтовый ящик на наличие проверочного письма.');
+            Yii::$app->session->setFlash(
+                'success',
+                'Спасибо за регистрацию. Пожалуйста, проверьте свой почтовый ящик на наличие проверочного письма.'
+            );
             return $this->goHome();
         }
 
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'signup',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
@@ -173,17 +189,26 @@ class SiteController extends Controller
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Проверьте свою электронную почту для получения дальнейших инструкций.');
+                Yii::$app->session->setFlash(
+                    'success',
+                    'Проверьте свою электронную почту для получения дальнейших инструкций.'
+                );
 
                 return $this->goHome();
             } else {
-                Yii::$app->session->setFlash('error', 'К сожалению, мы не можем сбросить пароль для предоставленного адреса электронной почты.');
+                Yii::$app->session->setFlash(
+                    'error',
+                    'К сожалению, мы не можем сбросить пароль для предоставленного адреса электронной почты.'
+                );
             }
         }
 
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'requestPasswordResetToken',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
@@ -207,17 +232,20 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return $this->render('resetPassword', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'resetPassword',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
      * Verify email address
      *
      * @param string $token
-     * @throws BadRequestHttpException
      * @return yii\web\Response
+     * @throws BadRequestHttpException
      */
     public function actionVerifyEmail($token)
     {
@@ -233,7 +261,10 @@ class SiteController extends Controller
             }
         }
 
-        Yii::$app->session->setFlash('error', 'К сожалению, мы не можем подтвердить вашу учетную запись с помощью предоставленного токена.');
+        Yii::$app->session->setFlash(
+            'error',
+            'К сожалению, мы не можем подтвердить вашу учетную запись с помощью предоставленного токена.'
+        );
         return $this->goHome();
     }
 
@@ -247,14 +278,23 @@ class SiteController extends Controller
         $model = new ResendVerificationEmailForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Проверьте свою электронную почту для получения дальнейших инструкций.');
+                Yii::$app->session->setFlash(
+                    'success',
+                    'Проверьте свою электронную почту для получения дальнейших инструкций.'
+                );
                 return $this->goHome();
             }
-            Yii::$app->session->setFlash('error', 'К сожалению, мы не можем повторно отправить проверочное письмо на указанный адрес электронной почты.');
+            Yii::$app->session->setFlash(
+                'error',
+                'К сожалению, мы не можем повторно отправить проверочное письмо на указанный адрес электронной почты.'
+            );
         }
 
-        return $this->render('resendVerificationEmail', [
-            'model' => $model
-        ]);
+        return $this->render(
+            'resendVerificationEmail',
+            [
+                'model' => $model
+            ]
+        );
     }
 }

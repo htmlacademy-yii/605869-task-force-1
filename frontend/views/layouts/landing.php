@@ -90,22 +90,22 @@ $formConfig = [
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/index']); ?>">Задания</a>
+                        <a href="#" class="header__account-enter open-modal" data-for="enter-form">Задания</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <a href="#" class="header__account-enter open-modal" data-for="enter-form">Мой профиль</a>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
+                        <a href="#" class="header__account-enter open-modal" data-for="enter-form">Исполнители</a>
                     </li>
                     <li class="links__item">
                         <a href="<?= Yii::$app->urlManager->createUrl(['registration/index']); ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Создать задание</a>
+                        <a href="#" class="header__account-enter open-modal" data-for="enter-form">Создать задание</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Справка</a>
+                        <a href="#">Справка</a>
                     </li>
                 </ul>
             </div>

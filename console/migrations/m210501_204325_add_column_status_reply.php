@@ -3,16 +3,16 @@
     use yii\db\Migration;
     
     /**
-     * Class m210407_182207_alterColumn_status_id
+     * Class m210501_204325_add_column_status_reply
      */
-    class m210407_182207_alterColumn_status_id extends Migration
+    class m210501_204325_add_column_status_reply extends Migration
     {
         /**
          * {@inheritdoc}
          */
         public function safeUp()
         {
-            $this->alterColumn('task', 'status_id', $this->tinyInteger(1)->defaultValue(1));
+            $this->addColumn('replies', 'status', $this->tinyInteger()->defaultValue(1));
         }
         
         /**
@@ -20,7 +20,7 @@
          */
         public function safeDown()
         {
-            $this->alterColumn('task', 'status_id', $this->tinyInteger(1)->notNull());
+            $this->dropColumn('replies', 'status');
         }
         
         /*
@@ -32,7 +32,7 @@
     
         public function down()
         {
-            echo "m210407_182207_alterColumn_status_id cannot be reverted.\n";
+            echo "m210501_204325_add_column_status_reply cannot be reverted.\n";
     
             return false;
         }

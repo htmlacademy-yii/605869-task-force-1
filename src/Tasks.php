@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace TaskForce;
 
 use Exception;
+use phpDocumentor\Reflection\Types\Null_;
 use TaskForce\Action\AbstractSelectingAction;
 use TaskForce\Action\Cancel;
-use TaskForce\Action\Done;
-use TaskForce\Action\Refuse;
-use TaskForce\Action\Respond;
+use TaskForce\Action\Complete;
+use TaskForce\Action\Refusal;
+use TaskForce\Action\Response;
 use TaskForce\Exception\StatusExistsException;
 
 /**
@@ -16,16 +17,16 @@ use TaskForce\Exception\StatusExistsException;
  * Class Task
  * @package TaskForce\src
  */
-class Task
+class Tasks
 {
     /**
      * константы статусов заданий
      */
-    const STATUS_NEW = '1'; //статус нового задания
-    const STATUS_CANCEL = '2'; //статус отмененного задания
-    const STATUS_IN_WORK = '3'; //статус задания находящегося в работе
-    const STATUS_COMPLETED = '4'; //статус выполненного задания
-    const STATUS_FAILED = '5'; //статус проваленного задания
+    const STATUS_NEW = 1; //статус нового задания
+    const STATUS_CANCEL = 2; //статус отмененного задания
+    const STATUS_IN_WORK = 3; //статус задания находящегося в работе
+    const STATUS_COMPLETED = 4; //статус выполненного задания
+    const STATUS_FAILED = 5; //статус проваленного задания
 
     /**
      * id исполнителя
@@ -70,7 +71,7 @@ class Task
      * @param string $status
      * @throws StatusExistsException
      */
-    public function __construct(int $idPerformer, int $idCustomer, int $idUser, string $status)
+    public function __construct($idPerformer, int $idCustomer, int $idUser, string $status)
     {
         $this->idPerformer = $idPerformer;
         $this->idCustomer = $idCustomer;
@@ -96,9 +97,9 @@ class Task
      * @return string|null
      * @throws Exception
      */
-    public function getNextStatus(): ?string
+    public function getNextStatus($taskId): ?string
     {
-        $availableAction = $this->getAvailableAction();
+        $availableAction = $this->getAvailableAction($taskId);
         $map = $this->getActionStatusMap();
 
         return $map[$availableAction] ?? null;
@@ -127,9 +128,9 @@ class Task
     {
         return [
             (new Cancel()),
-            (new Respond()),
-            (new Done()),
-            (new Refuse())
+            (new Response()),
+            (new Complete()),
+            (new Refusal())
         ];
     }
 
@@ -141,12 +142,11 @@ class Task
     public function availableAction(): ?array
     {
         if ($this->status == self::STATUS_NEW) {
-            return $actions = [new Respond(), new Cancel()];
+            return [new Response(), new Cancel()];
         } elseif ($this->status == self::STATUS_IN_WORK) {
-            return $actions = [new Done(), new Refuse()];
-        } else {
-            throw new StatusExistsException('Неожиданный cтатус задачи ' . $this->status);
+            return [new Complete(), new Refusal()];
         }
+        return [];
     }
 
     /**
@@ -154,12 +154,12 @@ class Task
      * @return string|null
      * @throws Exception
      */
-    public function getAvailableAction(): ?string
+    public function getAvailableAction($taskId): ?array
     {
         $actions = $this->availableAction();
         foreach ($actions as $action) {
             if ($action->checkingUserStatus($this->idPerformer, $this->idCustomer, $this->idUser)) {
-                return $action->getActionCode();
+                return [$action->getActionCode(), $action->getActionTitle($taskId)];
             }
         }
 
@@ -172,10 +172,10 @@ class Task
     private function getActionStatusMap()
     {
         return [
-            (new Respond())->getActionCode() => self::STATUS_IN_WORK,
+            (new Response())->getActionCode() => self::STATUS_IN_WORK,
             (new Cancel())->getActionCode() => self::STATUS_CANCEL,
-            (new Refuse())->getActionCode() => self::STATUS_FAILED,
-            (new Done())->getActionCode() => self::STATUS_COMPLETED
+            (new Refusal())->getActionCode() => self::STATUS_FAILED,
+            (new Complete())->getActionCode() => self::STATUS_COMPLETED
         ];
     }
 }

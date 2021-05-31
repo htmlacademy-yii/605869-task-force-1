@@ -13,5 +13,6 @@ class TaskForceAsset extends AssetBundle
     
     public $js = [
         'js/main.js',
+        'js/plugins.js',
     ];
 }

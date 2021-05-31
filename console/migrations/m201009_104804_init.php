@@ -52,10 +52,10 @@ class m201009_104804_init extends Migration
             'customer_id' => $this->integer()->notNull(),
             'status_id' => $this->integer()->notNull(),
             'status_execution' => $this->tinyInteger(1)->notNull(),
-            'replies_id' => $this->integer()->notNull(),
+            'replies_id' => $this->integer(),
             'lat' => $this->double()->notNull(),
             'long' => $this->double()->notNull(),
-            'executor_id' => $this->integer()->notNull(),
+            'executor_id' => $this->integer(),
             'dt_add' => $this->dateTime()->notNull()->defaultExpression('now()')
         ], 'charset=utf8');
 
@@ -109,7 +109,7 @@ class m201009_104804_init extends Migration
             'phone' => $this->string(45)->null(),
             'telegram' => $this->string(45)->null(),
             'counter_failed_tasks' => $this->tinyInteger()->null(),
-            'specialization_id' => $this->integer()->notNull(),
+            'specialization_id' => $this->integer(),
             'city_id' => $this->integer()->notNull(),
             'avatar' => $this->string(45)->null(),
             'user_id' => $this->integer()->notNull()

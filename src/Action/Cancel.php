@@ -3,9 +3,11 @@
 
 namespace TaskForce\Action;
 
+use frontend\models\Status;
+use frontend\models\Task;
 
 /**
- * Class Cancel
+ * Class Refusal
  * @package TaskForceAction
  * Класс наследуется от абстрактного, возвращает действие "Отменить"
  */
@@ -15,9 +17,14 @@ class Cancel extends AbstractSelectingAction
      * @return string|null
      * метод - для человекопонятного названия действия
      */
-    public function getActionTitle()
+    public function getActionTitle($taskId)
     {
-        return 'Отменить';
+        $task = Task::findOne($taskId);
+        if ($task->status_id == Status::STATUS_NEW) {
+            return 'Отменить';
+        }
+
+        return  null;
     }
 
     /**
@@ -26,7 +33,7 @@ class Cancel extends AbstractSelectingAction
      */
     public function getActionCode()
     {
-        return 'action_cancel';
+        return 'cancel';
     }
 
     /**
