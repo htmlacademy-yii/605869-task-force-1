@@ -19,6 +19,7 @@ class RegistrationController extends UnsecuredController
         $cityList = ArrayHelper::map($cities, 'id', 'name');
         if (Yii::$app->request->post()) {
             $model->load(Yii::$app->request->post());
+
             if ($model->validate() && ($user = $model->createUser())) {
                 Yii::$app->user->login($user);
 

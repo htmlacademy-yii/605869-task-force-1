@@ -9,6 +9,7 @@
      *
      * @property int $id
      * @property string $name
+     * @property string $kladr
      * @property float $lat
      * @property float $long
      *
@@ -31,7 +32,8 @@
         public function rules()
         {
             return [
-                [['name', 'lat', 'long'], 'required'],
+                [['name', 'lat', 'long', 'kladr'], 'required'],
+                [['name', 'lat', 'long', 'kladr'], 'safe'],
                 [['lat', 'long'], 'number'],
                 [['name'], 'string', 'max' => 45],
             ];
@@ -47,6 +49,7 @@
                 'name' => 'Name',
                 'lat' => 'Lat',
                 'long' => 'Long',
+                'kladr' => 'Код КЛАДР города',
             ];
         }
 

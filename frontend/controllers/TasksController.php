@@ -67,7 +67,7 @@ class TasksController extends SecuredController
                 'responseTaskForm' => $responseTaskForm,
                 'completeTaskForm' => $completeTaskForm,
                 'replies' => $replies,
-                'user_id' => Yii::$app->user->identity->getId(),
+                'userId' => Yii::$app->user->identity->getId(),
             ]
         );
     }

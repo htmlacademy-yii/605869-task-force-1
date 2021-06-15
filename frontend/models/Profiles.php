@@ -45,7 +45,7 @@
                 [['about'], 'string'],
                 [['counter_failed_tasks', 'specialization_id', 'city_id', 'user_id'], 'integer'],
                 [['city_id', 'user_id'], 'required'],
-                [['address', 'phone', 'email', 'avatar', 'skype'], 'string', 'max' => 45],
+                [['phone', 'email', 'avatar', 'skype'], 'string', 'max' => 45],
                 [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
                 [['specialization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Specialization::className(), 'targetAttribute' => ['specialization_id' => 'id']],
                 [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

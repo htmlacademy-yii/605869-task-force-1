@@ -3,12 +3,12 @@
 /* @var $this yii\web\View */
 /* @var $users User */
 /* @var $cities City */
-/* @var $model UserFiltersForm */
+/* @var $model RegistrationForm */
 /* @var array $cityList   */
 
 use frontend\models\City;
+use frontend\models\RegistrationForm;
 use frontend\models\User;
-use frontend\models\UserFiltersForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 	
@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
 			->hint('Введите валидный адрес электронной почты');
 	
 		?>
-	
+
 		<?= $form->field($model, 'name')
 			->textInput(
 				[
@@ -53,22 +53,19 @@ use yii\widgets\ActiveForm;
 			->label('Ваше имя')
 			->hint('Введите ваше имя и фамилию');
 		?>
-	
-	
-	
-		<?= $form->field(
-			$model,
-			'city',
-			[
-				'inputOptions' => [
-					'class' => 'multiple-select input town-select registration-town',
-					'size' => '1',
-					'id' => '18',
-				]
-			]
-		)->dropDownList($cityList)->label('Город проживания')
-			->hint('Укажите город, чтобы находить подходящие задачи');
-		?>
+
+
+
+
+        <?= $form->field($model, 'address',
+                         ['template' => "{label}\n{input}\n{hint}"]
+        )
+            ->textInput(
+                [
+                    'id' => 'address',
+                    'class' => 'input-navigation input-middle input address'
+                ]
+            )->hint('Укажите город, чтобы находить подходящие задачи') ?>
         
 		<?= $form->field(
 			$model,
@@ -85,6 +82,11 @@ use yii\widgets\ActiveForm;
         ?>
         
         <?= Html::button('Создать аккаунт', ['class' => 'button button__registration', 'type' => 'submit']); ?>
+        <?= $form->field($model, 'lat')->hiddenInput(['id' => 'lat'])->label(false); ?>
+        <?= $form->field($model, 'long')->hiddenInput(['id' => 'long'])->label(false); ?>
+        <?= $form->field($model, 'city')->hiddenInput(['id' => 'city'])->label(false); ?>
+        <?= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); ?>
+        <?= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); ?>
         <?php $form = ActiveForm::end(); ?>
     </div>
 </section>

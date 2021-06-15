@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use frontend\api\LocationApiService;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -21,7 +22,12 @@ class CreateTaskForm extends Model
     public $files;
     public $budget;
     public $expire;
-    
+    public $address;
+    public $lat;
+    public $long;
+    public $city;
+    public $kladr;
+
     public function attributeLabels()
     {
         return [
@@ -31,17 +37,26 @@ class CreateTaskForm extends Model
             'files' => 'Файлы',
             'budget' => 'Бюджет',
             'expire' => 'Срок исполнения',
+            'address' => 'Локация',
+            'long' => 'Долгота',
+            'lat' => 'Широта',
+            'city' => 'Город',
+            'kladr' => 'Код КЛАДР города',
         ];
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['name', 'description', 'categoryId'], 'required', 'message' => 'Это поле должно быть заполнено.'],
-            [['name', 'description', 'categoryId', 'files'], 'safe'],
+            [
+                ['name', 'description', 'categoryId', 'address'],
+                'required',
+                'message' => 'Это поле должно быть заполнено.'
+            ],
+            [['name', 'description', 'categoryId', 'files', 'address', 'lat', 'long', 'city', 'kladr'], 'safe'],
             [['name', 'description'], 'trim'],
             ['name', 'string', 'min' => 10, 'tooShort' => 'Это поле должно содержать не менее 10 символов.'],
             ['name', 'string', 'max' => 128, 'tooLong' => 'Это поле должно содержать не более 128 символов.'],
@@ -59,7 +74,7 @@ class CreateTaskForm extends Model
             ['expire', 'isDateInFuture'],
         ];
     }
-    
+
     /**
      * data validator
      * @param $attribute
@@ -70,7 +85,7 @@ class CreateTaskForm extends Model
             $this->addError($attribute, 'Дата окончания не может быть меньше даты начала задачи.');
         }
     }
-    
+
     /**
      * @return Task|null
      * @throws Throwable
@@ -81,34 +96,51 @@ class CreateTaskForm extends Model
     {
         $task = new Task();
         $task->name = $this->name;
+        $task->status_id = Task::STATUS_NEW;
         $task->description = $this->description;
         $task->category_id = $this->categoryId;
         //@todo required from requrest
         $task->city_id = 1;
-        $task->lat = 0;
-        $task->long = 0;
+        $task->lat = $this->lat;
+        $task->long = $this->long;
         //MYSQL: status_id DEFAULT 1
         //$task->status_id = Task::STATUS_NEW;
         $task->budget = $this->budget;
         $task->expire = $this->expire;
         $task->customer_id = Yii::$app->user->getId();
-        
+
+
+        $task->address = $this->address;
+
+        $cityModel = City::findOne(['kladr' => $this->kladr]);
+
+        if (!$cityModel) {
+            $cityModel = new City();
+            $cityModel->name = $this->city;
+            $cityModel->long = $this->long;
+            $cityModel->lat = $this->lat;
+            $cityModel->kladr = $this->kladr;
+            $cityModel->save();
+        }
+
+        $task->city_id = $cityModel->id;
+
         if (!$task->save()) {
             return null;
         }
-        
+
         $this->files = UploadedFile::getInstances($this, 'files');
         $src = Yii::getAlias('@app/uploads/') . $task->id;
-        
+
         foreach ($this->files as $file) {
-                FileHelper::createDirectory($src);
-                $file->saveAs($src . '/' . $file->name);
-                $newFile = new File();
-                $newFile->name = $file->name;
-                $newFile->task_id = $task->id;
-                $newFile->save();
+            FileHelper::createDirectory($src);
+            $file->saveAs($src . '/' . $file->name);
+            $newFile = new File();
+            $newFile->name = $file->name;
+            $newFile->task_id = $task->id;
+            $newFile->save();
         }
-        
+
         return $task;
     }
 }
