@@ -129,7 +129,6 @@ class CreateTaskForm extends Model
         $task->city_id = $cityModel->id;
 
         if (!$task->save()) {
-            var_dump($task->errors);
 
             return null;
         }
