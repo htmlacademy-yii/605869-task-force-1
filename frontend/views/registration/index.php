@@ -4,7 +4,6 @@
 /* @var $users User */
 /* @var $cities City */
 /* @var $model RegistrationForm */
-/* @var array $cityList   */
 
 use frontend\models\City;
 use frontend\models\RegistrationForm;
@@ -53,9 +52,6 @@ use yii\widgets\ActiveForm;
 			->label('Ваше имя')
 			->hint('Введите ваше имя и фамилию');
 		?>
-
-
-
 
         <?= $form->field($model, 'address',
                          ['template' => "{label}\n{input}\n{hint}"]

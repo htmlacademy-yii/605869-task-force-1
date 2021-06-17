@@ -81,7 +81,6 @@ class TasksController extends SecuredController
         $categories = Category::find()->all();
         $categoryList = ArrayHelper::map($categories, 'id', 'name');
         $cities = City::find()->all();
-        $cityList = ArrayHelper::map($cities, 'id', 'name');
 
         $model = new CreateTaskForm();
 
@@ -99,7 +98,6 @@ class TasksController extends SecuredController
                 'model' => $model,
                 'categoryList' => $categoryList,
                 'cities' => $cities,
-                'cityList' => $cityList
             ]
         );
     }

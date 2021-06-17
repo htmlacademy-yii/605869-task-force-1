@@ -1,10 +1,7 @@
 <?php
 /* @var $model CreateTaskForm */
-
-/* @var array $categoryList */
 /* @var $cities City */
-
-/* @var array $cityList */
+/* @var array $categoryList */
 
 use frontend\models\City;
 use frontend\models\CreateTaskForm;
@@ -158,6 +155,7 @@ $this->title = 'Создать новую задачу - TaskForce';
         <?= $form->field($model, 'lat')->hiddenInput(['id' => 'lat'])->label(false); ?>
         <?= $form->field($model, 'long')->hiddenInput(['id' => 'long'])->label(false); ?>
         <?= $form->field($model, 'city')->hiddenInput(['id' => 'city'])->label(false); ?>
+        <?= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); ?>
         <?= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); ?>
         <?php ActiveForm::end(); ?>
 

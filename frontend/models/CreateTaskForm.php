@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use frontend\api\LocationApiService;
+use frontend\repositories\CityRepository;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -26,6 +27,7 @@ class CreateTaskForm extends Model
     public $lat;
     public $long;
     public $city;
+    public $village;
     public $kladr;
 
     public function attributeLabels()
@@ -56,7 +58,7 @@ class CreateTaskForm extends Model
                 'required',
                 'message' => 'Это поле должно быть заполнено.'
             ],
-            [['name', 'description', 'categoryId', 'files', 'address', 'lat', 'long', 'city', 'kladr'], 'safe'],
+            [['name', 'description', 'categoryId', 'files', 'address', 'lat', 'long', 'city', 'kladr', 'village'], 'safe'],
             [['name', 'description'], 'trim'],
             ['name', 'string', 'min' => 10, 'tooShort' => 'Это поле должно содержать не менее 10 символов.'],
             ['name', 'string', 'max' => 128, 'tooLong' => 'Это поле должно содержать не более 128 символов.'],
@@ -109,23 +111,26 @@ class CreateTaskForm extends Model
         $task->expire = $this->expire;
         $task->customer_id = Yii::$app->user->getId();
 
-
         $task->address = $this->address;
 
-        $cityModel = City::findOne(['kladr' => $this->kladr]);
-
-        if (!$cityModel) {
-            $cityModel = new City();
-            $cityModel->name = $this->city;
-            $cityModel->long = $this->long;
-            $cityModel->lat = $this->lat;
-            $cityModel->kladr = $this->kladr;
-            $cityModel->save();
+        if (!$this->city && !$this->village) {
+            return null;
         }
+
+        $cityName = $this->city ?: $this->village;
+
+        $cityModel = CityRepository::getCityByBladrCode(
+            $this->kladr,
+            $cityName,
+            $this->long,
+            $this->lat
+        );
 
         $task->city_id = $cityModel->id;
 
         if (!$task->save()) {
+            var_dump($task->errors);
+
             return null;
         }
 

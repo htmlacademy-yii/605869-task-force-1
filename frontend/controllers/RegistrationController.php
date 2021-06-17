@@ -16,7 +16,6 @@ class RegistrationController extends UnsecuredController
         $model = new RegistrationForm();
 
         $cities = City::find()->all();
-        $cityList = ArrayHelper::map($cities, 'id', 'name');
         if (Yii::$app->request->post()) {
             $model->load(Yii::$app->request->post());
 
@@ -26,6 +25,6 @@ class RegistrationController extends UnsecuredController
                 return $this->goHome();
             }
         }
-        return $this->render('index', ['model' => $model, 'cities' => $cities, 'cityList' => $cityList]);
+        return $this->render('index', ['model' => $model, 'cities' => $cities]);
     }
 }

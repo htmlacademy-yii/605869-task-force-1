@@ -7,7 +7,6 @@
 /* @var $responseTaskForm ResponseTaskForm */
 /* @var $completeTaskForm CompleteTaskForm */
 /* @var $replies Replies */
-
 /* @var $userId Yii */
 
 use frontend\models\CompleteTaskForm;
@@ -46,18 +45,14 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                 <h3 class="content-view__h3">Общее описание</h3>
                 <p><?= $task->description; ?></p>
             </div>
-            <?php
-            if ($task->files): ?>
+            <?php if ($task->files): ?>
                 <div class="content-view__attach">
                     <h3 class="content-view__h3">Вложения</h3>
-                    <?php
-                    foreach ($task->files as $attachment): ?>
+                    <?php foreach ($task->files as $attachment): ?>
                         <a href="#"><?= Html::encode($attachment->name); ?>></a>
-                    <?php
-                    endforeach; ?>
+                    <?php endforeach; ?>
                 </div>
-            <?php
-            endif; ?>
+            <?php endif; ?>
             <div class="content-view__location">
                 <h3 class="content-view__h3">Расположение</h3>
                 <div class="content-view__location-wrapper">
@@ -73,7 +68,6 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                                 ]
                             ],
                         ]; ?>
-
 
                         <?= YandexMaps::widget(
                             [
@@ -108,8 +102,6 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                             ]
                         ); ?>
 
-                        <!--                        <div id="map" style="width: 361px; height: 292px; background-color: lightgray;"-->
-                        <!--                             data-longitude="" data-latitude=""></div>-->
                     </div>
                     <div class="content-view__address">
                         <span class="address__town"><?= explode(', ', $task->address)[0]; ?></span><br>
@@ -120,60 +112,54 @@ $this->title = 'Задание: ' . Html::encode($task->name);
             </div>
         </div>
 
-        <?php
-        if (!empty($strategy->getAvailableAction($task->id)[1])): ?>
+        <?php if (!empty($strategy->getAvailableAction($task->id)[1])): ?>
             <div class="content-view__action-buttons">
-                <button class=" button button__big-color <?= $strategy->getAvailableAction(
-                    $task->id
-                )[0]; ?>-button open-modal"
+                <button class=" button button__big-color <?= $strategy
+                    ->getAvailableAction($task->id)[0]; ?>-button open-modal"
                         type="button" data-for="<?= $strategy->getAvailableAction($task->id)[0]; ?>-form">
                     <?= $strategy->getAvailableAction($task->id)[1]; ?>
                 </button>
             </div>
-        <?php
-        endif; ?>
+        <?php endif; ?>
     </div>
 
-    <?php
-    if (count($task->replies)): ?>
+    <?php if (count($task->replies)): ?>
         <div class="content-view__feedback">
-            <?php
-            if ($userId === $task->customer_id): ?>
+            <?php if ($userId === $task->customer_id): ?>
                 <h2>Отклики <span>(<?= count($task->replies); ?>)</span></h2>
-                <?php
-                foreach ($task->replies as $reply): ?>
+                <?php foreach ($task->replies as $reply): ?>
 
                     <div class="content-view__feedback-wrapper">
                         <div class="content-view__feedback-card">
                             <div class="feedback-card__top">
                                 <a href="#"><img src="<?= Html::encode($reply->user->getAvatar()); ?>"
                                                  width="55"
-                                                 height="55"></a>
+                                                 height="55">
+                                </a>
                                 <div class="feedback-card__top--name">
                                     <p><a href="<?= BaseUrl::to(['users/view/', 'id' => $reply->user->id]) ?>"
-                                          class="link-regular"><?= Html::encode($reply->user->name); ?></a></p>
+                                          class="link-regular"><?= Html::encode($reply->user->name); ?>
+                                        </a>
+                                    </p>
 
                                     <!--                    звезды рейтинга-->
                                     <?= StarRatingWidget::widget(['user' => $reply->user]); ?>
                                     <b><?= $reply->user->getRating(); ?></b>
                                 </div>
-                                <?php
-                                if ($reply->dt_add): ?>
-                                    <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime(
-                                            $reply->dt_add
-                                        ); ?></span>
-                                <?php
-                                endif; ?>
+                                <?php if ($reply->dt_add): ?>
+                                    <span class="new-task__time">
+                                        <?= Yii::$app->formatter->asRelativeTime($reply->dt_add); ?>
+                                    </span>
+                                <?php endif; ?>
                             </div>
                             <div class="feedback-card__content">
                                 <p><?= Html::encode($reply->description); ?></p>
-                                <span><?= ($reply->price) ? Html::encode($reply->price) : Html::encode(
-                                        $reply->task->budget
-                                    ); ?> ₽</span>
+                                <span>
+                                    <?= ($reply->price) ? Html::encode($reply->price) : Html::encode($reply->task->budget); ?> ₽
+                                </span>
                             </div>
 
-                            <?php
-                            if ($reply->task->status_id === 1 && $reply->status === 1): ?>
+                            <?php if ($reply->task->status_id === 1 && $reply->status === 1): ?>
                                 <div class="feedback-card__actions">
                                     <?= Html::a(
                                         'Подтвердить',
@@ -184,8 +170,7 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                                             'reply_id' => $reply->id
                                         ],
                                         ['class' => 'button__small-color request-button button']
-                                    );
-                                    ?>
+                                    ); ?>
                                     <?= Html::a(
                                         'Отказать',
                                         [
@@ -194,36 +179,28 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                                             'reply_id' => $reply->id
                                         ],
                                         ['class' => 'button__small-color refusal-button button']
-                                    );
-                                    ?>
+                                    ); ?>
 
                                 </div>
-                            <?php
-                            endif; ?>
-
+                            <?php endif; ?>
                         </div>
                     </div>
-
-                <?php
-                endforeach; ?>
-            <?php
-            endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-    <?php
-    endif; ?>
+    <?php endif; ?>
 
-    <?php
-    foreach ($task->replies as $reply): ?>
+    <?php foreach ($task->replies as $reply): ?>
         <!--отображение отклика для автора отклика -->
         <div class="content-view__feedback">
             <div class="content-view__feedback-wrapper">
-                <?php
-                if ($reply->user_id === $userId): ?>
+                <?php if ($reply->user_id === $userId): ?>
                     <h2>Ваш отклик на задание:</h2>
                     <div class="content-view__feedback-card">
                         <div class="feedback-card__top">
                             <a href="#"><img src="<?= Html::encode($reply->user->getAvatar()); ?>" width="55"
-                                             height="55"></a>
+                                             height="55">
+                            </a>
                             <div class="feedback-card__top--name">
                                 <p><a href="<?= BaseUrl::to(['users/view/', 'id' => $reply->user->id]) ?>"
                                       class="link-regular"><?= Html::encode($reply->user->name); ?></a></p>
@@ -231,27 +208,24 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                                 <?= StarRatingWidget::widget(['user' => $reply->user]); ?>
                                 <b><?= $reply->user->getRating(); ?></b>
                             </div>
-                            <?php
-                            if ($reply->dt_add): ?>
-                                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime(
-                                        $reply->dt_add
-                                    ); ?></span>
+                            <?php if ($reply->dt_add): ?>
+                                <span class="new-task__time">
+                                    <?= Yii::$app->formatter->asRelativeTime($reply->dt_add); ?>
+                                </span>
                             <?php
                             endif; ?>
                         </div>
                         <div class="feedback-card__content">
                             <p><?= Html::encode($reply->description); ?></p>
-                            <span><?= ($reply->price) ? Html::encode($reply->price) : Html::encode(
-                                    $reply->task->budget
-                                ); ?> ₽</span>
+                            <span>
+                                <?= ($reply->price) ? Html::encode($reply->price) : Html::encode($reply->task->budget); ?> ₽
+                            </span>
                         </div>
                     </div>
-                <?php
-                endif; ?>
+                <?php endif; ?>
             </div>
         </div>
-    <?php
-    endforeach; ?>
+    <?php endforeach; ?>
 
 </section>
 
@@ -269,8 +243,9 @@ $this->title = 'Задание: ' . Html::encode($task->name);
             <p class="info-customer"><span><?= $task->customer->getTasksCount(); ?> заданий</span>
                 <span class="last-"><?= TimeOnSiteWidget::widget(['task' => $task]); ?></span>
             </p>
-            <a href="<?= BaseUrl::to(['users/view/', 'id' => $task->customer_id]); ?>" class="link-regular">Смотреть
-                профиль</a>
+            <a href="<?= BaseUrl::to(['users/view/', 'id' => $task->customer_id]); ?>" class="link-regular">
+                 Смотреть профиль
+            </a>
         </div>
     </div>
     <div id="chat-container">
@@ -281,8 +256,7 @@ $this->title = 'Задание: ' . Html::encode($task->name);
 
 <!--модальное окно ОКЛИКНУТЬСЯ-->
 
-<?php
-if (User::findOne($userId)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
+<?php if (User::findOne($userId)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
     <section class="modal response-form form-modal" id="response-form">
         <h2>Отклик на задание</h2>
 
@@ -332,11 +306,9 @@ if (User::findOne($userId)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
             [
                 'class' => 'button modal-button'
             ]
-        );
-        ?>
+        ); ?>
 
-        <?php
-        ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
 
         <button class="form-modal-close" type="button">Закрыть</button>
     </section>
@@ -344,8 +316,7 @@ if (User::findOne($userId)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
 endif; ?>
 
 <!--модальное окно ВЫПОЛНЕНО-->
-<?php
-if ($userId === $task->customer_id): ?>
+<?php if ($userId === $task->customer_id): ?>
     <section class="modal completion-form form-modal" id="complete-form">
         <h2>Завершение задания</h2>
         <p class="form-modal-description">Задание выполнено?</p>
@@ -367,8 +338,7 @@ if ($userId === $task->customer_id): ?>
                     ],
                 ]
             ]
-        );
-        ?>
+        ); ?>
 
         <?= Html::activeRadioList(
             $completeTaskForm,
@@ -432,13 +402,11 @@ if ($userId === $task->customer_id): ?>
             ]
         ) ?>
 
-        <?php
-        ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
 
         <button class="form-modal-close" type="button">Закрыть</button>
     </section>
-<?php
-endif; ?>
+<?php endif; ?>
 
 <!--модальное окно отказа от задания-->
 <section class="modal form-modal refusal-form" id="refusal-form">
@@ -451,8 +419,7 @@ endif; ?>
     <button class="button__form-modal button" id="close-modal"
             type="button">Отмена
     </button>
-    <?php
-    if (isset($task->replies_id)): ?>
+    <?php if (isset($task->replies_id)): ?>
         <?= Html::a(
             'Отказаться',
             [
@@ -462,8 +429,7 @@ endif; ?>
             ],
             ['class' => 'button__form-modal refusal-button button']
         ) ?>
-    <?php
-    endif; ?>
+    <?php endif; ?>
     <button class="form-modal-close" type="button">Закрыть</button>
 </section>
 

@@ -2,8 +2,8 @@
 
 namespace frontend\models;
 
+use frontend\repositories\CityRepository;
 use Yii;
-use yii\base\BaseObject;
 use yii\base\Model;
 
 class RegistrationForm extends Model
@@ -56,6 +56,7 @@ class RegistrationForm extends Model
         $user->password = Yii::$app->security->generatePasswordHash($this->password);
         
         if (!$user->save()) {
+
         	$transaction->rollBack();
 
         	return false;
@@ -64,29 +65,26 @@ class RegistrationForm extends Model
         $profile = new Profiles();
         $profile->user_id = $user->id;
 
-        $cityModel = City::findOne(['kladr' => $this->kladr]);
-        if (!$cityModel) {
-            $cityModel = new City();
+        if (!$this->city && !$this->village) {
 
-            if ($this->city) {
-                $cityModel->name = $this->city;
-            }
-
-            if ($this->village) {
-                $cityModel->name = $this->village;
-            }
-
-            $cityModel->long = $this->long;
-            $cityModel->lat = $this->lat;
-            $cityModel->kladr = $this->kladr;
-            $cityModel->save();
+            return null;
         }
+
+        $cityName = $this->city ?: $this->village;
+
+        $cityModel = CityRepository::getCityByBladrCode(
+            $this->kladr,
+            $cityName,
+            $this->long,
+            $this->lat
+        );
 
         $profile->city_id = $cityModel->id;
         $profile->address = $this->address;
 
         
         if (!$profile->save()) {
+
         	$transaction->rollBack();
 
         	return false;
