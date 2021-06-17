@@ -5,7 +5,6 @@
      */
 ?>
 
-
 <?php if ($dateInterval->y): ?>
     <?= $dateInterval->y; ?>  <?= WordHelper::pluralForm($dateInterval->y, 'год', 'года', 'лет'); ?>
 <?php endif; ?>
@@ -16,5 +15,5 @@
     <?= $dateInterval->d; ?>  <?= WordHelper::pluralForm($dateInterval->d, 'день', 'дня', 'дней') . ' '; ?>
 <?php endif; ?>
 <?php if ($dateInterval->h): ?>
-    <?= $dateInterval->h; ?>  <?= WordHelper::pluralForm($dateInterval->h, 'час', 'часа', 'часов'); ?>
-<?php endif; ?> назад
+    <?= $dateInterval->h; ?>  <?= WordHelper::pluralForm($dateInterval->h, 'час', 'часа', 'часов'); ?> <span>назад</span>
+<?php endif; ?>

@@ -7,7 +7,7 @@ Vue.component('chat', {
                <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
                 <p class="chat__message-time">{{ item.published_at }}</p>
                 <p class="chat__message-text">{{ item.message }}</p>
-               </div>
+               </div>draggable
               </div>
               <p class="chat__your-message">Ваше сообщение</p>
               <form class="chat__form">

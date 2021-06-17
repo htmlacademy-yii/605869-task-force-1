@@ -67,7 +67,7 @@ class TasksController extends SecuredController
                 'responseTaskForm' => $responseTaskForm,
                 'completeTaskForm' => $completeTaskForm,
                 'replies' => $replies,
-                'user_id' => Yii::$app->user->identity->getId(),
+                'userId' => Yii::$app->user->identity->getId(),
             ]
         );
     }
@@ -81,7 +81,6 @@ class TasksController extends SecuredController
         $categories = Category::find()->all();
         $categoryList = ArrayHelper::map($categories, 'id', 'name');
         $cities = City::find()->all();
-        $cityList = ArrayHelper::map($cities, 'id', 'name');
 
         $model = new CreateTaskForm();
 
@@ -99,7 +98,6 @@ class TasksController extends SecuredController
                 'model' => $model,
                 'categoryList' => $categoryList,
                 'cities' => $cities,
-                'cityList' => $cityList
             ]
         );
     }

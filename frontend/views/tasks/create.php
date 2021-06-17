@@ -1,24 +1,22 @@
 <?php
-    /* @var $model CreateTaskForm */
-    
-    /* @var array $categoryList */
-    /* @var $cities City */
-    
-    /* @var array $cityList */
-    
-    use frontend\models\City;
-    use frontend\models\CreateTaskForm;
-    use yii\widgets\ActiveForm;
-    
-    $this->title = 'Создать новую задачу - TaskForce';
+/* @var $model CreateTaskForm */
+/* @var $cities City */
+/* @var array $categoryList */
+
+use frontend\models\City;
+use frontend\models\CreateTaskForm;
+use yii\widgets\ActiveForm;
+
+$this->title = 'Создать новую задачу - TaskForce';
 ?>
 
 <section class="create__task">
     <h1>Публикация нового задания</h1>
     <div class="create__task-main">
-        
+
         <?php
-            $form = ActiveForm::begin([
+        $form = ActiveForm::begin(
+            [
                 'id' => 'task-form',
                 'enableClientScript' => false,
                 'options' => [
@@ -31,20 +29,21 @@
                     'errorOptions' => ['tag' => 'span'],
                     'hintOptions' => ['tag' => 'span'],
                 ]
-            ]); ?>
-        
+            ]
+        ); ?>
+
         <?= $form->field($model, 'name')
             ->textInput(
                 [
                     'class' => 'input textarea',
                     'rows' => 1,
-                    'placeholder' => 'Повесить полку',
+                    'placeholder' => 'Разместите свой текст',
                     'spellcheck' => 'false'
                 ]
             )
             ->hint('Кратко опишите суть работы');
         ?>
-        
+
         <?= $form->field($model, 'description')
             ->textarea(
                 [
@@ -58,7 +57,7 @@
                 'Укажите все пожелания и детали, чтобы исполнителям было проще соориентироваться'
             );
         ?>
-        
+
         <?= $form->field(
             $model,
             'categoryId',
@@ -74,7 +73,7 @@
 
         <label>Файлы</label>
         <span>Загрузите файлы, которые помогут исполнителю лучше выполнить или оценить работу</span>
-        
+
         <?= $form->field(
             $model,
             'files[]',
@@ -98,9 +97,15 @@
 
         <input type="hidden" name="_csrf-frontend" value="<?= Yii::$app->request->getCsrfToken() ?>"/>
 
-        <label for="13">Локация</label>
-        <input class="input-navigation input-middle input" id="13" type="search" name="q"
-               placeholder="Санкт-Петербург, Калининский район">
+        <?= $form->field($model, 'address',
+            ['template' => "{label}\n{input}"]
+        )
+            ->textInput(
+                [
+                    'id' => 'address',
+                    'class' => 'input-navigation input-middle input address'
+                ]
+            ) ?>
         <span>Укажите адрес исполнения, если задание требует присутствия</span>
 
         <div class="create__price-time">
@@ -124,7 +129,7 @@
                 )
                 ->hint('Не заполняйте для оценки исполнителем');
             ?>
-            
+
             <?= $form->field(
                 $model,
                 'expire',
@@ -140,16 +145,19 @@
                     'date',
                     [
                         'rows' => 1,
-                        'placeholder' => '10.11, 15:00',
-                        'class' => 'input-middle input input-date',
+                        'class' => 'input-middle input',
                     ]
                 )
                 ->hint('Укажите крайний срок исполнения');
             ?>
         </div>
         <input class="button" type="submit" value="Опубликовать"/>
-        <?php
-            ActiveForm::end(); ?>
+        <?= $form->field($model, 'lat')->hiddenInput(['id' => 'lat'])->label(false); ?>
+        <?= $form->field($model, 'long')->hiddenInput(['id' => 'long'])->label(false); ?>
+        <?= $form->field($model, 'city')->hiddenInput(['id' => 'city'])->label(false); ?>
+        <?= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); ?>
+        <?= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); ?>
+        <?php ActiveForm::end(); ?>
 
         <div class="create__warnings">
             <div class="warning-item warning-item--advice">
@@ -165,28 +173,28 @@
                     ракурсов.</p>
             </div>
             <?php
-                if ($model->errors): ?>
-                    <div class="warning-item warning-item--error">
-                        <h2>Ошибки заполнения формы</h2>
-                        <?php
-                            foreach ($model->getErrors() as $attribute => $messages): ?>
-                                <h3><?= $model->attributeLabels()[$attribute]; ?></h3>
-                                <p>
-                                    <?php
-                                        for ($i = 0; $i < count($messages); $i++): ?>
-                                            
-                                            <?= $messages[$i]; ?>
-                                            
-                                            <?= ($i < count($messages) - 1) ? '<br>' : ''; ?>
-                                        
-                                        <?php
-                                        endfor; ?>
-                                </p>
+            if ($model->errors): ?>
+                <div class="warning-item warning-item--error">
+                    <h2>Ошибки заполнения формы</h2>
+                    <?php
+                    foreach ($model->getErrors() as $attribute => $messages): ?>
+                        <h3><?= $model->attributeLabels()[$attribute]; ?></h3>
+                        <p>
                             <?php
-                            endforeach; ?>
-                    </div>
-                <?php
-                endif; ?>
+                            for ($i = 0; $i < count($messages); $i++): ?>
+
+                                <?= $messages[$i]; ?>
+
+                                <?= ($i < count($messages) - 1) ? '<br>' : ''; ?>
+
+                            <?php
+                            endfor; ?>
+                        </p>
+                    <?php
+                    endforeach; ?>
+                </div>
+            <?php
+            endif; ?>
         </div>
     </div>
 </section>
