@@ -73,16 +73,6 @@
         }
 
         /**
-         * Gets query for [[Messages]].
-         *
-         * @return ActiveQuery
-         */
-        public function getMessages()
-        {
-            return $this->hasMany(Message::className(), ['recipient_id' => 'id']);
-        }
-
-        /**
          * Gets query for [[Messages0]].
          *
          * @return ActiveQuery
@@ -225,4 +215,12 @@
 		{
 			// TODO: Implement validateAuthKey() method.
 		}
+
+        /**
+         * @return bool
+         */
+		public function isCustomer(): bool
+        {
+            return (int) $this->role === self::ROLE_CUSTOMER;
+        }
 	}

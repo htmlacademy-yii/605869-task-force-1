@@ -7,16 +7,16 @@ use frontend\models\City;
 use frontend\models\CompleteTaskForm;
 use frontend\models\CreateTaskForm;
 use frontend\models\Opinions;
-use frontend\models\Profiles;
 use frontend\models\Replies;
 use frontend\models\ResponseTaskForm;
 use frontend\models\Status;
 use frontend\models\Task;
 use frontend\models\TaskFiltersForm;
 use frontend\models\User;
-use TaskForce\Tasks;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -44,32 +44,18 @@ class TasksController extends SecuredController
      */
     public function actionView($id)
     {
-        $task = Task::findOne($id);
+        $task = Task::find()->where(['id' => $id])->with([
+            'replies' => function (ActiveQuery $query) {
+                $query->with('user');
+            },
+            'customer',
+        ])->one();
+
         if (!$task) {
-            throw new NotFoundHttpException("Задание с ID {$id} не существует!");
+            throw new NotFoundHttpException("Задание не существует!");
         }
 
-        $strategy = new Tasks(
-            $task->executor_id, $task->customer_id, Yii::$app->user->identity->getId(),
-            $task->status_id
-        );
-        $strategy->getAvailableAction($task->id);
-
-        $responseTaskForm = new ResponseTaskForm($task);
-        $completeTaskForm = new CompleteTaskForm();
-        $replies = Replies::find()->where(['task_id' => $task->id, 'user_id' => Yii::$app->user->identity->getId()]);
-
-        return $this->render(
-            'view',
-            [
-                'task' => $task,
-                'strategy' => $strategy,
-                'responseTaskForm' => $responseTaskForm,
-                'completeTaskForm' => $completeTaskForm,
-                'replies' => $replies,
-                'userId' => Yii::$app->user->identity->getId(),
-            ]
-        );
+        return $this->render('view', ['task' => $task]);
     }
 
     public function actionCreate()
@@ -102,79 +88,81 @@ class TasksController extends SecuredController
         );
     }
 
-    public function actionApply($taskId, $userId, $replyId)
+    public function actionApply(int $id)
     {
-        $task = Task::findOne($taskId);
-        if ($task->status_id = Status::STATUS_NEW) {
-            $task->status_id = Status::STATUS_IN_WORK;
-            $task->replies_id = $replyId;
-            $task->executor_id = $userId;
-            $task->save();
-            $reply = Replies::findOne($replyId);
-            $reply->status = Replies::STATUS_ACCEPT;
-            $reply->save();
+        $reply = Replies::findOne($id);
+
+        if (!$reply) {
+            throw new NotFoundHttpException('Отклик не найден');
         }
+
+        if ($reply->task->status_id != Task::STATUS_NEW) {
+            throw new BadRequestHttpException('Недопустимый статус задачи');
+        }
+
+        $reply->task->updateAttributes([
+            'status_id' => Task::STATUS_IN_WORK,
+            'executor_id' => $reply->user_id,
+        ]);
+
+        $reply->updateAttributes([
+            'status' => Replies::STATUS_ACCEPTED,
+        ]);
+
+        return $this->redirect(['tasks/view', 'id' => $reply->task_id]);
+    }
+
+    public function actionRefuse(int $id)
+    {
+        $task = Task::findOne($id);
+        $profiles = $task->executor->profiles;
+
+        $task->updateAttributes(['status_id' => Task::STATUS_FAILED]);
+
+        $profiles->counter_failed_tasks++;
+        $profiles->save();
 
         return $this->redirect(['tasks/view', 'id' => $task->id]);
     }
 
-    public function actionRefuse($taskId, $replyId)
+    public function actionResponse(int $id)
     {
-        $task = Task::findOne($taskId);
-        $reply = Replies::findOne($replyId);
-        $profiles = Profiles::findOne(['user_id' => $reply->user_id]);
-
-        if ($reply->status == Replies::STATUS_NEW) {
-            $reply->status = Replies::STATUS_REFUSAL;
-            $reply->save();
-        } elseif ($reply->status == Replies::STATUS_ACCEPT && $task->status_id == Task::STATUS_IN_WORK) {
-            $reply->status = Replies::STATUS_REFUSAL;
-            $reply->save();
-
-            $task->status_id = Status::STATUS_FAILED;
-            $task->save();
-
-            $profiles->counter_failed_tasks++;
-            $profiles->save();
-        }
-
-        return $this->redirect(['tasks/view', 'id' => $task->id]);
-    }
-
-    public function actionResponse($taskId)
-    {
-        $task = Task::findOne($taskId);
+        $task = Task::findOne($id);
 
         if (!$task) {
             throw new NotFoundHttpException("Задание не найдено");
         }
 
-        $user = User::findOne(Yii::$app->user->identity->getId());
+        $user = User::findOne(Yii::$app->user->getId());
 
-        $replies = Replies::find()->where(['task_id' => $taskId, 'user_id' => $user->id]);
-
-        if ($user->role === User::ROLE_EXECUTOR && empty($replies)) {
-            $responseTaskForm = new ResponseTaskForm($task);
-
-            if (Yii::$app->request->getIsPost()) {
-                $request = Yii::$app->request->post();
-            }
-
-            if ($responseTaskForm->load($request) && $responseTaskForm->validate()) {
-                $responseTaskForm->createReply();
-            }
-
-            return $this->redirect(['tasks/view', 'id' => $task->id]);
-        } else {
-            throw new NotFoundHttpException(
-                "Откликаться на задания могут только пользователи со статусом ИСПОЛНИТЕЛЬ и ранее не откликавшиеся на задание"
+        if ($user->isCustomer()) {
+            throw new BadRequestHttpException(
+                'Откликаться на задания могут только пользователи со статусом ИСПОЛНИТЕЛЬ'
             );
         }
+
+        $reply = Replies::find()->where(['task_id' => $id, 'user_id' => $user->id])->one();
+
+        if ($reply) {
+            throw new BadRequestHttpException(
+                'Откликаться на задания могут только пользователи ранее не откликавшиеся на задание'
+            );
+        }
+
+        $responseTaskForm = new ResponseTaskForm($task);
+
+        if (Yii::$app->request->getIsPost()) {
+            if ($responseTaskForm->load(Yii::$app->request->post()) && $responseTaskForm->validate()) {
+                $responseTaskForm->createReply();
+            }
+        }
+
+        return $this->redirect(['tasks/view', 'id' => $task->id]);
     }
 
-    public function actionComplete($taskId)
+    public function actionComplete(int $id)
     {
-        $task = Task::findOne($taskId);
+        $task = Task::findOne($id);
 
         if (!$task) {
             throw new NotFoundHttpException("Задание не найдено");
@@ -211,9 +199,9 @@ class TasksController extends SecuredController
         }
     }
 
-    public function actionCancel($taskId)
+    public function actionCancel(int $id)
     {
-        $task = Task::findOne($taskId);
+        $task = Task::findOne($id);
 
         if ($task->status_id == Status::STATUS_NEW) {
             $task->status_id = Status::STATUS_CANCEL;

@@ -39,7 +39,7 @@
          * константы статусов заданий
          */
         const STATUS_NEW = 1; //статус нового задания
-        const STATUS_CANCEL = 2; //статус отмененного задания
+        const STATUS_CANCELED = 2; //статус отмененного задания
         const STATUS_IN_WORK = 3; //статус задания находящегося в работе
         const STATUS_COMPLETED = 4; //статус выполненного задания
         const STATUS_FAILED = 5; //статус проваленного задания
@@ -226,5 +226,14 @@
         public function getStatus()
         {
             return $this->hasOne(Status::className(), ['id' => 'status_id']);
+        }
+
+        /**
+         * @param int $userId
+         * @return Replies|null
+         */
+        public function getReplyByUserId(int $userId): ?Replies
+        {
+            return $this->getReplies()->where(['user_id' => $userId])->one();
         }
     }

@@ -24,7 +24,7 @@
          * константы статусов откликов
          */
         const STATUS_NEW = 1; //статус нового отклика
-        const STATUS_ACCEPT = 2; //статус принятого отклика
+        const STATUS_ACCEPTED = 2; //статус принятого отклика
         const STATUS_REFUSAL = 3; //статус отказа от отклика
         
         /**

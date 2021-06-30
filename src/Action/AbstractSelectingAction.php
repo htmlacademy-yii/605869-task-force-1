@@ -2,6 +2,9 @@
 
 namespace TaskForce\Action;
 
+use frontend\models\Task;
+use frontend\models\User;
+
 /**
  * Class AbstractSelectingAction
  * @package TaskForceAction
@@ -10,12 +13,30 @@ namespace TaskForce\Action;
  */
 abstract class AbstractSelectingAction
 {
-    abstract public function getActionTitle($taskId);
+    /**
+     * Action title
+     *
+     * @return string
+     */
+    abstract public function getActionTitle(): string;
     //метод - для человекопонятного названия действия ("Отменить", "Откликнуться")
 
-    abstract public function getActionCode();
+    /**
+     * Action internal code
+     *
+     * @return string
+     */
+    abstract public function getActionCode(): string;
     // метод - для машинного названия действия ("action_cancel", "action_respond")
 
-    abstract public function checkingUserStatus($idPerformer, $idCustomer, $idUser);
+    /**
+     * Is action can be applied to the task
+     *
+     * @param Task $task
+     * @param User $user
+     *
+     * @return bool
+     */
+    abstract public function checkingUserStatus(Task $task, User $user): bool;
     //метод для проверки прав
 }
