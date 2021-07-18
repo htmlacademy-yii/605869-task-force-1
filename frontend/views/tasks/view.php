@@ -14,7 +14,6 @@ use yii\helpers\Html;
 use phpnt\yandexMap\YandexMaps;
 
 $this->title = 'Задание: ' . Html::encode($task->name);
-$task_id = $task->id
 ?>
 
 <section class="content-view">
@@ -142,7 +141,11 @@ $task_id = $task->id
                                 </span>
                             </div>
 
-                            <?php if ($task->status_id === Task::STATUS_NEW && $reply->status === Replies::STATUS_NEW): ?>
+                            <?php if (
+                                    $task->status_id === Task::STATUS_NEW &&
+                                    $task->customer_id === Yii::$app->user->getId() &&
+                                    $reply->status === Replies::STATUS_NEW
+                            ): ?>
                                 <div class="feedback-card__actions">
 
                                     <?= Html::a(

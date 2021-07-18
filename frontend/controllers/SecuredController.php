@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 abstract class SecuredController extends Controller
@@ -25,7 +26,13 @@ abstract class SecuredController extends Controller
                         }
                     ]
                 ]
-            ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'response'  => ['POST'],
+                ],
+            ],
         ];
     }
 }
