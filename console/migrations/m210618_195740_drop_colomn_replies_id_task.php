@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Class m210615_170728_add_column_kladr_city
+ * Class m210618_195740_drop_colomn_replies_id_task
  */
-class m210615_170728_add_column_kladr_city extends Migration
+class m210618_195740_drop_colomn_replies_id_task extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->addColumn('city', 'kladr', $this->string(13));
+        $this->dropColumn('task', 'replies_id');
     }
 
     /**
@@ -20,7 +20,7 @@ class m210615_170728_add_column_kladr_city extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('city', 'kladr');
+        $this->addColumn('task', 'replies_id', $this->integer());
     }
 
     /*
@@ -32,7 +32,7 @@ class m210615_170728_add_column_kladr_city extends Migration
 
     public function down()
     {
-        echo "m210615_170728_add_column_kladr_city cannot be reverted.\n";
+        echo "m210618_195740_drop_colomn_replies_id_task cannot be reverted.\n";
 
         return false;
     }

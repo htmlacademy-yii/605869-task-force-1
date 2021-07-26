@@ -1,57 +1,36 @@
 <?php
-    
-    
-    namespace TaskForce\Action;
-    
-    
-    use frontend\models\Replies;
-    use frontend\models\User;
-    use Yii;
-    
-    /**
-     * Class Response
-     * @package TaskForceAction
-     * Класс наследуется от абстрактного, возвращает действие "Откликнуться"
-     */
-    class Response extends AbstractSelectingAction
+
+namespace TaskForce\Action;
+
+use frontend\models\Task;
+use frontend\models\User;
+
+/**
+ * Class Response
+ * @package TaskForceAction
+ * Класс наследуется от абстрактного, возвращает действие "Откликнуться"
+ */
+class Response extends AbstractSelectingAction
+{
+    /** @inheritDoc */
+    public function getActionTitle(): string
     {
-        /**
-         * @return string|null
-         * метод - для человекопонятного названия действия
-         */
-        public function getActionTitle($taskId)
-        {
-            if (User::findOne(Yii::$app->user->identity->getId())->role === User::ROLE_EXECUTOR &&
-                empty(Replies::findAll(
-                    [
-                        'task_id' => $taskId,
-                        'user_id' => Yii::$app->user->identity->getId()
-                    ]
-                ))) {
-                return 'Откликнуться';
-            }
-            
-            return null;
-        }
-        
-        /**
-         * @return string|null
-         * метод - для машинного названия действия
-         */
-        public function getActionCode()
-        {
-            return 'response';
-        }
-        
-        /**
-         * @param $idPerformer
-         * @param $idCustomer
-         * @param $idUser
-         * @return bool
-         * метод для проверки прав на совершение действия по отклику
-         */
-        public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
-        {
-            return ($idUser !== $idCustomer);
-        }
+        return 'Откликнуться';
     }
+
+    /** @inheritDoc */
+    public function getActionCode(): string
+    {
+        return 'response';
+    }
+
+    /** @inheritDoc */
+    public function checkingUserStatus(Task $task, User $user): bool
+    {
+        if ($user->isCustomer()) {
+            return false;
+        }
+
+        return !$task->getReplies()->where(['user_id' => $user->id])->exists();
+    }
+}

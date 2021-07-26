@@ -7,7 +7,6 @@ use frontend\models\UserFiltersForm;
 use Yii;
 use yii\web\NotFoundHttpException;
 
-
 /**
  * Class usersController
  * @package frontend\controllers
@@ -31,7 +30,7 @@ class UsersController extends SecuredController
         );
     }
 
-    public function actionView($id)
+    public function actionView(int $id)
     {
         $user = User::findOne($id);
         if (!$user) {

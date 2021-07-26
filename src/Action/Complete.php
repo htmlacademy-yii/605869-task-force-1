@@ -3,7 +3,7 @@
 namespace TaskForce\Action;
 
 use frontend\models\Task;
-use Yii;
+use frontend\models\User;
 
 /**
  * Class Done
@@ -12,39 +12,21 @@ use Yii;
  */
 class Complete extends AbstractSelectingAction
 {
-    /**
-     * @return string|null
-     * метод - для человекопонятного названия действия
-     */
-    public function getActionTitle($taskId)
+    /** @inheritDoc */
+    public function getActionTitle(): string
     {
-        $task = Task::findOne($taskId);
-        
-        if (Yii::$app->user->identity->getId() === $task->customer_id) {
-            return 'Выполнено';
-        }
-        
-        return null;
+        return 'Выполнено';
     }
 
-    /**
-     * @return string|null
-     * метод - для машинного названия действия
-     */
-    public function getActionCode()
+    /** @inheritDoc */
+    public function getActionCode(): string
     {
         return 'complete';
     }
 
-    /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
-     * @return bool
-     * метод для проверки прав на совершение действия по завершению
-     */
-    public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
+    /** @inheritDoc */
+    public function checkingUserStatus(Task $task, User $user): bool
     {
-        return ($idUser !== $idPerformer);
+        return $user->id === $task->customer_id;
     }
 }

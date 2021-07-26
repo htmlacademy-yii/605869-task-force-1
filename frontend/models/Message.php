@@ -9,11 +9,12 @@ use Yii;
  *
  * @property int $id
  * @property int $sender_id
- * @property int $recipient_id
+ * @property int $task_id
  * @property string $message
+ * @property string $dt_add
  *
- * @property User $recipient
  * @property User $sender
+ * @property Task $task
  */
 class Message extends \yii\db\ActiveRecord
 {
@@ -31,11 +32,11 @@ class Message extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sender_id', 'recipient_id', 'message'], 'required'],
-            [['sender_id', 'recipient_id'], 'integer'],
+            [['sender_id', 'message', 'task_id'], 'required'],
+            [['sender_id', 'task_id'], 'integer'],
             [['message'], 'string'],
-            [['recipient_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['recipient_id' => 'id']],
             [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sender_id' => 'id']],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
 
@@ -47,19 +48,8 @@ class Message extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'sender_id' => 'Sender ID',
-            'recipient_id' => 'Recipient ID',
             'message' => 'Message',
         ];
-    }
-
-    /**
-     * Gets query for [[Recipient]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRecipient()
-    {
-        return $this->hasOne(User::className(), ['id' => 'recipient_id']);
     }
 
     /**
@@ -70,5 +60,15 @@ class Message extends \yii\db\ActiveRecord
     public function getSender()
     {
         return $this->hasOne(User::className(), ['id' => 'sender_id']);
+    }
+
+    /**
+     * Gets query for [[Task]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTask()
+    {
+        return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
 }

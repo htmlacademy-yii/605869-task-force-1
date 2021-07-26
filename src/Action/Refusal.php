@@ -1,8 +1,9 @@
 <?php
 
-
 namespace TaskForce\Action;
 
+use frontend\models\Task;
+use frontend\models\User;
 
 /**
  * Class Refuse
@@ -11,33 +12,21 @@ namespace TaskForce\Action;
  */
 class Refusal extends AbstractSelectingAction
 {
-    /**
-     * @return string|null
-     * метод - для человекопонятного названия действия
-     */
-    public function getActionTitle($taskId)
+    /** @inheritDoc */
+    public function getActionTitle(): string
     {
         return 'Отказаться';
     }
 
-    /**
-     * @return string|null
-     * метод - для машинного названия действия
-     */
-    public function getActionCode()
+    /** @inheritDoc */
+    public function getActionCode(): string
     {
         return 'refusal';
     }
 
-    /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
-     * @return bool
-     * метод для проверки прав на совершение действия по отказу
-     */
-    public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
+    /** @inheritDoc */
+    public function checkingUserStatus(Task $task, User $user): bool
     {
-        return ($idUser !== $idCustomer);
+        return $user->id === $task->executor_id;
     }
 }

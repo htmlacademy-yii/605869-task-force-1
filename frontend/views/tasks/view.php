@@ -2,24 +2,15 @@
 /* @var $this yii\web\View */
 
 /* @var $task Task */
-/* @var $strategy Task */
-/* @var $pages Task */
-/* @var $responseTaskForm ResponseTaskForm */
-/* @var $completeTaskForm CompleteTaskForm */
-/* @var $replies Replies */
-/* @var $userId Yii */
 
-use frontend\models\CompleteTaskForm;
 use frontend\models\Replies;
-use frontend\models\ResponseTaskForm;
 use frontend\models\Task;
-use frontend\models\User;
 use frontend\widgets\EstimatedTimeWidget;
 use frontend\widgets\StarRatingWidget;
+use frontend\widgets\TaskActionsWidget;
 use frontend\widgets\TimeOnSiteWidget;
 use yii\helpers\BaseUrl;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use phpnt\yandexMap\YandexMaps;
 
 $this->title = 'Задание: ' . Html::encode($task->name);
@@ -104,40 +95,31 @@ $this->title = 'Задание: ' . Html::encode($task->name);
 
                     </div>
                     <div class="content-view__address">
-                        <span class="address__town"><?= explode(', ', $task->address)[0]; ?></span><br>
-                        <span><?= implode(', ', array_slice(explode(', ', $task->address), 1)); ?></span>
+                        <span class="address__town"><?= $task->address; ?></span>
                         <p></p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <?php if (!empty($strategy->getAvailableAction($task->id)[1])): ?>
-            <div class="content-view__action-buttons">
-                <button class=" button button__big-color <?= $strategy
-                    ->getAvailableAction($task->id)[0]; ?>-button open-modal"
-                        type="button" data-for="<?= $strategy->getAvailableAction($task->id)[0]; ?>-form">
-                    <?= $strategy->getAvailableAction($task->id)[1]; ?>
-                </button>
-            </div>
-        <?php endif; ?>
+        <?= TaskActionsWidget::widget(['task' => $task]); ?>
     </div>
 
     <?php if (count($task->replies)): ?>
         <div class="content-view__feedback">
-            <?php if ($userId === $task->customer_id): ?>
+            <?php if ((int) Yii::$app->user->getId() === (int) $task->customer_id): ?>
                 <h2>Отклики <span>(<?= count($task->replies); ?>)</span></h2>
                 <?php foreach ($task->replies as $reply): ?>
 
                     <div class="content-view__feedback-wrapper">
                         <div class="content-view__feedback-card">
                             <div class="feedback-card__top">
-                                <a href="#"><img src="<?= Html::encode($reply->user->getAvatar()); ?>"
-                                                 width="55"
-                                                 height="55">
+                                <a href="#">
+                                    <img src="<?= Html::encode($reply->user->getAvatar()); ?>"
+                                     width="55" height="55">
                                 </a>
                                 <div class="feedback-card__top--name">
-                                    <p><a href="<?= BaseUrl::to(['users/view/', 'id' => $reply->user->id]) ?>"
+                                    <p><a href="<?= BaseUrl::to(['users/view/', 'id' => $reply->user_id]) ?>"
                                           class="link-regular"><?= Html::encode($reply->user->name); ?>
                                         </a>
                                     </p>
@@ -155,28 +137,31 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                             <div class="feedback-card__content">
                                 <p><?= Html::encode($reply->description); ?></p>
                                 <span>
-                                    <?= ($reply->price) ? Html::encode($reply->price) : Html::encode($reply->task->budget); ?> ₽
+                                    <?= Html::encode($reply->price); ?> ₽
                                 </span>
                             </div>
 
-                            <?php if ($reply->task->status_id === 1 && $reply->status === 1): ?>
+                            <?php if (
+                                    $task->status_id === Task::STATUS_NEW &&
+                                    $task->customer_id === Yii::$app->user->getId() &&
+                                    $reply->status === Replies::STATUS_NEW
+                            ): ?>
                                 <div class="feedback-card__actions">
+
                                     <?= Html::a(
                                         'Подтвердить',
                                         [
                                             'tasks/apply',
-                                            'task_id' => $reply->task_id,
-                                            'user_id' => $reply->user_id,
-                                            'reply_id' => $reply->id
+                                            'id' => $reply->id
                                         ],
                                         ['class' => 'button__small-color request-button button']
                                     ); ?>
+
                                     <?= Html::a(
                                         'Отказать',
                                         [
                                             'tasks/refuse',
-                                            'task_id' => $reply->task_id,
-                                            'reply_id' => $reply->id
+                                            'id' => $reply->task_id,
                                         ],
                                         ['class' => 'button__small-color refusal-button button']
                                     ); ?>
@@ -190,11 +175,10 @@ $this->title = 'Задание: ' . Html::encode($task->name);
         </div>
     <?php endif; ?>
 
-    <?php foreach ($task->replies as $reply): ?>
+    <?php if ($reply = $task->getReplyByUserId(Yii::$app->user->getId())): ?>
         <!--отображение отклика для автора отклика -->
         <div class="content-view__feedback">
             <div class="content-view__feedback-wrapper">
-                <?php if ($reply->user_id === $userId): ?>
                     <h2>Ваш отклик на задание:</h2>
                     <div class="content-view__feedback-card">
                         <div class="feedback-card__top">
@@ -222,10 +206,9 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                             </span>
                         </div>
                     </div>
-                <?php endif; ?>
             </div>
         </div>
-    <?php endforeach; ?>
+    <?php endif; ?>
 
 </section>
 
@@ -249,218 +232,10 @@ $this->title = 'Задание: ' . Html::encode($task->name);
         </div>
     </div>
     <div id="chat-container">
-        <!--                    добавьте сюда атрибут task с указанием в нем id текущего задания-->
-        <chat class="connect-desk__chat"></chat>
+        <!--добавьте сюда атрибут task с указанием в нем id текущего задания-->
+        <chat class="connect-desk__chat"
+              task="<?= $task->id; ?>"
+              sender_id="<?= (int) Yii::$app->user->getId() ;?>">
+        </chat>
     </div>
-</section>
-
-<!--модальное окно ОКЛИКНУТЬСЯ-->
-
-<?php if (User::findOne($userId)->role === User::ROLE_EXECUTOR && empty($replies)): ?>
-    <section class="modal response-form form-modal" id="response-form">
-        <h2>Отклик на задание</h2>
-
-        <?php
-        $form = ActiveForm::begin(
-            [
-                'method' => 'POST',
-                'action' => ['tasks/response', 'task_id' => $task->id],
-                'enableClientValidation' => true,
-                'fieldConfig' => [
-                    'template' => "<p>{label}\n{input}</p>{error}",
-                    'labelOptions' => [
-                        'class' => 'form-modal-description'
-                    ],
-                    'errorOptions' => [
-                        'tag' => 'span',
-                        'style' => 'color:red',
-                    ],
-                ]
-            ]
-        );
-        ?>
-        <?= $form
-            ->field($responseTaskForm, 'payment')
-            ->input(
-                'text',
-                [
-                    'class' => 'response-form-payment input input-middle input-money',
-
-                ]
-            );
-        ?>
-        <?= Html::error($responseTaskForm, 'payment', ['class' => 'help-block']); ?>
-
-        <?= $form->field($responseTaskForm, 'comment')
-            ->textarea(
-                [
-                    'class' => 'input textarea',
-                    'rows' => 4,
-                    'placeholder' => 'Разместите здесь свой текст'
-                ]
-            ); ?>
-        <?= Html::error($responseTaskForm, 'comment', ['class' => 'help-block']); ?>
-
-        <?= Html::submitButton(
-            'Отправить',
-            [
-                'class' => 'button modal-button'
-            ]
-        ); ?>
-
-        <?php ActiveForm::end(); ?>
-
-        <button class="form-modal-close" type="button">Закрыть</button>
-    </section>
-<?php
-endif; ?>
-
-<!--модальное окно ВЫПОЛНЕНО-->
-<?php if ($userId === $task->customer_id): ?>
-    <section class="modal completion-form form-modal" id="complete-form">
-        <h2>Завершение задания</h2>
-        <p class="form-modal-description">Задание выполнено?</p>
-
-        <?php
-        $form = ActiveForm::begin(
-            [
-                'method' => 'POST',
-                'action' => ['tasks/complete', 'task_id' => $task->id],
-                'enableClientValidation' => true,
-                'fieldConfig' => [
-                    'template' => "<p>{label}\n{input}</p>{error}",
-                    'labelOptions' => [
-                        'class' => 'form-modal-description'
-                    ],
-                    'errorOptions' => [
-                        'tag' => 'span',
-                        'style' => 'color:red',
-                    ],
-                ]
-            ]
-        ); ?>
-
-        <?= Html::activeRadioList(
-            $completeTaskForm,
-            'completion',
-            CompleteTaskForm::getCompletionFields(),
-            [
-                'item' => function ($index, $label, $name, $checked, $value) {
-                    $radio = Html::radio(
-                        $name,
-                        $checked,
-                        [
-                            'id' => $value,
-                            'value' => $value,
-                            'class' => 'visually-hidden completion-input completion-input--' . $value
-                        ]
-                    );
-                    $label = Html::label(
-                        $label,
-                        $value,
-                        [
-                            'class' => 'completion-label completion-label--' . $value
-                        ]
-                    );
-
-                    return $radio . $label;
-                },
-                'unselect' => null
-            ]
-        ); ?>
-        <?= Html::error($completeTaskForm, 'completion', ['class' => 'help-block']); ?>
-
-        <?= $form->field($completeTaskForm, 'comment')->textarea(
-            [
-                'class' => 'input textarea',
-                'rows' => 4,
-                'placeholder' => 'Разместите здесь свой текст'
-            ]
-        ); ?>
-        <?= Html::error($completeTaskForm, 'comment', ['class' => 'help-block']); ?>
-
-        <?= $form->field(
-            $completeTaskForm,
-            'rating',
-            [
-                'template' => "<p>{label}
-                    <div class='feedback-card__top--name completion-form-star'>
-                        <span class='star-disabled'></span>
-                        <span class='star-disabled'></span>
-                        <span class='star-disabled'></span>
-                        <span class='star-disabled'></span>
-                        <span class='star-disabled'></span>
-                    </div>
-                    {input}</p>{error}"
-            ]
-        )->hiddenInput(['id' => 'rating']); ?>
-
-        <?= Html::submitButton(
-            'Отправить',
-            [
-                'class' => 'button modal-button'
-            ]
-        ) ?>
-
-        <?php ActiveForm::end(); ?>
-
-        <button class="form-modal-close" type="button">Закрыть</button>
-    </section>
-<?php endif; ?>
-
-<!--модальное окно отказа от задания-->
-<section class="modal form-modal refusal-form" id="refusal-form">
-    <h2>Отказ от задания</h2>
-    <p>
-        Вы собираетесь отказаться от выполнения задания.
-        Это действие приведёт к снижению вашего рейтинга.
-        Вы уверены?
-    </p>
-    <button class="button__form-modal button" id="close-modal"
-            type="button">Отмена
-    </button>
-    <?php if (isset($task->replies_id)): ?>
-        <?= Html::a(
-            'Отказаться',
-            [
-                'tasks/refuse',
-                'task_id' => $reply->task_id,
-                'reply_id' => $reply->id
-            ],
-            ['class' => 'button__form-modal refusal-button button']
-        ) ?>
-    <?php endif; ?>
-    <button class="form-modal-close" type="button">Закрыть</button>
-</section>
-
-<!--модальное окно отмены задания-->
-<section class="modal form-modal refusal-form" id="cancel-form">
-    <h2>Отмена задания</h2>
-    <p>
-        Вы собираетесь отменить задание.<br>
-        Вы уверены?
-    </p>
-
-    <?= Html::a(
-        'Не отменять',
-        [
-            'tasks/view',
-            'id' => $task->id,
-        ],
-        [
-            'class' => "button__form-modal button",
-            'id' => "close-modal",
-            'type' => "button"
-        ]
-    ) ?>
-
-    <?= Html::a(
-        'Отменить',
-        [
-            'tasks/cancel',
-            'task_id' => $task->id,
-        ],
-        ['class' => 'button__form-modal refusal-button button']
-    ) ?>
-    <button class="form-modal-close" type="button">Закрыть</button>
 </section>

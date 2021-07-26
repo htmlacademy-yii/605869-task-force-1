@@ -1,10 +1,9 @@
 <?php
 
-
 namespace TaskForce\Action;
 
-use frontend\models\Status;
 use frontend\models\Task;
+use frontend\models\User;
 
 /**
  * Class Refusal
@@ -13,38 +12,21 @@ use frontend\models\Task;
  */
 class Cancel extends AbstractSelectingAction
 {
-    /**
-     * @return string|null
-     * метод - для человекопонятного названия действия
-     */
-    public function getActionTitle($taskId)
+    /** @inheritDoc */
+    public function getActionTitle(): string
     {
-        $task = Task::findOne($taskId);
-        if ($task->status_id == Status::STATUS_NEW) {
-            return 'Отменить';
-        }
-
-        return  null;
+        return 'Отменить';
     }
 
-    /**
-     * @return string|null
-     * метод - для машинного названия действия
-     */
-    public function getActionCode()
+    /** @inheritDoc */
+    public function getActionCode(): string
     {
         return 'cancel';
     }
 
-    /**
-     * @param $idPerformer
-     * @param $idCustomer
-     * @param $idUser
-     * @return bool
-     * метод для проверки прав на совершение действия по отмене
-     */
-    public function checkingUserStatus($idPerformer, $idCustomer, $idUser)
+    /** @inheritDoc */
+    public function checkingUserStatus(Task $task, User $user): bool
     {
-        return ($idUser !== $idPerformer);
+        return $user->id === $task->customer_id;
     }
 }
