@@ -15,7 +15,7 @@
 <section class="content-view">
     <div class="user__card-wrapper">
         <div class="user__card">
-            <img src="<?= Html::encode($user->getAvatar()); ?>" width="120" height="120" alt="<?= Html::encode($user->name); ?>: Аватар пользователя">
+            <img src="<?= Html::encode($user->getAvatar()); ?>" width="120" height="120" alt="Аватар пользователя: <?= Html::encode($user->name); ?>">
             <div class="content-view__headline">
                 <h1><?= Html::encode($user->name); ?></h1>
                 <?php if ($user->getAge()): ?>

@@ -114,7 +114,7 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                     <div class="content-view__feedback-wrapper">
                         <div class="content-view__feedback-card">
                             <div class="feedback-card__top">
-                                <a href="#">
+                                <a href="<?= BaseUrl::to(['users/view/', 'id' => $reply->user->id]); ?>">
                                     <img src="<?= Html::encode($reply->user->getAvatar()); ?>"
                                      width="55" height="55">
                                 </a>
@@ -182,7 +182,7 @@ $this->title = 'Задание: ' . Html::encode($task->name);
                     <h2>Ваш отклик на задание:</h2>
                     <div class="content-view__feedback-card">
                         <div class="feedback-card__top">
-                            <a href="#"><img src="<?= Html::encode($reply->user->getAvatar()); ?>" width="55"
+                            <a href="<?= BaseUrl::to(['users/view/', 'id' => $reply->user_id]) ?>"><img src="<?= Html::encode($reply->user->getAvatar()); ?>" width="55"
                                              height="55">
                             </a>
                             <div class="feedback-card__top--name">

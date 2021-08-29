@@ -2,6 +2,7 @@
 
     namespace frontend\models;
 
+    use DateTime;
     use Yii;
 	use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
@@ -222,5 +223,23 @@
 		public function isCustomer(): bool
         {
             return (int) $this->role === self::ROLE_CUSTOMER;
+        }
+
+        public function getSecondsLastActivity()
+        {
+            $lastActivity = $this->last_activity_datetime;
+            $currentTimeStamp = new DateTime();
+
+            return $seconds = abs(strtotime($lastActivity) - $currentTimeStamp);
+        }
+
+        /**
+         * пользователь онлайн, если последняя активность была менее 5 минут назад
+         *
+         * @return bool
+         */
+        public function isOnline()
+        {
+            return (int) $this->getSecondsLastActivity() < 300;
         }
 	}

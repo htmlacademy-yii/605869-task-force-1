@@ -27,7 +27,7 @@
             <div class="content-view__feedback-card user__search-wrapper">
                 <div class="feedback-card__top">
                     <div class="user__search-icon">
-                        <a href="#"><img src="<?= $user->getAvatar(); ?>" width="65" height="65" alt="аватар"/></a>
+                        <a href="<?= BaseUrl::to(['users/view/', 'id' => $user->id]); ?>"><img src="<?= $user->getAvatar(); ?>" width="65" height="65" alt="аватар"/></a>
                         <?php
                             if ($user->executedTasks): ?>
                                 <span><?= count($user->executedTasks); ?> <?= WordHelper::pluralForm($user->getExecutedTasks()->count(),

@@ -140,7 +140,7 @@
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['list/index/']); ?>">Мои задания</a>
                     </li>
                     <li>
                         <a href="#">Настройки</a>

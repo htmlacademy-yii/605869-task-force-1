@@ -1,10 +1,10 @@
 <?php
-    
+
     namespace frontend\models;
-    
+
     use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
-    
+
     /**
      * This is the model class for table "task".
      *
@@ -18,7 +18,6 @@
      * @property string $description
      * @property int $customer_id
      * @property int $status_id
-     * @property int $replies_id //drop column
      * @property float $lat
      * @property float $long
      * @property int $executor_id //not required
@@ -43,7 +42,8 @@
         const STATUS_IN_WORK = 3; //статус задания находящегося в работе
         const STATUS_COMPLETED = 4; //статус выполненного задания
         const STATUS_FAILED = 5; //статус проваленного задания
-        
+        const STATUS_EXPIRED = 6; //статус просроченного задания
+
         /**
          * {@inheritdoc}
          */
@@ -51,7 +51,7 @@
         {
             return 'task';
         }
-        
+
         /**
          * {@inheritdoc}
          */
@@ -76,7 +76,6 @@
                         'city_id',
                         'customer_id',
                         'status_id',
-                        'replies_id',
                         'executor_id'
                     ],
                     'integer'
@@ -123,7 +122,7 @@
                 ],
             ];
         }
-        
+
         /**
          * {@inheritdoc}
          */
@@ -140,14 +139,13 @@
                 'description' => 'Description',
                 'customer_id' => 'Customer ID',
                 'status_id' => 'Status ID',
-                'replies_id' => 'Replies ID',
                 'lat' => 'Lat',
                 'long' => 'Long',
                 'executor_id' => 'Executor ID',
                 'dt_add' => 'Dt Add',
             ];
         }
-        
+
         /**
          * Gets query for [[Files]].
          *
@@ -157,7 +155,7 @@
         {
             return $this->hasMany(File::className(), ['task_id' => 'id']);
         }
-        
+
         /**
          * Gets query for [[Opinions]].
          *
@@ -167,7 +165,7 @@
         {
             return $this->hasMany(Opinions::className(), ['task_id' => 'id']);
         }
-        
+
         /**
          * Gets query for [[Replies]].
          *
@@ -177,7 +175,7 @@
         {
             return $this->hasMany(Replies::className(), ['task_id' => 'id']);
         }
-        
+
         /**
          * Gets query for [[Category]].
          *
@@ -187,7 +185,7 @@
         {
             return $this->hasOne(Category::className(), ['id' => 'category_id']);
         }
-        
+
         /**
          * Gets query for [[City]].
          *
@@ -197,7 +195,7 @@
         {
             return $this->hasOne(City::className(), ['id' => 'city_id']);
         }
-        
+
         /**
          * Gets query for [[Customer]].
          *
@@ -207,7 +205,7 @@
         {
             return $this->hasOne(User::className(), ['id' => 'customer_id']);
         }
-        
+
         /**
          * Gets query for [[Executor]].
          *
@@ -217,7 +215,7 @@
         {
             return $this->hasOne(User::className(), ['id' => 'executor_id']);
         }
-        
+
         /**
          * Gets query for [[Status]].
          *
