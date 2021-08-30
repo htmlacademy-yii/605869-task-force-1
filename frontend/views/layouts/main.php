@@ -94,7 +94,12 @@
                         <?php
                         endif; ?>
                     <li class="site-list__item">
-                        <a>Мой профиль</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(
+                            [
+                                'users/view/',
+                                'id' => Yii::$app->user->getId()
+                            ]
+                        ); ?>">Мой профиль</a>
                     </li>
                 </ul>
             </div>
@@ -175,7 +180,12 @@
                         <a href="<?= Yii::$app->urlManager->createUrl(['tasks/index']); ?>">Задания</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(
+                            [
+                                'users/view/',
+                                'id' => Yii::$app->user->getId()
+                            ]
+                        ); ?>">Мой профиль</a>
                     </li>
                     <li class="links__item">
                         <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>

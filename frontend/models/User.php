@@ -4,11 +4,11 @@
 
     use DateTime;
     use Yii;
-	use yii\db\ActiveQuery;
+    use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
-	use yii\web\IdentityInterface;
+    use yii\web\IdentityInterface;
 
-	/**
+    /**
      * This is the model class for table "user".
      *
      * @property int $id
@@ -33,9 +33,9 @@
      */
     class User extends ActiveRecord implements IdentityInterface
     {
-    	const ROLE_CUSTOMER = 2;
-    	const ROLE_EXECUTOR = 1;
-    	
+        const ROLE_CUSTOMER = 2;
+        const ROLE_EXECUTOR = 1;
+
         /**     * {@inheritdoc}
          */
         public static function tableName()
@@ -50,7 +50,7 @@
         {
             return [
                 [['name', 'email', 'password'], 'required'],
-                [['dt_add'], 'safe'],
+                [['dt_add', 'last_activity_datetime'], 'safe'],
                 [['role'], 'integer'],
                 [['name', 'email'], 'string', 'max' => 45],
                 [['password'], 'string', 'max' => 64],
@@ -186,60 +186,55 @@
                 ->join('INNER JOIN', Task::tableName() . ' t', 't.id = o.task_id')
                 ->where('t.executor_id = :userId', ['userId' => $this->id])->average('o.rate');
         }
-        
+
         public function validatePassword($password)
-		{
-			return Yii::$app->security->validatePassword($password, $this->password);
-		}
-	
-		public static function findIdentity($id)
-		{
-			return self::findOne($id);
-		}
-	
-		public static function findIdentityByAccessToken($token, $type = null)
-		{
-			// TODO: Implement findIdentityByAccessToken() method.
-		}
-	
-		public function getId()
-		{
-			return $this->getPrimaryKey();
-		}
-	
-		public function getAuthKey()
-		{
-			// TODO: Implement getAuthKey() method.
-		}
-	
-		public function validateAuthKey($authKey)
-		{
-			// TODO: Implement validateAuthKey() method.
-		}
+        {
+            return Yii::$app->security->validatePassword($password, $this->password);
+        }
+
+        public static function findIdentity($id)
+        {
+            return self::findOne($id);
+        }
+
+        public static function findIdentityByAccessToken($token, $type = null)
+        {
+            // TODO: Implement findIdentityByAccessToken() method.
+        }
+
+        public function getId()
+        {
+            return $this->getPrimaryKey();
+        }
+
+        public function getAuthKey()
+        {
+            // TODO: Implement getAuthKey() method.
+        }
+
+        public function validateAuthKey($authKey)
+        {
+            // TODO: Implement validateAuthKey() method.
+        }
 
         /**
          * @return bool
          */
-		public function isCustomer(): bool
+        public function isCustomer(): bool
         {
-            return (int) $this->role === self::ROLE_CUSTOMER;
+            return (int)$this->role === self::ROLE_CUSTOMER;
         }
 
-        public function getSecondsLastActivity()
+        public function isNotOnline()
         {
-            $lastActivity = $this->last_activity_datetime;
+            $lastActivity = new DateTime($this->last_activity_datetime);;
             $currentTimeStamp = new DateTime();
+            $differenceLastActivity = $currentTimeStamp->diff($lastActivity);
 
-            return $seconds = abs(strtotime($lastActivity) - $currentTimeStamp);
+            return $differenceLastActivity->y > 1
+                || $differenceLastActivity->m > 1
+                || $differenceLastActivity->d > 1
+                || $differenceLastActivity->h > 1
+                ||$differenceLastActivity->i > 5;
         }
-
-        /**
-         * пользователь онлайн, если последняя активность была менее 5 минут назад
-         *
-         * @return bool
-         */
-        public function isOnline()
-        {
-            return (int) $this->getSecondsLastActivity() < 300;
-        }
-	}
+    }
