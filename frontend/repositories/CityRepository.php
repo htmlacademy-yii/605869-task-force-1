@@ -6,7 +6,7 @@ use frontend\models\City;
 
 class CityRepository
 {
-    public static function getCityByBladrCode(string $kladrCode, string $cityName, float $long, float $lat): City
+    public static function getCityByKladrCode(string $kladrCode, string $cityName, float $long, float $lat): City
     {
         $model = City::findOne(['kladr' => $kladrCode]);
         if(!$model) {

@@ -12,7 +12,7 @@
      * @var int $status
      */
 
-    $this->title = 'Task Force - мои задания';
+    $this->title = Yii::$app->user->getIdentity()->name . ' | мои задания';
 
 ?>
 

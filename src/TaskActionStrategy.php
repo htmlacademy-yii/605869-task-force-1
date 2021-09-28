@@ -1,81 +1,89 @@
 <?php
 
-declare(strict_types=1);
+    declare(strict_types=1);
 
-namespace TaskForce;
+    namespace TaskForce;
 
-use Exception;
-use frontend\models\Task;
-use frontend\models\User;
-use TaskForce\Action\AbstractSelectingAction;
-use TaskForce\Action\Cancel;
-use TaskForce\Action\Complete;
-use TaskForce\Action\Refusal;
-use TaskForce\Action\Response;
-
-/**
- * класс для определения списков действий и статусов, и выполнения базовой работы с ними
- * Class Task
- * @package TaskForce\src
- */
-class TaskActionStrategy
-{
-    /** @var Task */
-    private $task;
-
-    /** @var User */
-    private $user;
-
-    public function __construct(Task $task, User $user)
-    {
-        $this->task = $task;
-        $this->user = $user;
-    }
+    use Exception;
+    use frontend\models\Task;
+    use frontend\models\User;
+    use TaskForce\Action\AbstractSelectingAction;
+    use TaskForce\Action\Cancel;
+    use TaskForce\Action\Complete;
+    use TaskForce\Action\Refusal;
+    use TaskForce\Action\Response;
+    use Yii;
 
     /**
-     * метод возвращающий статус в который перейдет задание
-     * @param string $actionCode
-     * @return string|null
+     * класс для определения списков действий и статусов, и выполнения базовой работы с ними
+     * Class Task
+     * @package TaskForce\src
      */
-    public function getStatusByAction(string $actionCode): ?string
+    class TaskActionStrategy
     {
-        $map = [
-            (new Cancel())->getActionCode() => Task::STATUS_CANCELED,
-            (new Complete())->getActionCode() => Task::STATUS_COMPLETED,
-            (new Refusal())->getActionCode() => Task::STATUS_FAILED,
-        ];
+        /** @var Task */
+        private $task;
 
-        return $map[$actionCode] ?? null;
-    }
+        /** @var User */
+        private $user;
 
-    /**
-     * Метод возвращающий возможные действия к текущему статусу
-     * @return array
-     * @throws Exception
-     */
-    public function availableActions(): array
-    {
-        $actions = [
-            Task::STATUS_NEW => [new Response(), new Cancel()],
-            Task::STATUS_IN_WORK => [new Complete(), new Refusal()],
-        ];
+        public function __construct(Task $task, User $user)
+        {
+            $this->task = $task;
+            $this->user = $user;
+        }
 
-        return $actions[$this->task->status_id] ?? [];
-    }
+        /**
+         * метод возвращающий статус в который перейдет задание
+         * @param string $actionCode
+         * @return string|null
+         */
+        public function getStatusByAction(string $actionCode): ?string
+        {
+            $map = [
+                (new Cancel())->getActionCode() => Task::STATUS_CANCELED,
+                (new Complete())->getActionCode() => Task::STATUS_COMPLETED,
+                (new Refusal())->getActionCode() => Task::STATUS_FAILED,
+            ];
 
-    /**
-     * Метод возвращающий действие к текущему статусу
-     *
-     * @return AbstractSelectingAction[]
-     * @throws Exception
-     */
-    public function getAvailableActions(): array
-    {
-        return array_filter(
-            $this->availableActions(),
-            function (AbstractSelectingAction $action) {
-                return $action->checkingUserStatus($this->task, $this->user);
+            return $map[$actionCode] ?? null;
+        }
+
+        /**
+         * Метод возвращающий возможные действия к текущему статусу
+         * @return array
+         * @throws Exception
+         */
+        public function availableActions(): array
+        {
+            if ($this->task->customer_id == Yii::$app->user->getId()) {
+                $actions = [
+                    Task::STATUS_NEW => [new Cancel()],
+                    Task::STATUS_IN_WORK => [new Complete()],
+                ];
+            } else {
+                $actions = [
+                    Task::STATUS_NEW => [new Response(), new Cancel()],
+                    Task::STATUS_IN_WORK => [new Complete(), new Refusal()],
+                ];
             }
-        );
+
+            return $actions[$this->task->status_id] ?? [];
+        }
+
+        /**
+         * Метод возвращающий действие к текущему статусу
+         *
+         * @return AbstractSelectingAction[]
+         * @throws Exception
+         */
+        public function getAvailableActions(): array
+        {
+            return array_filter(
+                $this->availableActions(),
+                function (AbstractSelectingAction $action) {
+                    return $action->checkingUserStatus($this->task, $this->user);
+                }
+            );
+        }
     }
-}

@@ -70,7 +70,7 @@
 
             $cityName = $this->city ?: $this->village;
 
-            $cityModel = CityRepository::getCityByBladrCode(
+            $cityModel = CityRepository::getCityByKladrCode(
                 $this->kladr,
                 $cityName,
                 $this->long,
@@ -86,6 +86,10 @@
 
                 return false;
             }
+
+            $siteSettings = new SiteSettings();
+            $siteSettings->user_id = $user->id;
+            $siteSettings->save();
 
             $transaction->commit();
 

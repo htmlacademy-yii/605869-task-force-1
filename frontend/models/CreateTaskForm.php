@@ -119,7 +119,7 @@ class CreateTaskForm extends Model
 
         $cityName = $this->city ?: $this->village;
 
-        $cityModel = CityRepository::getCityByBladrCode(
+        $cityModel = CityRepository::getCityByKladrCode(
             $this->kladr,
             $cityName,
             $this->long,

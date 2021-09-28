@@ -29,6 +29,7 @@
      * @property Task[] $executedTasks
      * @property City $city
      * @property Opinions[] $opinions
+     * @property SiteSettings $siteSettings
      *
      */
     class User extends ActiveRecord implements IdentityInterface
@@ -80,7 +81,7 @@
          */
         public function getMessages0()
         {
-            return $this->hasMany(Message::className(), ['sender_id' => 'id']);
+            return $this->hasMany(Message::class, ['sender_id' => 'id']);
         }
 
         /**
@@ -90,7 +91,7 @@
          */
         public function getPhotos()
         {
-            return $this->hasMany(Photo::className(), ['user_id' => 'id']);
+            return $this->hasMany(Photo::class, ['user_id' => 'id']);
         }
 
         /**
@@ -100,7 +101,7 @@
          */
         public function getProfiles()
         {
-            return $this->hasOne(Profiles::className(), ['user_id' => 'id']);
+            return $this->hasOne(Profiles::class, ['user_id' => 'id']);
         }
 
         /**
@@ -110,7 +111,17 @@
          */
         public function getReplies()
         {
-            return $this->hasMany(Replies::className(), ['user_id' => 'id']);
+            return $this->hasMany(Replies::class, ['user_id' => 'id']);
+        }
+
+        /**
+         * Gets query for [[SiteSettings]].
+         *
+         * @return ActiveQuery
+         */
+        public function getSiteSettings()
+        {
+            return $this->hasOne(SiteSettings::class, ['user_id' => 'id']);
         }
 
         /**
@@ -120,7 +131,7 @@
          */
         public function getSpecializations()
         {
-            return $this->hasMany(Specialization::className(), ['user_id' => 'id']);
+            return $this->hasMany(Specialization::class, ['user_id' => 'id']);
         }
 
         /**
@@ -130,7 +141,7 @@
          */
         public function getOwnedTasks()
         {
-            return $this->hasMany(Task::className(), ['customer_id' => 'id']);
+            return $this->hasMany(Task::class, ['customer_id' => 'id']);
         }
 
         /**
@@ -140,7 +151,7 @@
          */
         public function getExecutedTasks()
         {
-            return $this->hasMany(Task::className(), ['executor_id' => 'id']);
+            return $this->hasMany(Task::class, ['executor_id' => 'id']);
         }
 
         /**
@@ -148,7 +159,11 @@
          */
         public function getAvatar()
         {
-            return $this->profiles->avatar ?? '/img/account.png';
+            if ($this->profiles->avatar) {
+                return Yii::getAlias('@web') . '/uploads/avatars/' . $this->profiles->avatar;
+            } else {
+                return '/img/account.png';
+            }
         }
 
         /**
@@ -170,7 +185,7 @@
          */
         public function getTasksCount()
         {
-            return $this->hasMany(Task::className(), ['customer_id' => 'id'])->count();
+            return $this->hasMany(Task::class, ['customer_id' => 'id'])->count();
         }
 
         public function getOpinions()
@@ -235,6 +250,6 @@
                 || $differenceLastActivity->m > 1
                 || $differenceLastActivity->d > 1
                 || $differenceLastActivity->h > 1
-                ||$differenceLastActivity->i > 5;
+                || $differenceLastActivity->i > 5;
         }
     }

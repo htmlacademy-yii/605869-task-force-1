@@ -1,14 +1,17 @@
 <?php
-    /* @var $this yii\web\View */
-
-    /* @var $user User */
 
     use frontend\helpers\WordHelper;
+    use frontend\models\SiteSettings;
     use frontend\models\User;
     use frontend\widgets\LastActivityWidget;
     use frontend\widgets\StarRatingWidget;
     use yii\helpers\BaseUrl;
     use yii\helpers\Html;
+
+    /**
+     * @var yii\web\View $this
+     * @var User $user
+     */
 
     $this->title = 'Исполнитель: ' . Html::encode($user->name);
 ?>
@@ -93,19 +96,36 @@
                     <?php
                     endif; ?>
                 <?php
-                    if ($user->profiles->phone || $user->email || $user->profiles->skype): ?>
-                        <h3 class="content-view__h3">Контакты</h3>
-                        <div class="user__card-link">
-                            <a class="user__card-link--tel link-regular" href="#"><?= Html::encode(
-                                    $user->profiles->phone
-                                ); ?></a>
-                            <a class="user__card-link--email link-regular" href="#"><?= Html::encode(
-                                    $user->email
-                                ); ?></a>
-                            <a class="user__card-link--skype link-regular" href="#"><?= Html::encode(
-                                    $user->profiles->skype
-                                ) ?></a>
-                        </div>
+                    if ($user->siteSettings->show_my_contacts_customer == SiteSettings::DISABLED
+                        || Yii::$app->user->getIdentity()->role == User::ROLE_CUSTOMER): ?>
+                        <?php
+                        if ($user->profiles->phone || $user->email || $user->profiles->skype): ?>
+                            <h3 class="content-view__h3">Контакты</h3>
+                            <div class="user__card-link">
+                                <?php
+                                    if ($user->profiles->phone): ?>
+                                        <a class="user__card-link--tel link-regular"
+                                           href="#"><?= Html::encode($user->profiles->phone); ?>
+                                        </a>
+                                    <?php
+                                    endif; ?>
+                                <?php
+                                    if ($user->email): ?>
+                                        <a class="user__card-link--email link-regular"
+                                           href="#"><?= Html::encode($user->email); ?>
+                                        </a>
+                                    <?php
+                                    endif; ?>
+                                <?php
+                                    if ($user->profiles->skype): ?>
+                                        <a class="user__card-link--skype link-regular"
+                                           href="#"><?= Html::encode($user->profiles->skype) ?>
+                                        </a>
+                                    <?php
+                                    endif; ?>
+                            </div>
+                        <?php
+                        endif; ?>
                     <?php
                     endif; ?>
             </div>

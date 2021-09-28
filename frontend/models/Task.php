@@ -89,35 +89,35 @@
                     ['category_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => Category::className(),
+                    'targetClass' => Category::class,
                     'targetAttribute' => ['category_id' => 'id']
                 ],
                 [
                     ['city_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => City::className(),
+                    'targetClass' => City::class,
                     'targetAttribute' => ['city_id' => 'id']
                 ],
                 [
                     ['customer_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => User::className(),
+                    'targetClass' => User::class,
                     'targetAttribute' => ['customer_id' => 'id']
                 ],
                 [
                     ['executor_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => User::className(),
+                    'targetClass' => User::class,
                     'targetAttribute' => ['executor_id' => 'id']
                 ],
                 [
                     ['status_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => Status::className(),
+                    'targetClass' => Status::class,
                     'targetAttribute' => ['status_id' => 'id']
                 ],
             ];
@@ -153,7 +153,7 @@
          */
         public function getFiles()
         {
-            return $this->hasMany(File::className(), ['task_id' => 'id']);
+            return $this->hasMany(File::class, ['task_id' => 'id']);
         }
 
         /**
@@ -163,7 +163,7 @@
          */
         public function getOpinions()
         {
-            return $this->hasMany(Opinions::className(), ['task_id' => 'id']);
+            return $this->hasMany(Opinions::class, ['task_id' => 'id']);
         }
 
         /**
@@ -173,7 +173,7 @@
          */
         public function getReplies()
         {
-            return $this->hasMany(Replies::className(), ['task_id' => 'id']);
+            return $this->hasMany(Replies::class, ['task_id' => 'id']);
         }
 
         /**
@@ -183,7 +183,7 @@
          */
         public function getCategory()
         {
-            return $this->hasOne(Category::className(), ['id' => 'category_id']);
+            return $this->hasOne(Category::class, ['id' => 'category_id']);
         }
 
         /**
@@ -193,7 +193,7 @@
          */
         public function getCity()
         {
-            return $this->hasOne(City::className(), ['id' => 'city_id']);
+            return $this->hasOne(City::class, ['id' => 'city_id']);
         }
 
         /**
@@ -203,7 +203,7 @@
          */
         public function getCustomer()
         {
-            return $this->hasOne(User::className(), ['id' => 'customer_id']);
+            return $this->hasOne(User::class, ['id' => 'customer_id']);
         }
 
         /**
@@ -213,7 +213,7 @@
          */
         public function getExecutor()
         {
-            return $this->hasOne(User::className(), ['id' => 'executor_id']);
+            return $this->hasOne(User::class, ['id' => 'executor_id']);
         }
 
         /**
@@ -223,7 +223,7 @@
          */
         public function getStatus()
         {
-            return $this->hasOne(Status::className(), ['id' => 'status_id']);
+            return $this->hasOne(Status::class, ['id' => 'status_id']);
         }
 
         /**

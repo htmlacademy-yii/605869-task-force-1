@@ -2,6 +2,7 @@
 
     namespace frontend\models;
 
+    use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
 
     /**
@@ -56,20 +57,26 @@
         /**
          * Gets query for [[Profiles]].
          *
-         * @return \yii\db\ActiveQuery
+         * @return ActiveQuery
          */
         public function getProfiles()
         {
-            return $this->hasMany(Profiles::className(), ['city_id' => 'id']);
+            return $this->hasMany(Profiles::class, ['city_id' => 'id']);
         }
 
         /**
          * Gets query for [[Tasks]].
          *
-         * @return \yii\db\ActiveQuery
+         * @return ActiveQuery
          */
         public function getTasks()
         {
-            return $this->hasMany(Task::className(), ['city_id' => 'id']);
+            return $this->hasMany(Task::class, ['city_id' => 'id']);
+        }
+
+        public static function getListCities()
+        {
+            return City::find()->select('name')->indexBy('id')->column();
         }
     }
+
