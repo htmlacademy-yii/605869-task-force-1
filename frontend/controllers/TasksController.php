@@ -111,28 +111,13 @@
                     'executor_id' => $reply->user_id,
                 ]
             );
+            $reply->task->trigger(Task::EVENT_SET_EXECUTOR);
 
             $reply->updateAttributes(
                 [
                     'status' => Replies::STATUS_ACCEPTED,
                 ]
             );
-
-            if ($reply->task->executor->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
-                $setTo = $reply->task->executor->email;
-                $subject = 'Отклик на задание «' . $reply->task->name . '» от «' . $reply->task->executor->name . '» принят';
-                MailSender::mail($setTo, $subject);
-            }
-
-            // сохраняем уведомление о выборе исполнителя
-            $notification = new Notification();
-            $notification->user_id = $reply->user_id;
-            $notification->title = $reply->task->name;
-            $notification->is_view = 0;
-            $notification->icon = 'executor';
-            $notification->description = 'Выбран исполнитель для';
-            $notification->task_id = $reply->task->id;
-            $notification->save();
 
             return $this->redirect(['tasks/view', 'id' => $reply->task_id]);
         }
@@ -150,12 +135,6 @@
 
             $profiles->counter_failed_tasks++;
             $profiles->save();
-
-            if ($task->executor->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
-                $setTo = $task->customer->email;
-                $subject = $task->executor->name . ' отказался от вашего задания «' . $task->name . '»';
-                MailSender::mail($setTo, $subject);
-            }
 
             return $this->redirect(['tasks/view', 'id' => $task->id]);
         }
@@ -186,12 +165,6 @@
 
             if ($responseTaskForm->load(Yii::$app->request->post()) && $responseTaskForm->validate()) {
                 $responseTaskForm->createReply();
-
-                if ($task->customer->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
-                    $setTo = $task->customer->email;
-                    $subject = 'На ваше задание: «' . $task->name . '» откликнулся «' . $user->name . '»';
-                    MailSender::mail($setTo, $subject);
-                }
             }
 
             return $this->redirect(['tasks/view', 'id' => $task->id]);
@@ -216,21 +189,11 @@
                     if ($completeTaskForm->completion === CompleteTaskForm::COMPLETION_PROBLEMS) {
                         $task->status_id = Status::STATUS_FAILED;
                         $task->save();
-
-                        if ($task->executor->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
-                            $setTo = $task->executor->email;
-                            $subject = 'Задание: «' . $task->name . '» провалено!';
-                            MailSender::mail($setTo, $subject);
-                        }
                     } else {
                         $task->status_id = Status::STATUS_COMPLETED;
                         $task->save();
 
-                        if ($task->executor->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
-                            $setTo = $task->executor->email;
-                            $subject = 'Задание: «' . $task->name . '» принято!';
-                            MailSender::mail($setTo, $subject);
-                        }
+                        $task->trigger(Task::EVENT_COMPLETE_TASK);
                     }
                 }
 
@@ -239,16 +202,6 @@
                 $opinions->comment = $completeTaskForm->comment;
                 $opinions->rate = $completeTaskForm->rating;
                 $opinions->save();
-
-                // сохраняем уведомление о завершении задания
-                $notification = new Notification();
-                $notification->user_id = $task->executor_id;
-                $notification->title = $task->name;
-                $notification->is_view = 0;
-                $notification->icon = 'close';
-                $notification->description = 'Завершено задание';
-                $notification->task_id = $task->id;
-                $notification->save();
 
                 return $this->redirect('/tasks');
             } else {

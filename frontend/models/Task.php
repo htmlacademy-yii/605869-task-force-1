@@ -2,6 +2,8 @@
 
     namespace frontend\models;
 
+    use frontend\events\TaskEventListener;
+    use yii\base\Event;
     use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
 
@@ -34,6 +36,10 @@
      */
     class Task extends ActiveRecord
     {
+        const EVENT_SET_EXECUTOR = 'eventSetExecutor';
+        const EVENT_COMPLETE_TASK = 'eventCompleteTask';
+        const EVENT_STATUS_CHANGE = 'eventStatusChange';
+
         /**
          * константы статусов заданий
          */
@@ -43,6 +49,24 @@
         const STATUS_COMPLETED = 4; //статус выполненного задания
         const STATUS_FAILED = 5; //статус проваленного задания
         const STATUS_EXPIRED = 6; //статус просроченного задания
+
+        public function init()
+        {
+            Event::on(self::class, self::EVENT_SET_EXECUTOR, [
+                TaskEventListener::class, 'setExecutor'
+            ]);
+            Event::on(self::class, self::EVENT_COMPLETE_TASK, [
+                TaskEventListener::class, 'complete'
+            ]);
+            Event::on(self::class, self::EVENT_STATUS_CHANGE, [
+                TaskEventListener::class, 'statusChange'
+            ]);
+            Event::on(self::class, self::EVENT_AFTER_UPDATE, function (Event $event) {
+                if ($this->oldAttributes['status_id'] !== $this->status_id) {
+                    $this->trigger(self::EVENT_STATUS_CHANGE);
+                }
+            });
+        }
 
         /**
          * {@inheritdoc}

@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use frontend\events\MessageEventsListener;
+use yii\base\Event;
 
 /**
  * This is the model class for table "message".
@@ -18,6 +19,13 @@ use Yii;
  */
 class Message extends \yii\db\ActiveRecord
 {
+    public function init()
+    {
+        Event::on(self::class, self::EVENT_AFTER_INSERT, [
+            MessageEventsListener::class, 'afterInsert'
+        ]);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -35,8 +43,8 @@ class Message extends \yii\db\ActiveRecord
             [['sender_id', 'message', 'task_id'], 'required'],
             [['sender_id', 'task_id'], 'integer'],
             [['message'], 'string'],
-            [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['sender_id' => 'id']],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['sender_id' => 'id']],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
 

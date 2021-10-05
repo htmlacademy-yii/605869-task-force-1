@@ -2,7 +2,7 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "photo".
@@ -13,7 +13,7 @@ use Yii;
  *
  * @property User $user
  */
-class Photo extends \yii\db\ActiveRecord
+class Photo extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -32,7 +32,7 @@ class Photo extends \yii\db\ActiveRecord
             [['name', 'user_id'], 'required'],
             [['user_id'], 'integer'],
             [['name'], 'string', 'max' => 128],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -55,6 +55,6 @@ class Photo extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

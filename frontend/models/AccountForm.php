@@ -2,11 +2,9 @@
 
     namespace frontend\models;
 
-    use phpDocumentor\Reflection\Types\This;
     use Throwable;
     use Yii;
     use yii\base\Model;
-    use yii\helpers\Json;
     use yii\web\UploadedFile;
 
     class AccountForm extends Model

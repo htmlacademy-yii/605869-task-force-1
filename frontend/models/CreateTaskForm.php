@@ -2,7 +2,6 @@
 
 namespace frontend\models;
 
-use frontend\api\LocationApiService;
 use frontend\repositories\CityRepository;
 use Throwable;
 use Yii;

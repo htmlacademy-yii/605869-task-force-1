@@ -2,8 +2,6 @@
 
 namespace frontend\models;
 
-use phpDocumentor\Reflection\Types\Array_;
-use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 

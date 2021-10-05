@@ -2,8 +2,12 @@
     
     namespace frontend\models;
     
-    use Yii;
-    
+    use frontend\events\ReplyEventListener;
+    use frontend\events\TaskEventListener;
+    use yii\base\Event;
+    use yii\db\ActiveQuery;
+    use yii\db\ActiveRecord;
+
     /**
      * This is the model class for table "replies".
      *
@@ -18,7 +22,7 @@
      * @property Task $task
      * @property User $user
      */
-    class Replies extends \yii\db\ActiveRecord
+    class Replies extends ActiveRecord
     {
         /**
          * константы статусов откликов
@@ -26,6 +30,13 @@
         const STATUS_NEW = 1; //статус нового отклика
         const STATUS_ACCEPTED = 2; //статус принятого отклика
         const STATUS_REFUSAL = 3; //статус отказа от отклика
+
+        public function init()
+        {
+            Event::on(self::class, self::EVENT_AFTER_INSERT, [
+                ReplyEventListener::class, 'reply'
+            ]);
+        }
         
         /**
          * {@inheritdoc}
@@ -50,14 +61,14 @@
                     ['task_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => Task::className(),
+                    'targetClass' => Task::class,
                     'targetAttribute' => ['task_id' => 'id']
                 ],
                 [
                     ['user_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => User::className(),
+                    'targetClass' => User::class,
                     'targetAttribute' => ['user_id' => 'id']
                 ],
             ];
@@ -82,20 +93,20 @@
         /**
          * Gets query for [[Task]].
          *
-         * @return \yii\db\ActiveQuery
+         * @return ActiveQuery
          */
         public function getTask()
         {
-            return $this->hasOne(Task::className(), ['id' => 'task_id']);
+            return $this->hasOne(Task::class, ['id' => 'task_id']);
         }
         
         /**
          * Gets query for [[User]].
          *
-         * @return \yii\db\ActiveQuery
+         * @return ActiveQuery
          */
         public function getUser()
         {
-            return $this->hasOne(User::className(), ['id' => 'user_id']);
+            return $this->hasOne(User::class, ['id' => 'user_id']);
         }
     }

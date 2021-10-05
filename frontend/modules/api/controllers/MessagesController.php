@@ -62,17 +62,6 @@
             $model->message = $body['message'];
             $model->save();
 
-            // сохраняем уведомление о новом сообщении
-            $notification = new Notification();
-            $task = Task::findOne($id);
-            $notification->user_id = $task->customer_id;
-            $notification->title = $task->name;
-            $notification->is_view = 0;
-            $notification->icon = 'message';
-            $notification->description = 'Новое сообщение в чате';
-            $notification->task_id = $id;
-            $notification->save();
-
             return [
                 'id' => $model->id,
                 'message' => $model->message,

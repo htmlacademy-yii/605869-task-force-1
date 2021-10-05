@@ -105,34 +105,18 @@
                     </li>
                 </ul>
             </div>
-<!--            <div class="header__town">-->
-<!--                <select class="multiple-select input town-select" size="1" name="town[]">-->
-<!--                    <option value="Moscow">Москва</option>-->
-<!--                    <option selected value="SPB">Санкт-Петербург</option>-->
-<!--                    <option value="Krasnodar">Краснодар</option>-->
-<!--                    <option value="Irkutsk">Иркутск</option>-->
-<!--                    <option value="Vladivostok">Владивосток</option>-->
-<!--                </select>-->
-<!--            </div>-->
+            <!--            <div class="header__town">-->
+            <!--                <select class="multiple-select input town-select" size="1" name="town[]">-->
+            <!--                    <option value="Moscow">Москва</option>-->
+            <!--                    <option selected value="SPB">Санкт-Петербург</option>-->
+            <!--                    <option value="Krasnodar">Краснодар</option>-->
+            <!--                    <option value="Irkutsk">Иркутск</option>-->
+            <!--                    <option value="Vladivostok">Владивосток</option>-->
+            <!--                </select>-->
+            <!--            </div>-->
 
             <?= Lightbulb::widget() ?>
 
-<!--            <div class="header__lightbulb"></div>-->
-<!--            <div class="lightbulb__pop-up">-->
-<!--                <h3>Новые события</h3>-->
-<!--                <p class="lightbulb__new-task lightbulb__new-task--message">-->
-<!--                    Новое сообщение в чате-->
-<!--                    <a href="#" class="link-regular">«Помочь с курсовой»</a>-->
-<!--                </p>-->
-<!--                <p class="lightbulb__new-task lightbulb__new-task--executor">-->
-<!--                    Выбран исполнитель для-->
-<!--                    <a href="#" class="link-regular">«Помочь с курсовой»</a>-->
-<!--                </p>-->
-<!--                <p class="lightbulb__new-task lightbulb__new-task--close">-->
-<!--                    Завершено задание-->
-<!--                    <a href="#" class="link-regular">«Помочь с курсовой»</a>-->
-<!--                </p>-->
-<!--            </div>-->
             <div class="header__account">
                 <?php
                     if (!Yii::$app->user->isGuest): ?>
@@ -230,7 +214,6 @@
         </div>
     </footer>
 </div>
-
 <?php
     $this->endBody() ?>
 </body>
