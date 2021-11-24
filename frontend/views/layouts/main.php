@@ -1,13 +1,15 @@
 <?php
 
-    /* @var $this View */
-
-    /* @var $content string */
-
+    use frontend\widgets\Lightbulb;
     use yii\helpers\Html;
     use frontend\assets\AppAsset;
     use frontend\assets\TaskForceAsset;
     use yii\web\View;
+
+    /**
+     * @var View $this
+     * @var string $content
+     */
 
     AppAsset::register($this);
     TaskForceAsset::register($this);
@@ -94,35 +96,27 @@
                         <?php
                         endif; ?>
                     <li class="site-list__item">
-                        <a>Мой профиль</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(
+                            [
+                                'users/view/',
+                                'id' => Yii::$app->user->getId()
+                            ]
+                        ); ?>">Мой профиль</a>
                     </li>
                 </ul>
             </div>
-            <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
-            </div>
-            <div class="header__lightbulb"></div>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-            </div>
+            <!--            <div class="header__town">-->
+            <!--                <select class="multiple-select input town-select" size="1" name="town[]">-->
+            <!--                    <option value="Moscow">Москва</option>-->
+            <!--                    <option selected value="SPB">Санкт-Петербург</option>-->
+            <!--                    <option value="Krasnodar">Краснодар</option>-->
+            <!--                    <option value="Irkutsk">Иркутск</option>-->
+            <!--                    <option value="Vladivostok">Владивосток</option>-->
+            <!--                </select>-->
+            <!--            </div>-->
+
+            <?= Lightbulb::widget() ?>
+
             <div class="header__account">
                 <?php
                     if (!Yii::$app->user->isGuest): ?>
@@ -140,10 +134,10 @@
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['list/index/']); ?>">Мои задания</a>
                     </li>
                     <li>
-                        <a href="#">Настройки</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['account/index/']); ?>">Настройки</a>
                     </li>
                     <li>
                         <a data-method="post" href="<?= Yii::$app->urlManager->createUrl(['site/logout']); ?>">Выход</a>
@@ -175,7 +169,12 @@
                         <a href="<?= Yii::$app->urlManager->createUrl(['tasks/index']); ?>">Задания</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(
+                            [
+                                'users/view/',
+                                'id' => Yii::$app->user->getId()
+                            ]
+                        ); ?>">Мой профиль</a>
                     </li>
                     <li class="links__item">
                         <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
@@ -215,7 +214,6 @@
         </div>
     </footer>
 </div>
-
 <?php
     $this->endBody() ?>
 </body>

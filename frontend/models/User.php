@@ -2,12 +2,13 @@
 
     namespace frontend\models;
 
+    use DateTime;
     use Yii;
-	use yii\db\ActiveQuery;
+    use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
-	use yii\web\IdentityInterface;
+    use yii\web\IdentityInterface;
 
-	/**
+    /**
      * This is the model class for table "user".
      *
      * @property int $id
@@ -28,13 +29,14 @@
      * @property Task[] $executedTasks
      * @property City $city
      * @property Opinions[] $opinions
+     * @property SiteSettings $siteSettings
      *
      */
     class User extends ActiveRecord implements IdentityInterface
     {
-    	const ROLE_CUSTOMER = 2;
-    	const ROLE_EXECUTOR = 1;
-    	
+        const ROLE_CUSTOMER = 2;
+        const ROLE_EXECUTOR = 1;
+
         /**     * {@inheritdoc}
          */
         public static function tableName()
@@ -49,7 +51,7 @@
         {
             return [
                 [['name', 'email', 'password'], 'required'],
-                [['dt_add'], 'safe'],
+                [['dt_add', 'last_activity_datetime'], 'safe'],
                 [['role'], 'integer'],
                 [['name', 'email'], 'string', 'max' => 45],
                 [['password'], 'string', 'max' => 64],
@@ -79,7 +81,7 @@
          */
         public function getMessages0()
         {
-            return $this->hasMany(Message::className(), ['sender_id' => 'id']);
+            return $this->hasMany(Message::class, ['sender_id' => 'id']);
         }
 
         /**
@@ -89,7 +91,7 @@
          */
         public function getPhotos()
         {
-            return $this->hasMany(Photo::className(), ['user_id' => 'id']);
+            return $this->hasMany(Photo::class, ['user_id' => 'id']);
         }
 
         /**
@@ -99,7 +101,7 @@
          */
         public function getProfiles()
         {
-            return $this->hasOne(Profiles::className(), ['user_id' => 'id']);
+            return $this->hasOne(Profiles::class, ['user_id' => 'id']);
         }
 
         /**
@@ -109,7 +111,17 @@
          */
         public function getReplies()
         {
-            return $this->hasMany(Replies::className(), ['user_id' => 'id']);
+            return $this->hasMany(Replies::class, ['user_id' => 'id']);
+        }
+
+        /**
+         * Gets query for [[SiteSettings]].
+         *
+         * @return ActiveQuery
+         */
+        public function getSiteSettings()
+        {
+            return $this->hasOne(SiteSettings::class, ['user_id' => 'id']);
         }
 
         /**
@@ -119,7 +131,7 @@
          */
         public function getSpecializations()
         {
-            return $this->hasMany(Specialization::className(), ['user_id' => 'id']);
+            return $this->hasMany(Specialization::class, ['user_id' => 'id']);
         }
 
         /**
@@ -129,7 +141,7 @@
          */
         public function getOwnedTasks()
         {
-            return $this->hasMany(Task::className(), ['customer_id' => 'id']);
+            return $this->hasMany(Task::class, ['customer_id' => 'id']);
         }
 
         /**
@@ -139,7 +151,7 @@
          */
         public function getExecutedTasks()
         {
-            return $this->hasMany(Task::className(), ['executor_id' => 'id']);
+            return $this->hasMany(Task::class, ['executor_id' => 'id']);
         }
 
         /**
@@ -147,7 +159,11 @@
          */
         public function getAvatar()
         {
-            return $this->profiles->avatar ?? '/img/account.png';
+            if ($this->profiles->avatar) {
+                return Yii::getAlias('@web') . '/uploads/avatars/' . $this->profiles->avatar;
+            } else {
+                return '/img/account.png';
+            }
         }
 
         /**
@@ -169,7 +185,7 @@
          */
         public function getTasksCount()
         {
-            return $this->hasMany(Task::className(), ['customer_id' => 'id'])->count();
+            return $this->hasMany(Task::class, ['customer_id' => 'id'])->count();
         }
 
         public function getOpinions()
@@ -185,42 +201,55 @@
                 ->join('INNER JOIN', Task::tableName() . ' t', 't.id = o.task_id')
                 ->where('t.executor_id = :userId', ['userId' => $this->id])->average('o.rate');
         }
-        
+
         public function validatePassword($password)
-		{
-			return Yii::$app->security->validatePassword($password, $this->password);
-		}
-	
-		public static function findIdentity($id)
-		{
-			return self::findOne($id);
-		}
-	
-		public static function findIdentityByAccessToken($token, $type = null)
-		{
-			// TODO: Implement findIdentityByAccessToken() method.
-		}
-	
-		public function getId()
-		{
-			return $this->getPrimaryKey();
-		}
-	
-		public function getAuthKey()
-		{
-			// TODO: Implement getAuthKey() method.
-		}
-	
-		public function validateAuthKey($authKey)
-		{
-			// TODO: Implement validateAuthKey() method.
-		}
+        {
+            return Yii::$app->security->validatePassword($password, $this->password);
+        }
+
+        public static function findIdentity($id)
+        {
+            return self::findOne($id);
+        }
+
+        public static function findIdentityByAccessToken($token, $type = null)
+        {
+            // TODO: Implement findIdentityByAccessToken() method.
+        }
+
+        public function getId()
+        {
+            return $this->getPrimaryKey();
+        }
+
+        public function getAuthKey()
+        {
+            // TODO: Implement getAuthKey() method.
+        }
+
+        public function validateAuthKey($authKey)
+        {
+            // TODO: Implement validateAuthKey() method.
+        }
 
         /**
          * @return bool
          */
-		public function isCustomer(): bool
+        public function isCustomer(): bool
         {
-            return (int) $this->role === self::ROLE_CUSTOMER;
+            return (int)$this->role === self::ROLE_CUSTOMER;
         }
-	}
+
+        public function isNotOnline()
+        {
+            $lastActivity = new DateTime($this->last_activity_datetime);;
+            $currentTimeStamp = new DateTime();
+            $differenceLastActivity = $currentTimeStamp->diff($lastActivity);
+
+            return $differenceLastActivity->y > 1
+                || $differenceLastActivity->m > 1
+                || $differenceLastActivity->d > 1
+                || $differenceLastActivity->h > 1
+                || $differenceLastActivity->i > 5;
+        }
+    }

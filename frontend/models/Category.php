@@ -2,8 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "category".
@@ -55,7 +55,7 @@ class Category extends ActiveRecord
      */
     public function getSpecializations()
     {
-        return $this->hasMany(Specialization::className(), ['category_id' => 'id']);
+        return $this->hasMany(Specialization::class, ['category_id' => 'id']);
     }
 
     /**
@@ -65,6 +65,11 @@ class Category extends ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Task::className(), ['category_id' => 'id']);
+        return $this->hasMany(Task::class, ['category_id' => 'id']);
+    }
+
+    public static function getMap()
+    {
+        return ArrayHelper::map(self::find()->orderBy(['name' => SORT_ASC])->all(), 'id', 'name');
     }
 }

@@ -1,13 +1,16 @@
 <?php
-/* @var $model CreateTaskForm */
-/* @var $cities City */
-/* @var array $categoryList */
 
-use frontend\models\City;
-use frontend\models\CreateTaskForm;
-use yii\widgets\ActiveForm;
+    use frontend\models\City;
+    use frontend\models\CreateTaskForm;
+    use yii\widgets\ActiveForm;
 
-$this->title = 'Создать новую задачу - TaskForce';
+    /**
+     * @var CreateTaskForm $model
+     * @var City $cities
+     * @var array $categoryList
+     */
+
+    $this->title = 'Создать новую задачу - TaskForce';
 ?>
 
 <section class="create__task">
@@ -15,22 +18,22 @@ $this->title = 'Создать новую задачу - TaskForce';
     <div class="create__task-main">
 
         <?php
-        $form = ActiveForm::begin(
-            [
-                'id' => 'task-form',
-                'enableClientScript' => false,
-                'options' => [
-                    'enctype' => 'multipart/form-data',
-                    'class' => 'create__task-form form-create',
-                    'name' => $model->formName()
-                ],
-                'fieldConfig' => [
-                    'options' => ['tag' => false],
-                    'errorOptions' => ['tag' => 'span'],
-                    'hintOptions' => ['tag' => 'span'],
+            $form = ActiveForm::begin(
+                [
+                    'id' => 'task-form',
+                    'enableClientScript' => false,
+                    'options' => [
+                        'enctype' => 'multipart/form-data',
+                        'class' => 'create__task-form form-create',
+                        'name' => $model->formName()
+                    ],
+                    'fieldConfig' => [
+                        'options' => ['tag' => false],
+                        'errorOptions' => ['tag' => 'span'],
+                        'hintOptions' => ['tag' => 'span'],
+                    ]
                 ]
-            ]
-        ); ?>
+            ); ?>
 
         <?= $form->field($model, 'name')
             ->textInput(
@@ -98,7 +101,7 @@ $this->title = 'Создать новую задачу - TaskForce';
         <input type="hidden" name="_csrf-frontend" value="<?= Yii::$app->request->getCsrfToken() ?>"/>
 
         <?= $form->field($model, 'address',
-            ['template' => "{label}\n{input}"]
+                         ['template' => "{label}\n{input}"]
         )
             ->textInput(
                 [
@@ -157,7 +160,8 @@ $this->title = 'Создать новую задачу - TaskForce';
         <?= $form->field($model, 'city')->hiddenInput(['id' => 'city'])->label(false); ?>
         <?= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); ?>
         <?= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); ?>
-        <?php ActiveForm::end(); ?>
+        <?php
+            ActiveForm::end(); ?>
 
         <div class="create__warnings">
             <div class="warning-item warning-item--advice">
@@ -173,28 +177,28 @@ $this->title = 'Создать новую задачу - TaskForce';
                     ракурсов.</p>
             </div>
             <?php
-            if ($model->errors): ?>
-                <div class="warning-item warning-item--error">
-                    <h2>Ошибки заполнения формы</h2>
-                    <?php
-                    foreach ($model->getErrors() as $attribute => $messages): ?>
-                        <h3><?= $model->attributeLabels()[$attribute]; ?></h3>
-                        <p>
+                if ($model->errors): ?>
+                    <div class="warning-item warning-item--error">
+                        <h2>Ошибки заполнения формы</h2>
+                        <?php
+                            foreach ($model->getErrors() as $attribute => $messages): ?>
+                                <h3><?= $model->attributeLabels()[$attribute]; ?></h3>
+                                <p>
+                                    <?php
+                                        for ($i = 0; $i < count($messages); $i++): ?>
+
+                                            <?= $messages[$i]; ?>
+
+                                            <?= ($i < count($messages) - 1) ? '<br>' : ''; ?>
+
+                                        <?php
+                                        endfor; ?>
+                                </p>
                             <?php
-                            for ($i = 0; $i < count($messages); $i++): ?>
-
-                                <?= $messages[$i]; ?>
-
-                                <?= ($i < count($messages) - 1) ? '<br>' : ''; ?>
-
-                            <?php
-                            endfor; ?>
-                        </p>
-                    <?php
-                    endforeach; ?>
-                </div>
-            <?php
-            endif; ?>
+                            endforeach; ?>
+                    </div>
+                <?php
+                endif; ?>
         </div>
     </div>
 </section>

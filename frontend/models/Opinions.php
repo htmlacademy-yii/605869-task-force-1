@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -35,7 +36,7 @@ class Opinions extends ActiveRecord
             [['rate', 'task_id'], 'integer'],
             [['task_id'], 'required'],
             [['comment'], 'string'],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
 
@@ -56,10 +57,10 @@ class Opinions extends ActiveRecord
     /**
      * Gets query for [[Task]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTask()
     {
-        return $this->hasOne(Task::className(), ['id' => 'task_id']);
+        return $this->hasOne(Task::class, ['id' => 'task_id']);
     }
 }

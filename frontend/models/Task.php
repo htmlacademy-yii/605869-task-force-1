@@ -1,10 +1,12 @@
 <?php
-    
+
     namespace frontend\models;
-    
+
+    use frontend\events\TaskEventListener;
+    use yii\base\Event;
     use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;
-    
+
     /**
      * This is the model class for table "task".
      *
@@ -18,7 +20,6 @@
      * @property string $description
      * @property int $customer_id
      * @property int $status_id
-     * @property int $replies_id //drop column
      * @property float $lat
      * @property float $long
      * @property int $executor_id //not required
@@ -35,6 +36,10 @@
      */
     class Task extends ActiveRecord
     {
+        const EVENT_SET_EXECUTOR = 'eventSetExecutor';
+        const EVENT_COMPLETE_TASK = 'eventCompleteTask';
+        const EVENT_STATUS_CHANGE = 'eventStatusChange';
+
         /**
          * константы статусов заданий
          */
@@ -43,7 +48,26 @@
         const STATUS_IN_WORK = 3; //статус задания находящегося в работе
         const STATUS_COMPLETED = 4; //статус выполненного задания
         const STATUS_FAILED = 5; //статус проваленного задания
-        
+        const STATUS_EXPIRED = 6; //статус просроченного задания
+
+        public function init()
+        {
+            Event::on(self::class, self::EVENT_SET_EXECUTOR, [
+                TaskEventListener::class, 'setExecutor'
+            ]);
+            Event::on(self::class, self::EVENT_COMPLETE_TASK, [
+                TaskEventListener::class, 'complete'
+            ]);
+            Event::on(self::class, self::EVENT_STATUS_CHANGE, [
+                TaskEventListener::class, 'statusChange'
+            ]);
+            Event::on(self::class, self::EVENT_AFTER_UPDATE, function (Event $event) {
+                if ($this->oldAttributes['status_id'] !== $this->status_id) {
+                    $this->trigger(self::EVENT_STATUS_CHANGE);
+                }
+            });
+        }
+
         /**
          * {@inheritdoc}
          */
@@ -51,7 +75,7 @@
         {
             return 'task';
         }
-        
+
         /**
          * {@inheritdoc}
          */
@@ -76,7 +100,6 @@
                         'city_id',
                         'customer_id',
                         'status_id',
-                        'replies_id',
                         'executor_id'
                     ],
                     'integer'
@@ -90,40 +113,40 @@
                     ['category_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => Category::className(),
+                    'targetClass' => Category::class,
                     'targetAttribute' => ['category_id' => 'id']
                 ],
                 [
                     ['city_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => City::className(),
+                    'targetClass' => City::class,
                     'targetAttribute' => ['city_id' => 'id']
                 ],
                 [
                     ['customer_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => User::className(),
+                    'targetClass' => User::class,
                     'targetAttribute' => ['customer_id' => 'id']
                 ],
                 [
                     ['executor_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => User::className(),
+                    'targetClass' => User::class,
                     'targetAttribute' => ['executor_id' => 'id']
                 ],
                 [
                     ['status_id'],
                     'exist',
                     'skipOnError' => true,
-                    'targetClass' => Status::className(),
+                    'targetClass' => Status::class,
                     'targetAttribute' => ['status_id' => 'id']
                 ],
             ];
         }
-        
+
         /**
          * {@inheritdoc}
          */
@@ -140,14 +163,13 @@
                 'description' => 'Description',
                 'customer_id' => 'Customer ID',
                 'status_id' => 'Status ID',
-                'replies_id' => 'Replies ID',
                 'lat' => 'Lat',
                 'long' => 'Long',
                 'executor_id' => 'Executor ID',
                 'dt_add' => 'Dt Add',
             ];
         }
-        
+
         /**
          * Gets query for [[Files]].
          *
@@ -155,9 +177,9 @@
          */
         public function getFiles()
         {
-            return $this->hasMany(File::className(), ['task_id' => 'id']);
+            return $this->hasMany(File::class, ['task_id' => 'id']);
         }
-        
+
         /**
          * Gets query for [[Opinions]].
          *
@@ -165,9 +187,9 @@
          */
         public function getOpinions()
         {
-            return $this->hasMany(Opinions::className(), ['task_id' => 'id']);
+            return $this->hasMany(Opinions::class, ['task_id' => 'id']);
         }
-        
+
         /**
          * Gets query for [[Replies]].
          *
@@ -175,9 +197,9 @@
          */
         public function getReplies()
         {
-            return $this->hasMany(Replies::className(), ['task_id' => 'id']);
+            return $this->hasMany(Replies::class, ['task_id' => 'id']);
         }
-        
+
         /**
          * Gets query for [[Category]].
          *
@@ -185,9 +207,9 @@
          */
         public function getCategory()
         {
-            return $this->hasOne(Category::className(), ['id' => 'category_id']);
+            return $this->hasOne(Category::class, ['id' => 'category_id']);
         }
-        
+
         /**
          * Gets query for [[City]].
          *
@@ -195,9 +217,9 @@
          */
         public function getCity()
         {
-            return $this->hasOne(City::className(), ['id' => 'city_id']);
+            return $this->hasOne(City::class, ['id' => 'city_id']);
         }
-        
+
         /**
          * Gets query for [[Customer]].
          *
@@ -205,9 +227,9 @@
          */
         public function getCustomer()
         {
-            return $this->hasOne(User::className(), ['id' => 'customer_id']);
+            return $this->hasOne(User::class, ['id' => 'customer_id']);
         }
-        
+
         /**
          * Gets query for [[Executor]].
          *
@@ -215,9 +237,9 @@
          */
         public function getExecutor()
         {
-            return $this->hasOne(User::className(), ['id' => 'executor_id']);
+            return $this->hasOne(User::class, ['id' => 'executor_id']);
         }
-        
+
         /**
          * Gets query for [[Status]].
          *
@@ -225,7 +247,7 @@
          */
         public function getStatus()
         {
-            return $this->hasOne(Status::className(), ['id' => 'status_id']);
+            return $this->hasOne(Status::class, ['id' => 'status_id']);
         }
 
         /**

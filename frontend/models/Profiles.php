@@ -13,9 +13,8 @@
      * @property string|null $bd
      * @property string|null $about
      * @property string|null $phone
-     * @property string|null $email
+     * @property string|null $telegram
      * @property int|null $counter_failed_tasks
-     * @property int $specialization_id
      * @property int $city_id
      * @property string|null $avatar
      * @property int $user_id
@@ -43,12 +42,23 @@
             return [
                 [['bd'], 'safe'],
                 [['about'], 'string'],
-                [['counter_failed_tasks', 'specialization_id', 'city_id', 'user_id'], 'integer'],
+                [['counter_failed_tasks', 'city_id', 'user_id'], 'integer'],
                 [['city_id', 'user_id'], 'required'],
-                [['phone', 'email', 'avatar', 'skype'], 'string', 'max' => 45],
-                [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
-                [['specialization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Specialization::className(), 'targetAttribute' => ['specialization_id' => 'id']],
-                [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+                [['phone', 'telegram', 'avatar', 'skype'], 'string', 'max' => 45],
+                [
+                    ['city_id'],
+                    'exist',
+                    'skipOnError' => true,
+                    'targetClass' => City::class,
+                    'targetAttribute' => ['city_id' => 'id']
+                ],
+                [
+                    ['user_id'],
+                    'exist',
+                    'skipOnError' => true,
+                    'targetClass' => User::class,
+                    'targetAttribute' => ['user_id' => 'id']
+                ],
             ];
         }
 
@@ -63,9 +73,8 @@
                 'bd' => 'Bd',
                 'about' => 'About',
                 'phone' => 'Phone',
-                'email' => 'Email',
+                'telegram' => 'Telegram',
                 'counter_failed_tasks' => 'Counter Failed Tasks',
-                'specialization_id' => 'Specialization ID',
                 'city_id' => 'City ID',
                 'avatar' => 'Avatar',
                 'user_id' => 'User ID',
@@ -80,7 +89,7 @@
          */
         public function getCity(): ActiveQuery
         {
-            return $this->hasOne(City::className(), ['id' => 'city_id']);
+            return $this->hasOne(City::class, ['id' => 'city_id']);
         }
 
         /**
@@ -90,6 +99,6 @@
          */
         public function getUser(): ActiveQuery
         {
-            return $this->hasOne(User::className(), ['id' => 'user_id']);
+            return $this->hasOne(User::class, ['id' => 'user_id']);
         }
     }
