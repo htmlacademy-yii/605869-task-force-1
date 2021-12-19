@@ -9,6 +9,8 @@
     use Yii;
     use yii\authclient\ClientInterface;
     use yii\helpers\ArrayHelper;
+    use yii\web\BadRequestHttpException;
+    use yii\db\Exception;
 
     /**
      * AuthHandler handles successful authentication via Yii auth component
@@ -18,18 +20,57 @@
         /**
          * @var ClientInterface
          */
-        private $client;
+        private ClientInterface $client;
 
         public function __construct(ClientInterface $client)
         {
             $this->client = $client;
         }
 
+        /**
+         * @throws Exception
+         * @throws BadRequestHttpException
+         */
         public function socialLogin()
         {
             $attributes = $this->client->getUserAttributes();
+            $VKId = ArrayHelper::getValue($attributes, 'id');
             $email = ArrayHelper::getValue($attributes, 'email');
-            $id = ArrayHelper::getValue($attributes, 'id');
+
+            /* @var Auth $auth */
+            $auth = Auth::find()->where([
+                                            'source' => $this->client->getId(),
+                                            'source_id' => $VKId,
+                                        ])->one();
+
+            if (!Yii::$app->user->isGuest && !$auth) {
+                $this->createAuth(Yii::$app->user, $VKId);
+
+                return;
+            }
+
+            if ($auth) {
+                /* @var User $user */
+                $user = $auth->user;
+                Yii::$app->user->login($user);
+
+                return;
+            }
+
+            if ($email !== null && User::find()->where(['email' => $email])->exists()) {
+                throw new BadRequestHttpException('Пользователь с указанным адресом электронной почты уже существует');
+            }
+
+            if ($user = $this->createUser()) {
+                Yii::$app->user->login($user);
+            }
+        }
+
+        private function createUser(): ?User
+        {
+            $attributes = $this->client->getUserAttributes();
+            $VKId = ArrayHelper::getValue($attributes, 'id');
+            $email = ArrayHelper::getValue($attributes, 'email');
             $cityName = ArrayHelper::getValue($attributes, 'city');
             $latitude = ArrayHelper::getValue($attributes, 'latitude');
             $longitude = ArrayHelper::getValue($attributes, 'longitude');
@@ -40,133 +81,88 @@
                 );
             $bdate = ArrayHelper::getValue($attributes, 'bdate');
             $phone = ArrayHelper::getValue($attributes, 'phone');
+            $transaction = Yii::$app->db->beginTransaction();
 
-            /* @var Auth $auth */
-            $auth = Auth::find()->where(
-                [
-                    'source' => $this->client->getId(),
-                    'source_id' => $id,
-                ]
-            )->one();
-
-            if (Yii::$app->user->isGuest) {
-                if ($auth) {
-                    // login
-                    /* @var User $user */
-                    $user = $auth->user;
-                    Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
-                } else {
-                    // signup
-                    if ($email !== null && User::find()->where(['email' => $email])->exists()) {
-                        Yii::$app->getSession()->setFlash('error', [
-                            Yii::t(
-                                'app',
-                                "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.",
-                                ['client' => $this->client->getTitle()]
-                            ),
-                        ]);
-                    } else {
-                        $password = Yii::$app->security->generateRandomString(6);
-                        $user = new User(
-                            [
-                                'name' => $name,
-                                'email' => $email,
-                                'password' => Yii::$app->getSecurity()->generatePasswordHash($password),
-                            ]
-                        );
-                        $transactionUser = User::getDb()->beginTransaction();
-
-                        $city = City::find()->where(['name' => $cityName])->one();
-                        if (!$city) {
-                            $city = new City(
-                                [
-                                    'name' => $cityName,
-                                    'lat' => $latitude,
-                                    'long' => $longitude,
-                                ]
-                            );
-                            $transactionCity = City::getDb()->beginTransaction();
-                        }
-
-                        $profile = new Profiles(
-                            [
-                                'bd' => $bdate,
-                                'phone' => $phone,
-                                'city_id' => $city->id,
-                                'user_id' => $user->id,
-                            ]
-                        );
-                        $transactionProfile = Profiles::getDb()->beginTransaction();
-
-                        if ($user->save()) {
-                            $auth = new Auth(
-                                [
-                                    'user_id' => $user->id,
-                                    'source' => $this->client->getId(),
-                                    'source_id' => (string)$id,
-                                ]
-                            );
-
-                            if ($auth->save()) {
-                                $transactionUser->commit();
-                                $transactionCity->commit();
-                                $transactionProfile->commit();
-                                Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
-                            } else {
-                                Yii::$app->getSession()->setFlash('error', [
-                                    Yii::t('app', 'Unable to save {client} account: {errors}', [
-                                        'client' => $this->client->getTitle(),
-                                        'errors' => json_encode($auth->getErrors()),
-                                    ]),
-                                ]);
-                            }
-                        } else {
-                            Yii::$app->getSession()->setFlash('error', [
-                                Yii::t('app', 'Unable to save user: {errors}', [
-                                    'client' => $this->client->getTitle(),
-                                    'errors' => json_encode($user->getErrors()),
-                                ]),
-                            ]);
-                        }
-                    }
+            try {
+                $password = Yii::$app->security->generateRandomString(6);
+                $user = new User();
+                $user->name = $name;
+                $user->email = $email;
+                $user->password = Yii::$app->getSecurity()->generatePasswordHash($password);
+                if (!$user->save()) {
+                    throw new Exception('Ошибка сохранения пользователем');
                 }
-            } else {
-                // user already logged in
-                if (!$auth) {
-                    // add auth provider
-                    $auth = new Auth(
-                        [
-                            'user_id' => Yii::$app->user->id,
-                            'source' => $this->client->getId(),
-                            'source_id' => (string)$attributes['id'],
-                        ]
-                    );
-                    if ($auth->save()) {
-                        /** @var User $user */
-                        $user = $auth->user;
-                        Yii::$app->getSession()->setFlash('success', [
-                            Yii::t('app', 'Linked {client} account.', [
-                                'client' => $this->client->getTitle()
-                            ]),
-                        ]);
-                    } else {
-                        Yii::$app->getSession()->setFlash('error', [
-                            Yii::t('app', 'Unable to link {client} account: {errors}', [
-                                'client' => $this->client->getTitle(),
-                                'errors' => json_encode($auth->getErrors()),
-                            ]),
-                        ]);
-                    }
-                } else {
-                    // there's existing auth
-                    Yii::$app->getSession()->setFlash('error', [
-                        Yii::t(
-                            'app',
-                            'Unable to link {client} account. There is another user using it.',
-                            ['client' => $this->client->getTitle()]
-                        ),
-                    ]);
+
+                $city = $this->getOrCreateCity($cityName, $latitude, $longitude);
+                $this->createProfile($bdate, $phone, $city, $user);
+                $this->createAuth($user, $VKId);
+
+                return $user;
+            } catch (\Throwable $exception) {
+                $transaction->rollBack();
+
+                return null;
+            }
+        }
+
+        /**
+         * @param $cityName
+         * @param $latitude
+         * @param $longitude
+         * @return City
+         * @throws Exception
+         */
+        private function getOrCreateCity($cityName, $latitude, $longitude): City
+        {
+            $city = City::find()->where(['name' => $cityName])->one();
+            if (!$city) {
+                $city = new City();
+                $city->name = $cityName;
+                $city->lat = $latitude;
+                $city->long = $longitude;
+                if (!$city->save()) {
+                    throw new Exception('Ошибка сохранения города');
                 }
+            }
+
+            return $city;
+        }
+
+        /**
+         * @param $bdate
+         * @param $phone
+         * @param City $city
+         * @param User $user
+         * @return void
+         * @throws Exception
+         */
+        private function createProfile($bdate, $phone, City $city, User $user): void
+        {
+            $profile = new Profiles();
+            $profile->bd = $bdate;
+            $profile->phone = $phone;
+            $profile->city_id = $city->id;
+            $profile->user_id = $user->id;
+            if (!$profile->save()) {
+                throw new Exception('Ошибка сохранения профиля');
+            }
+        }
+
+        /**
+         * @param User $user
+         * @param $VKId
+         * @return void
+         * @throws Exception
+         */
+        private function createAuth(User $user, $VKId): void
+        {
+            $auth = new Auth();
+            $auth->user_id = $user->id;
+            $auth->source = $this->client->getId();
+            $auth->source_id = (string)$VKId;
+
+            if (!$auth->save()) {
+                throw new Exception('Ошибка при сохранении авторизации');
             }
         }
     }
