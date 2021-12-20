@@ -30,6 +30,7 @@
      * @property City $city
      * @property Opinions[] $opinions
      * @property SiteSettings $siteSettings
+     * @property Auth[] $auths
      *
      */
     class User extends ActiveRecord implements IdentityInterface
@@ -251,5 +252,14 @@
                 || $differenceLastActivity->d > 1
                 || $differenceLastActivity->h > 1
                 || $differenceLastActivity->i > 5;
+        }
+
+        /**
+         * Gets query for [[Auths]].
+         */
+        public function getAuths()
+        {
+            return
+                $this->hasMany(Auth::class, ['user_id' => 'id']);
         }
     }
