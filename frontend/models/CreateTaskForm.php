@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use frontend\repositories\CityRepository;
+use frontend\service\CityDTO;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -26,7 +27,7 @@ class CreateTaskForm extends Model
     public $lat;
     public $long;
     public $city;
-    public $village;
+    public $settlement;
     public $kladr;
 
     public function attributeLabels()
@@ -57,7 +58,7 @@ class CreateTaskForm extends Model
                 'required',
                 'message' => 'Это поле должно быть заполнено.'
             ],
-            [['name', 'description', 'categoryId', 'files', 'address', 'lat', 'long', 'city', 'kladr', 'village'], 'safe'],
+            [['name', 'description', 'categoryId', 'files', 'address'], 'safe'],
             [['name', 'description'], 'trim'],
             ['name', 'string', 'min' => 10, 'tooShort' => 'Это поле должно содержать не менее 10 символов.'],
             ['name', 'string', 'max' => 128, 'tooLong' => 'Это поле должно содержать не более 128 символов.'],
@@ -101,9 +102,7 @@ class CreateTaskForm extends Model
         $task->description = $this->description;
         $task->category_id = $this->categoryId;
         //@todo required from requrest
-        $task->city_id = 1;
-        $task->lat = $this->lat;
-        $task->long = $this->long;
+        //$task->city_id = 1;
         //MYSQL: status_id DEFAULT 1
         //$task->status_id = Task::STATUS_NEW;
         $task->budget = $this->budget;
@@ -112,23 +111,26 @@ class CreateTaskForm extends Model
 
         $task->address = $this->address;
 
-        if (!$this->city && !$this->village) {
+        /** @var CityDTO $cityDTO */
+        $cityDTO = Yii::$app->dadata->getCityDtoByAddress($this->address);
+
+        if (!$cityDTO->getCityName()) {
             return null;
         }
 
-        $cityName = $this->city ?: $this->village;
-
         $cityModel = CityRepository::getCityByKladrCode(
-            $this->kladr,
-            $cityName,
-            $this->long,
-            $this->lat
+            $cityDTO->getCityKladrId(),
+            $cityDTO->getCityName(),
+            $cityDTO->getLongitude(),
+            $cityDTO->getLatitude()
         );
 
         $task->city_id = $cityModel->id;
 
-        if (!$task->save()) {
+        $task->lat = $cityDTO->getLatitude();
+        $task->long = $cityDTO->getLongitude();
 
+        if (!$task->save()) {
             return null;
         }
 
