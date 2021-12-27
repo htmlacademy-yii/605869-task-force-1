@@ -35,7 +35,9 @@
         "phpnt/yandex-map": "^0.0.3",
         "corpsepk/yii2-dadata-suggestions-widget": "~0.4",
         "gietos/yii2-dadata": "^1.0",
-        "yiisoft/yii2-authclient": "~2.1.0"
+        "yiisoft/yii2-authclient": "~2.1.0",
+        "yiisoft/yii2-redis": "~2.0.0",
+        "hflabs/dadata": "^20.12"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

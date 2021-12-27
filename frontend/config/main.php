@@ -15,6 +15,19 @@
         'language' => 'ru-RU',
         'defaultRoute' => 'landing',
         'components' => [
+            'cache' => [
+                'class' => \yii\redis\Cache::class,
+                'redis' => [
+                    'hostname' => 'localhost',
+                    'port' => 6379,
+                    'database' => 0,
+                ],
+            ],
+            'dadata' => [
+                'class' => \frontend\service\DadataService::class,
+                'key' => 'c9a16f7f6b541566d3657c8458983070ccc0db99',
+                'secret' => '735b911554ff767f34e8173953a4d8e9cb74fee8',
+            ],
             'request' => [
                 'csrfParam' => '_csrf-frontend',
             ],

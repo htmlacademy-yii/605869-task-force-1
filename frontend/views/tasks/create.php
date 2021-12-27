@@ -155,11 +155,11 @@
             ?>
         </div>
         <input class="button" type="submit" value="Опубликовать"/>
-        <?= $form->field($model, 'lat')->hiddenInput(['id' => 'lat'])->label(false); ?>
-        <?= $form->field($model, 'long')->hiddenInput(['id' => 'long'])->label(false); ?>
-        <?= $form->field($model, 'city')->hiddenInput(['id' => 'city'])->label(false); ?>
-        <?= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); ?>
-        <?= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); ?>
+        <?/*= $form->field($model, 'lat')->hiddenInput(['id' => 'lat'])->label(false); */?><!--
+        <?/*= $form->field($model, 'long')->hiddenInput(['id' => 'long'])->label(false); */?>
+        <?/*= $form->field($model, 'city')->hiddenInput(['id' => 'city'])->label(false); */?>
+        <?/*= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); */?>
+        --><?/*= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); */?>
         <?php
             ActiveForm::end(); ?>
 
