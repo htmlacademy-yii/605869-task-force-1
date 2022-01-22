@@ -2,8 +2,6 @@
 
 namespace frontend\service;
 
-use yii\base\Model;
-
 class CityDTO
 {
     private ?string $geo_lat;

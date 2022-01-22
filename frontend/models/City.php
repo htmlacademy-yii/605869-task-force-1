@@ -79,4 +79,3 @@
             return City::find()->select('name')->indexBy('id')->column();
         }
     }
-

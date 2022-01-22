@@ -13,11 +13,11 @@
         public static function mail(string $setTo, string $subject)
         {
             $result = Yii::$app->mailer->compose()
-                ->setFrom('test12345box@gmail.com')
-                ->setTo('$setTo')
-                ->setSubject('$subject')
-                ->setTextBody('$subject')
-                ->setHtmlBody('<b>$subject</b>')
+                ->setFrom("test12345box@gmail.com")
+                ->setTo("$setTo")
+                ->setSubject("$subject")
+                ->setTextBody("$subject")
+                ->setHtmlBody("<b>$subject</b>")
                 ->send();
         }
     }

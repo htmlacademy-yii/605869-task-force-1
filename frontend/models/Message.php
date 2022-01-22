@@ -41,6 +41,7 @@ class Message extends \yii\db\ActiveRecord
     {
         return [
             [['sender_id', 'message', 'task_id'], 'required'],
+            [['sender_id', 'message', 'task_id', 'id'], 'safe'],
             [['sender_id', 'task_id'], 'integer'],
             [['message'], 'string'],
             [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['sender_id' => 'id']],

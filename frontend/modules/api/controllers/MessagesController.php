@@ -5,8 +5,6 @@
     use DateTime;
     use Exception;
     use frontend\models\Message;
-    use frontend\models\Notification;
-    use frontend\models\Task;
     use Yii;
     use yii\helpers\Json;
     use yii\web\BadRequestHttpException;
@@ -49,6 +47,7 @@
         public function actionAdd(int $id)
         {
             Yii::$app->response->format = Response::FORMAT_JSON;
+            Yii::$app->response->statusCode = 201;
 
             $body = Json::decode(Yii::$app->request->rawBody);
 

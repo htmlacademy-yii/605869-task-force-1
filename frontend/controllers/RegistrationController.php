@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-use yii\helpers\ArrayHelper;
 use Yii;
 use frontend\models\City;
 use frontend\models\RegistrationForm;
