@@ -2,16 +2,13 @@
 
     namespace frontend\controllers;
 
-    use frontend\helpers\MailSender;
     use frontend\models\Category;
     use frontend\models\City;
     use frontend\models\CompleteTaskForm;
     use frontend\models\CreateTaskForm;
-    use frontend\models\Notification;
     use frontend\models\Opinions;
     use frontend\models\Replies;
     use frontend\models\ResponseTaskForm;
-    use frontend\models\SiteSettings;
     use frontend\models\Status;
     use frontend\models\Task;
     use frontend\models\TaskFiltersForm;

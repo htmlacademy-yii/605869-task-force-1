@@ -3,7 +3,6 @@
     namespace frontend\models;
     
     use frontend\events\ReplyEventListener;
-    use frontend\events\TaskEventListener;
     use yii\base\Event;
     use yii\db\ActiveQuery;
     use yii\db\ActiveRecord;

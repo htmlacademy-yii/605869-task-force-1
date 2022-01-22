@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-use common\models\LoginForm;
 use frontend\models\Task;
 use frontend\models\UserLoginForm;
 use Yii;

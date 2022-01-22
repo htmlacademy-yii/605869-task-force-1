@@ -40,7 +40,6 @@
 
         public function init()
         {
-            //$this->categories = $this->user->getSpecializations()->where(['active' => 1])->column('category_id');
             $user = User::findOne(Yii::$app->user->getId());
             $this->user = $user;
             $profiles = $this->user->profiles;

@@ -107,7 +107,7 @@
                 [['budget', 'lat', 'long'], 'number'],
                 [['expire', 'dt_add'], 'safe'],
                 [['description'], 'string'],
-                [['name'], 'string', 'max' => 45],
+                [['name'], 'string', 'max' => 128],
                 [['address'], 'string', 'max' => 200],
                 [
                     ['category_id'],

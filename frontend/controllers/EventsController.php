@@ -4,7 +4,7 @@
 
     use frontend\models\Notification;
     use Yii;
-    use \yii\web\Controller;
+    use yii\web\Controller;
 
     class EventsController extends Controller
     {

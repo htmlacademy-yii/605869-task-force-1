@@ -74,6 +74,7 @@ class CreateTaskForm extends Model
             ['budget', 'integer', 'min' => 0, 'tooSmall' => 'Бюджет не может быть меньше нуля'],
             ['expire', 'date', 'format' => 'php:Y-m-d'],
             ['expire', 'isDateInFuture'],
+            [['name', 'description'],'filter','filter'=>'htmlspecialchars'],
         ];
     }
 
@@ -101,10 +102,6 @@ class CreateTaskForm extends Model
         $task->status_id = Task::STATUS_NEW;
         $task->description = $this->description;
         $task->category_id = $this->categoryId;
-        //@todo required from requrest
-        //$task->city_id = 1;
-        //MYSQL: status_id DEFAULT 1
-        //$task->status_id = Task::STATUS_NEW;
         $task->budget = $this->budget;
         $task->expire = $this->expire;
         $task->customer_id = Yii::$app->user->getId();

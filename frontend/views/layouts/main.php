@@ -105,15 +105,6 @@
                     </li>
                 </ul>
             </div>
-            <!--            <div class="header__town">-->
-            <!--                <select class="multiple-select input town-select" size="1" name="town[]">-->
-            <!--                    <option value="Moscow">Москва</option>-->
-            <!--                    <option selected value="SPB">Санкт-Петербург</option>-->
-            <!--                    <option value="Krasnodar">Краснодар</option>-->
-            <!--                    <option value="Irkutsk">Иркутск</option>-->
-            <!--                    <option value="Vladivostok">Владивосток</option>-->
-            <!--                </select>-->
-            <!--            </div>-->
 
             <?= Lightbulb::widget() ?>
 
