@@ -1,17 +1,17 @@
 <?php
 
-    use frontend\models\City;
-    use frontend\models\RegistrationForm;
-    use frontend\models\User;
-    use yii\helpers\Html;
-    use yii\widgets\ActiveForm;
+use frontend\models\City;
+use frontend\models\RegistrationForm;
+use frontend\models\User;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-    /**
-     * @var yii\web\View $this
-     * @var User $users
-     * @var City $cities
-     * @var RegistrationForm $model
-     */
+/**
+ * @var yii\web\View $this
+ * @var User $users
+ * @var City $cities
+ * @var RegistrationForm $model
+ */
 
 ?>
 
@@ -19,20 +19,20 @@
     <h1>Регистрация аккаунта</h1>
     <div class="registration-wrapper">
         <?php
-            $form = ActiveForm::begin(
-                [
-                    'enableClientValidation' => true,
-                    'fieldConfig' => [
-                        'template' => "</br>{label}</br>{input}</br>{hint}</br>{error}",
-                        'inputOptions' => ['class' => 'input textarea input-wide'],
-                        'errorOptions' => ['tag' => 'span', 'class' => 'input-error'],
-                        'hintOptions' => ['tag' => 'span'],
-                    ],
-                    'options' => [
-                        'class' => 'registration__user-form form-create',
-                    ]
+        $form = ActiveForm::begin(
+            [
+                'enableClientValidation' => true,
+                'fieldConfig' => [
+                    'template' => "</br>{label}</br>{input}</br>{hint}</br>{error}",
+                    'inputOptions' => ['class' => 'input textarea input-wide'],
+                    'errorOptions' => ['tag' => 'span', 'class' => 'input-error'],
+                    'hintOptions' => ['tag' => 'span'],
+                ],
+                'options' => [
+                    'class' => 'registration__user-form form-create',
                 ]
-            ); ?>
+            ]
+        ); ?>
         <?= $form->field($model, 'email')
             ->textInput(
                 [
@@ -59,7 +59,7 @@
         ?>
 
         <?= $form->field($model, 'address',
-                         ['template' => "{label}\n{input}\n{hint}"]
+            ['template' => "{label}\n{input}\n{hint}"]
         )
             ->textInput(
                 [
@@ -89,6 +89,6 @@
         <?= $form->field($model, 'village')->hiddenInput(['id' => 'village'])->label(false); ?>
         <?= $form->field($model, 'kladr')->hiddenInput(['id' => 'kladr'])->label(false); ?>
         <?php
-            $form = ActiveForm::end(); ?>
+        $form = ActiveForm::end(); ?>
     </div>
 </section>

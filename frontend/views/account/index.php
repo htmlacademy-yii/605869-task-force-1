@@ -1,38 +1,38 @@
 <?php
 
-    use frontend\models\AccountForm;
-    use frontend\models\Category;
-    use frontend\models\City;
-    use frontend\models\User;
-    use yii\helpers\Html;
-    use yii\widgets\ActiveForm;
-    use yii\widgets\Pjax;
+use frontend\models\AccountForm;
+use frontend\models\Category;
+use frontend\models\City;
+use frontend\models\User;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 
-    /**
-     * @var AccountForm $model
-     * @var City $cities
-     * @var User $user
-     */
+/**
+ * @var AccountForm $model
+ * @var City $cities
+ * @var User $user
+ */
 
-    $this->title = 'Настройки | ' . Yii::$app->user->getIdentity()->name;
+$this->title = 'Настройки | ' . Yii::$app->user->getIdentity()->name;
 ?>
 
 <section class="account__redaction-wrapper">
     <h1>Редактирование настроек профиля</h1>
     <?php
-        $form = ActiveForm::begin(
-            [
-                'method' => 'POST',
-                'id' => 'accont',
-                'action' => ['account/index'],
-                'options' => ['enctype' => 'multipart/form-data'],
-                'fieldConfig' => [
-                    'options' => ['tag' => false],
-                    'errorOptions' => ['style' => 'color: #FF116E']
-                ],
-                'enableClientScript' => false,
-            ]
-        ) ?>
+    $form = ActiveForm::begin(
+        [
+            'method' => 'POST',
+            'id' => 'accont',
+            'action' => ['account/index'],
+            'options' => ['enctype' => 'multipart/form-data'],
+            'fieldConfig' => [
+                'options' => ['tag' => false],
+                'errorOptions' => ['style' => 'color: #FF116E']
+            ],
+            'enableClientScript' => false,
+        ]
+    ) ?>
     <div class="account__redaction-section">
         <h3 class="div-line">Настройки аккаунта</h3>
         <div class="account__redaction-section-wrapper">
@@ -114,11 +114,11 @@
                             'tag' => false,
                             'item' => function ($index, $label, $name, $checked, $value) {
                                 return Html::checkbox($name, $checked,
-                                                      [
-                                                          'id' => $index,
-                                                          'class' => 'visually-hidden checkbox__input',
-                                                          'value' => $value
-                                                      ]
+                                        [
+                                            'id' => $index,
+                                            'class' => 'visually-hidden checkbox__input',
+                                            'value' => $value
+                                        ]
                                     ) . Html::label($label, $index);
                             }
                         ]
@@ -154,21 +154,22 @@
         <div class="account__redaction-section-wrapper account__redaction">
             <div class="portfolio-list">
                 <?php
-                    Pjax::begin(['id' => 'photoList']); ?>
+                Pjax::begin(['id' => 'photoList']); ?>
                 <?php
-                    if (!empty($user->photos)): ?>
-                        <?php
-                        foreach ($user->photos as $img): ?>
-                            <div class="user-work-photo"
-                                 style="background-image: url('/uploads/photo/<?= $img->name; ?>')">
-                                <a href="/account/delete-photo?id=<?= $img->id; ?>" class="drop-image-btn btn btn-xs button">Удалить</a>
-                            </div>
-                        <?php
-                        endforeach; ?>
+                if (!empty($user->photos)): ?>
                     <?php
-                    endif; ?>
+                    foreach ($user->photos as $img): ?>
+                        <div class="user-work-photo"
+                             style="background-image: url('/uploads/photo/<?= $img->name; ?>')">
+                            <a href="/account/delete-photo?id=<?= $img->id; ?>"
+                               class="drop-image-btn btn btn-xs button">Удалить</a>
+                        </div>
+                    <?php
+                    endforeach; ?>
                 <?php
-                    Pjax::end() ?>
+                endif; ?>
+                <?php
+                Pjax::end() ?>
             </div>
 
             <span id="dropzone">Выбрать фотографии</span>
@@ -212,30 +213,30 @@
         <div class="account__redaction-section-wrapper account_section--bottom">
             <div class="search-task__categories account_checkbox--bottom">
                 <?= $form->field($model, 'showNewMessages',
-                                 [
-                                     'options' => ['tag' => false],
-                                     'template' => '{input}{label}'
-                                 ]
+                    [
+                        'options' => ['tag' => false],
+                        'template' => '{input}{label}'
+                    ]
                 )->checkbox(
                     ['class' => 'visually-hidden checkbox__input'],
                     false
                 ); ?>
 
                 <?= $form->field($model, 'showActionsOfTask',
-                                 [
-                                     'options' => ['tag' => false],
-                                     'template' => '{input}{label}'
-                                 ]
+                    [
+                        'options' => ['tag' => false],
+                        'template' => '{input}{label}'
+                    ]
                 )->checkbox(
                     ['class' => 'visually-hidden checkbox__input'],
                     false
                 ); ?>
 
                 <?= $form->field($model, 'showNewReview',
-                                 [
-                                     'options' => ['tag' => false],
-                                     'template' => '{input}{label}'
-                                 ]
+                    [
+                        'options' => ['tag' => false],
+                        'template' => '{input}{label}'
+                    ]
                 )->checkbox(
                     ['class' => 'visually-hidden checkbox__input'],
                     false
@@ -245,20 +246,20 @@
             <div class="search-task__categories account_checkbox account_checkbox--secrecy">
 
                 <?= $form->field($model, 'showMyContactsCustomer',
-                                 [
-                                     'options' => ['tag' => false],
-                                     'template' => '{input}{label}'
-                                 ]
+                    [
+                        'options' => ['tag' => false],
+                        'template' => '{input}{label}'
+                    ]
                 )->checkbox(
                     ['class' => 'visually-hidden checkbox__input'],
                     false
                 ); ?>
 
                 <?= $form->field($model, 'hideAccount',
-                                 [
-                                     'options' => ['tag' => false],
-                                     'template' => '{input}{label}'
-                                 ]
+                    [
+                        'options' => ['tag' => false],
+                        'template' => '{input}{label}'
+                    ]
                 )->checkbox(
                     ['class' => 'visually-hidden checkbox__input'],
                     false
@@ -270,5 +271,5 @@
 
     <?= Html::button('Сохранить изменения', ['type' => 'submit', 'class' => 'button']); ?>
     <?php
-        $form::end() ?>
+    $form::end() ?>
 </section>

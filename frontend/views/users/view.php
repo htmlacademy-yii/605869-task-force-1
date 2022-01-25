@@ -1,19 +1,19 @@
 <?php
 
-    use frontend\helpers\WordHelper;
-    use frontend\models\SiteSettings;
-    use frontend\models\User;
-    use frontend\widgets\LastActivityWidget;
-    use frontend\widgets\StarRatingWidget;
-    use yii\helpers\BaseUrl;
-    use yii\helpers\Html;
+use frontend\helpers\WordHelper;
+use frontend\models\SiteSettings;
+use frontend\models\User;
+use frontend\widgets\LastActivityWidget;
+use frontend\widgets\StarRatingWidget;
+use yii\helpers\BaseUrl;
+use yii\helpers\Html;
 
-    /**
-     * @var yii\web\View $this
-     * @var User $user
-     */
+/**
+ * @var yii\web\View $this
+ * @var User $user
+ */
 
-    $this->title = 'Исполнитель: ' . Html::encode($user->name);
+$this->title = 'Исполнитель: ' . Html::encode($user->name);
 ?>
 
 <section class="content-view">
@@ -24,56 +24,56 @@
             <div class="content-view__headline">
                 <h1><?= Html::encode($user->name); ?></h1>
                 <?php
-                    if ($user->getAge()): ?>
-                        <p><?= $user->getCity(); ?> <?= $user->getAge(); ?> <?= WordHelper::pluralForm(
-                                $user->getAge(),
-                                'год',
-                                'года',
-                                'лет'
-                            ); ?></p>
-                    <?php
-                    endif; ?>
+                if ($user->getAge()): ?>
+                    <p><?= Html::encode($user->getCity()); ?> <?= Html::encode($user->getAge()); ?> <?= WordHelper::pluralForm(
+                            Html::encode($user->getAge()),
+                            'год',
+                            'года',
+                            'лет'
+                        ); ?></p>
+                <?php
+                endif; ?>
                 <div class="profile-mini__name five-stars__rate">
                     <!--                    звезды рейтинга-->
                     <?= StarRatingWidget::widget(['user' => $user]); ?>
                     <?php
-                        if ($user->getRating()): ?>
-                            <b><?= round($user->getRating(), 2); ?></b>
-                        <?php
-                        endif; ?>
+                    if ($user->getRating()): ?>
+                        <b><?= round($user->getRating(), 2); ?></b>
+                    <?php
+                    endif; ?>
                 </div>
                 <?php
-                    if ($user->getExecutedTasks()->count()): ?>
-                        <b class="done-task">Выполнил <?= $user->getExecutedTasks()->count(); ?>
+                if ($user->getExecutedTasks()->count()): ?>
+                    <b class="done-task">Выполнил <?= $user->getExecutedTasks()->count(); ?>
 
-                            <?= WordHelper::pluralForm(
-                                $user->getExecutedTasks()->count(),
-                                'заказ',
-                                'заказа',
-                                'заказов'
-                            ); ?>
-                        </b>
-                    <?php
-                    endif; ?>
+                        <?= WordHelper::pluralForm(
+                            $user->getExecutedTasks()->count(),
+                            'заказ',
+                            'заказа',
+                            'заказов'
+                        ); ?>
+                    </b>
                 <?php
-                    if (count($user->opinions)): ?>
-                        <b class="done-review">Получил <?= count($user->opinions); ?>
+                endif; ?>
+                <?php
+                if (count($user->opinions)): ?>
+                    <b class="done-review">Получил <?= count($user->opinions); ?>
 
-                            <?= WordHelper::pluralForm(count($user->opinions), 'отзыв', 'отзыва', 'отзывов'); ?>
-                        </b>
-                    <?php
-                    endif; ?>
+                        <?= WordHelper::pluralForm(count($user->opinions), 'отзыв', 'отзыва', 'отзывов'); ?>
+                    </b>
+                <?php
+                endif; ?>
             </div>
             <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
                 <span>
                     <?php
-                        if ($user->isNotOnline()): ?>
-                            Был на сайте <?= LastActivityWidget::widget(['user' => $user]); ?>
-                        <?php
-                        else: ?>
-                            Сейчас онлайн
-                        <?php
-                        endif; ?>
+                    if ($user->isNotOnline()): ?>
+                        Был на сайте <?= LastActivityWidget::widget(['user' => $user]); ?>
+                    <?php
+                    else: ?>
+                        Сейчас онлайн
+                    <?php
+                    endif; ?>
                    </span>
                 <a href="#"><b></b></a>
             </div>
@@ -84,103 +84,103 @@
         <div class="user__card-general-information">
             <div class="user__card-info">
                 <?php
-                    if ($user->specializations): ?>
-                        <h3 class="content-view__h3">Специализация:</h3>
-                        <div class="link-specialization">
+                if ($user->specializations): ?>
+                    <h3 class="content-view__h3">Специализация:</h3>
+                    <div class="link-specialization">
+                        <?php
+                        foreach ($user->specializations as $item): ?>
+                            <a href="#" class="link-regular"><?= Html::encode($item->category->name); ?></a>
+                        <?php
+                        endforeach; ?>
+                    </div>
+                <?php
+                endif; ?>
+                <?php
+                if ($user->siteSettings->show_my_contacts_customer == SiteSettings::DISABLED
+                    || Yii::$app->user->getIdentity()->role == User::ROLE_CUSTOMER): ?>
+                    <?php
+                    if ($user->profiles->phone || $user->email || $user->profiles->skype): ?>
+                        <h3 class="content-view__h3">Контакты</h3>
+                        <div class="user__card-link">
                             <?php
-                                foreach ($user->specializations as $item): ?>
-                                    <a href="#" class="link-regular"><?= $item->category->name; ?></a>
-                                <?php
-                                endforeach; ?>
+                            if ($user->profiles->phone): ?>
+                                <a class="user__card-link--tel link-regular"
+                                   href="#"><?= Html::encode($user->profiles->phone); ?>
+                                </a>
+                            <?php
+                            endif; ?>
+                            <?php
+                            if ($user->email): ?>
+                                <a class="user__card-link--email link-regular"
+                                   href="#"><?= Html::encode($user->email); ?>
+                                </a>
+                            <?php
+                            endif; ?>
+                            <?php
+                            if ($user->profiles->skype): ?>
+                                <a class="user__card-link--skype link-regular"
+                                   href="#"><?= Html::encode($user->profiles->skype) ?>
+                                </a>
+                            <?php
+                            endif; ?>
                         </div>
                     <?php
                     endif; ?>
                 <?php
-                    if ($user->siteSettings->show_my_contacts_customer == SiteSettings::DISABLED
-                        || Yii::$app->user->getIdentity()->role == User::ROLE_CUSTOMER): ?>
-                        <?php
-                        if ($user->profiles->phone || $user->email || $user->profiles->skype): ?>
-                            <h3 class="content-view__h3">Контакты</h3>
-                            <div class="user__card-link">
-                                <?php
-                                    if ($user->profiles->phone): ?>
-                                        <a class="user__card-link--tel link-regular"
-                                           href="#"><?= Html::encode($user->profiles->phone); ?>
-                                        </a>
-                                    <?php
-                                    endif; ?>
-                                <?php
-                                    if ($user->email): ?>
-                                        <a class="user__card-link--email link-regular"
-                                           href="#"><?= Html::encode($user->email); ?>
-                                        </a>
-                                    <?php
-                                    endif; ?>
-                                <?php
-                                    if ($user->profiles->skype): ?>
-                                        <a class="user__card-link--skype link-regular"
-                                           href="#"><?= Html::encode($user->profiles->skype) ?>
-                                        </a>
-                                    <?php
-                                    endif; ?>
-                            </div>
-                        <?php
-                        endif; ?>
-                    <?php
-                    endif; ?>
+                endif; ?>
             </div>
             <?php
-                if ($user->photos): ?>
-                    <div class="user__card-photo">
-                        <h3 class="content-view__h3">Фото работ</h3>
-                        <?php
-                            foreach ($user->photos as $photo): ?>
-                                <a href="#"><img src="<?= $photo->name; ?>" width="85" height="86"
-                                                 alt="Фото работы"></a>
-                            <?php
-                            endforeach; ?>
-                    </div>
-                <?php
-                endif; ?>
+            if ($user->photos): ?>
+                <div class="user__card-photo">
+                    <h3 class="content-view__h3">Фото работ</h3>
+                    <?php
+                    foreach ($user->photos as $photo): ?>
+                        <a href="#"><img src="<?= Html::encode($photo->name); ?>" width="85" height="86"
+                                         alt="Фото работы"></a>
+                    <?php
+                    endforeach; ?>
+                </div>
+            <?php
+            endif; ?>
         </div>
     </div>
     <?php
-        if (count($user->opinions)): ?>
-            <div class="content-view__feedback">
-                <h2>Отзывы<span>(<?= count($user->opinions); ?>)</span></h2>
-                <div class="content-view__feedback-wrapper reviews-wrapper">
-                    <?php
-                        foreach ($user->opinions as $opinion): ?>
-                            <div class="feedback-card__reviews">
-                                <p class="link-task link">
-                                    Задание <a href="<?= BaseUrl::to(['tasks/view/', 'id' => $opinion->task->id]); ?>"
-                                               class="link-regular">«<?= Html::encode($opinion->task->name); ?>»</a>
+    if (count($user->opinions)): ?>
+        <div class="content-view__feedback">
+            <h2>Отзывы<span>(<?= count($user->opinions); ?>)</span></h2>
+            <div class="content-view__feedback-wrapper reviews-wrapper">
+                <?php
+                foreach ($user->opinions as $opinion): ?>
+                    <div class="feedback-card__reviews">
+                        <p class="link-task link">
+                            Задание <a href="<?= BaseUrl::to(['tasks/view/', 'id' => $opinion->task->id]); ?>"
+                                       class="link-regular">«<?= Html::encode($opinion->task->name); ?>»</a>
+                        </p>
+                        <div class="card__review">
+                            <a href="#"><img src="<?= Html::encode($opinion->task->executor->getAvatar()); ?>"
+                                             width="55" height="54"></a>
+                            <div class="feedback-card__reviews-content">
+                                <p class="link-name link">
+                                    <a href="<?= BaseUrl::to(
+                                        ['users/view/', 'id' => $opinion->task->executor->id]
+                                    ); ?>" class="link-regular">
+                                        <?= Html::encode($opinion->task->executor->name); ?>
+                                    </a>
                                 </p>
-                                <div class="card__review">
-                                    <a href="#"><img src="<?= Html::encode($opinion->task->executor->getAvatar()); ?>"
-                                                     width="55" height="54"></a>
-                                    <div class="feedback-card__reviews-content">
-                                        <p class="link-name link">
-                                            <a href="<?= BaseUrl::to(
-                                                ['users/view/', 'id' => $opinion->task->executor->id]
-                                            ); ?>" class="link-regular">
-                                                <?= Html::encode($opinion->task->executor->name); ?>
-                                            </a>
-                                        </p>
-                                        <p class="review-text"><?= Html::encode($opinion->comment); ?></p>
-                                    </div>
-                                    <div class="card__review-rate">
-                                        <p class="five-rate big-rate"><?= Html::encode($opinion->rate); ?><span></span>
-                                        </p>
-                                    </div>
-                                </div>
+                                <p class="review-text"><?= Html::encode($opinion->comment); ?></p>
                             </div>
-                        <?php
-                        endforeach; ?>
-                </div>
+                            <div class="card__review-rate">
+                                <p class="five-rate big-rate"><?= Html::encode($opinion->rate); ?><span></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                endforeach; ?>
             </div>
-        <?php
-        endif; ?>
+        </div>
+    <?php
+    endif; ?>
 </section>
 <section class="connect-desk">
     <div class="connect-desk__chat">

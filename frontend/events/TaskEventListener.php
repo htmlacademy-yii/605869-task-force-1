@@ -8,6 +8,7 @@
     use frontend\models\Status;
     use frontend\models\Task;
     use yii\base\Event;
+    use yii\helpers\Html;
 
     class TaskEventListener
     {
@@ -15,9 +16,9 @@
         {
             $notification = new Notification();
             $notification->user_id = $task->executor_id;
-            $notification->title = $task->name;
-            $notification->icon = $icon;
-            $notification->description = $description;
+            $notification->title = Html::encode($task->name);
+            $notification->icon = Html::encode($icon);
+            $notification->description = Html::encode($description);
             $notification->task_id = $task->id;
             $notification->save();
         }
@@ -59,14 +60,14 @@
 
             if ($task->customer->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
                 $setTo = $task->customer->email;
-                $subject = 'Задание «' . $task->name . '» изменило статус на «' . Status::STATUSES[$task->status_id] . '».';
+                $subject = 'Задание «' . Html::encode($task->name) . '» изменило статус на «' . Status::STATUSES[$task->status_id] . '».';
                 MailSender::mail($setTo, $subject);
             }
 
             if (isset($task->executor_id)) {
                 if ($task->executor->siteSettings->show_actions_of_task === SiteSettings::ENABLED) {
                     $setTo = $task->executor->email;
-                    $subject = 'Задание «' . $task->name . '» изменило статус на «' . Status::STATUSES[$task->status_id] . '».';
+                    $subject = 'Задание «' . Html::encode($task->name) . '» изменило статус на «' . Status::STATUSES[$task->status_id] . '».';
                     MailSender::mail($setTo, $subject);
                 }
             }

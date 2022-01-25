@@ -1,18 +1,18 @@
 <?php
 
-    use frontend\models\Task;
-    use frontend\widgets\StarRatingWidget;
-    use yii\data\ActiveDataProvider;
-    use yii\helpers\BaseUrl;
-    use yii\helpers\Html;
+use frontend\models\Task;
+use frontend\widgets\StarRatingWidget;
+use yii\data\ActiveDataProvider;
+use yii\helpers\BaseUrl;
+use yii\helpers\Html;
 
-    /**
-     * @var  ActiveDataProvider $dataProvider
-     * @var Task $task
-     * @var int $status
-     */
+/**
+ * @var  ActiveDataProvider $dataProvider
+ * @var Task $task
+ * @var int $status
+ */
 
-    $this->title = Yii::$app->user->getIdentity()->name . ' | мои задания';
+$this->title = Html::encode(Yii::$app->user->getIdentity()->name) . ' | мои задания';
 
 ?>
 
@@ -103,67 +103,68 @@
     <div class="my-list__wrapper">
         <h1>Мои задания</h1>
         <?php
-            foreach ($dataProvider->getModels() as $task): ?>
-                <div class="new-task__card">
-                    <div class="new-task__title">
-                        <a href="<?= BaseUrl::to(['tasks/view/', 'id' => $task->id]); ?>" class="link-regular">
-                            <h2><?= Html::encode($task->name); ?></h2>
-                        </a>
-                        <a class="new-task__type link-regular" href="#"><p><?= $task->category->name; ?></p></a>
-                    </div>
-                    <div class="task-status done-status"><?= $task->status->translate; ?></div>
-                    <p class="new-task_description"><?= $task->description; ?></p>
-                    <div class="feedback-card__top ">
-                        <?php
-                            if ($task->executor_id === Yii::$app->user->getId()): ?>
-                                <a href="#"><img src="<?= Html::encode($task->customer->getAvatar()); ?>" width="36"
-                                                 height="36"></a>
+        foreach ($dataProvider->getModels() as $task): ?>
+            <div class="new-task__card">
+                <div class="new-task__title">
+                    <a href="<?= BaseUrl::to(['tasks/view/', 'id' => $task->id]); ?>" class="link-regular">
+                        <h2><?= Html::encode($task->name); ?></h2>
+                    </a>
+                    <a class="new-task__type link-regular" href="#"><p><?= Html::encode($task->category->name); ?></p>
+                    </a>
+                </div>
+                <div class="task-status done-status"><?= Html::encode($task->status->translate); ?></div>
+                <p class="new-task_description"><?= Html::encode($task->description); ?></p>
+                <div class="feedback-card__top ">
+                    <?php
+                    if ($task->executor_id === Yii::$app->user->getId()): ?>
+                        <a href="#"><img src="<?= Html::encode($task->customer->getAvatar()); ?>" width="36"
+                                         height="36"></a>
 
-                                <div class="feedback-card__top--name my-list__bottom">
-                                    <p class="link-name">
-                                        <a href="<?= BaseUrl::to(['users/view/', 'id' => $task->customer_id]) ?>"
-                                           class="link-regular">
-                                            <?= Html::encode($task->customer->name); ?>
-                                        </a>
-                                    </p>
-                                    <!--                    звезды рейтинга-->
-                                    <?= StarRatingWidget::widget(['user' => $task->customer]); ?>
-                                    <?php
-                                        if ($task->customer->getRating()): ?>
-                                            <b><?= round($task->customer->getRating(), 2); ?></b>
-                                        <?php
-                                        endif; ?>
-                                </div>
+                        <div class="feedback-card__top--name my-list__bottom">
+                            <p class="link-name">
+                                <a href="<?= BaseUrl::to(['users/view/', 'id' => $task->customer_id]) ?>"
+                                   class="link-regular">
+                                    <?= Html::encode($task->customer->name); ?>
+                                </a>
+                            </p>
+                            <!--                    звезды рейтинга-->
+                            <?= StarRatingWidget::widget(['user' => $task->customer]); ?>
                             <?php
-                            else: ?>
-
-                                <?php
-                                if ($task->executor): ?>
-                                    <a href="#"><img src="<?= Html::encode($task->executor->getAvatar()); ?>" width="36"
-                                                     height="36"></a>
-
-                                    <div class="feedback-card__top--name my-list__bottom">
-                                        <p class="link-name">
-                                            <a href="<?= BaseUrl::to(['users/view/', 'id' => $task->executor_id]) ?>"
-                                               class="link-regular">
-                                                <?= Html::encode($task->executor->name); ?>
-                                            </a>
-                                        </p>
-                                        <!--                    звезды рейтинга-->
-                                        <?= StarRatingWidget::widget(['user' => $task->executor]); ?>
-                                        <?php
-                                            if ($task->executor->getRating()): ?>
-                                                <b><?= round($task->executor->getRating(), 2); ?></b>
-                                            <?php
-                                            endif; ?>
-                                    </div>
-                                <?php
-                                endif; ?>
+                            if ($task->customer->getRating()): ?>
+                                <b><?= round($task->customer->getRating(), 2); ?></b>
                             <?php
                             endif; ?>
-                    </div>
+                        </div>
+                    <?php
+                    else: ?>
+
+                        <?php
+                        if ($task->executor): ?>
+                            <a href="#"><img src="<?= Html::encode($task->executor->getAvatar()); ?>" width="36"
+                                             height="36"></a>
+
+                            <div class="feedback-card__top--name my-list__bottom">
+                                <p class="link-name">
+                                    <a href="<?= BaseUrl::to(['users/view/', 'id' => $task->executor_id]) ?>"
+                                       class="link-regular">
+                                        <?= Html::encode($task->executor->name); ?>
+                                    </a>
+                                </p>
+                                <!--                    звезды рейтинга-->
+                                <?= StarRatingWidget::widget(['user' => $task->executor]); ?>
+                                <?php
+                                if ($task->executor->getRating()): ?>
+                                    <b><?= round($task->executor->getRating(), 2); ?></b>
+                                <?php
+                                endif; ?>
+                            </div>
+                        <?php
+                        endif; ?>
+                    <?php
+                    endif; ?>
                 </div>
-            <?php
-            endforeach; ?>
+            </div>
+        <?php
+        endforeach; ?>
     </div>
 </section>

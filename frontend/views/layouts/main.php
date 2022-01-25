@@ -1,23 +1,23 @@
 <?php
 
-    use frontend\widgets\Lightbulb;
-    use yii\helpers\Html;
-    use frontend\assets\AppAsset;
-    use frontend\assets\TaskForceAsset;
-    use yii\web\View;
+use frontend\widgets\Lightbulb;
+use yii\helpers\Html;
+use frontend\assets\AppAsset;
+use frontend\assets\TaskForceAsset;
+use yii\web\View;
 
-    /**
-     * @var View $this
-     * @var string $content
-     */
+/**
+ * @var View $this
+ * @var string $content
+ */
 
-    AppAsset::register($this);
-    TaskForceAsset::register($this);
-    $urlCreate = Yii::$app->urlManager->createUrl(['tasks/create']);
+AppAsset::register($this);
+TaskForceAsset::register($this);
+$urlCreate = Yii::$app->urlManager->createUrl(['tasks/create']);
 
 ?>
 <?php
-    $this->beginPage() ?>
+$this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
@@ -25,14 +25,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
-        $this->registerCsrfMetaTags() ?>
+    $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php
-        $this->head() ?>
+    $this->head() ?>
 </head>
 <body>
 <?php
-    $this->beginBody() ?>
+$this->beginBody() ?>
 
 <div class="table-layout">
     <header class="page-header">
@@ -89,12 +89,12 @@
                     </li>
 
                     <?php
-                        if ((Yii::$app->user->getIdentity()->role) == 2): ?>
-                            <li class="site-list__item">
-                                <a href="<?= $urlCreate; ?>">Создать задание</a>
-                            </li>
-                        <?php
-                        endif; ?>
+                    if ((Yii::$app->user->getIdentity()->role) == 2): ?>
+                        <li class="site-list__item">
+                            <a href="<?= $urlCreate; ?>">Создать задание</a>
+                        </li>
+                    <?php
+                    endif; ?>
                     <li class="site-list__item">
                         <a href="<?= Yii::$app->urlManager->createUrl(
                             [
@@ -110,14 +110,14 @@
 
             <div class="header__account">
                 <?php
-                    if (!Yii::$app->user->isGuest): ?>
-                        <a class="header__account-photo">
-                            <img src="<?= Yii::$app->user->getIdentity()->getAvatar(); ?>"
-                                 width="43" height="44"
-                                 alt="Аватар пользователя">
-                        </a>
-                    <?php
-                    endif; ?>
+                if (!Yii::$app->user->isGuest): ?>
+                    <a class="header__account-photo">
+                        <img src="<?= Yii::$app->user->getIdentity()->getAvatar(); ?>"
+                             width="43" height="44"
+                             alt="Аватар пользователя">
+                    </a>
+                <?php
+                endif; ?>
                 <span class="header__account-name">
                  <?= Html::encode(Yii::$app->user->getIdentity()->name) ?>
                 </span>
@@ -171,24 +171,24 @@
                         <a href="<?= Yii::$app->urlManager->createUrl(['users/index']); ?>">Исполнители</a>
                     </li>
                     <?php
-                        if (!Yii::$app->user->getIdentity()): ?>
-                            <li class="links__item">
-                                <a href="<?= Yii::$app->urlManager->createUrl(
-                                    ['registration/index']
-                                ); ?>">Регистрация</a>
-                            </li>
-                        <?php
-                        endif; ?>
+                    if (!Yii::$app->user->getIdentity()): ?>
+                        <li class="links__item">
+                            <a href="<?= Yii::$app->urlManager->createUrl(
+                                ['registration/index']
+                            ); ?>">Регистрация</a>
+                        </li>
+                    <?php
+                    endif; ?>
                     <li class="links__item">
                         <a href="">Создать задание</a>
                     </li>
                     <?php
-                        if ((Yii::$app->user->getIdentity()->role) == 2): ?>
-                            <li class="links__item">
-                                <a href="<?= $urlCreate; ?>">Создать задание</a>
-                            </li>
-                        <?php
-                        endif; ?>
+                    if ((Yii::$app->user->getIdentity()->role) == 2): ?>
+                        <li class="links__item">
+                            <a href="<?= $urlCreate; ?>">Создать задание</a>
+                        </li>
+                    <?php
+                    endif; ?>
                     <li class="links__item">
                         <a href="">Справка</a>
                     </li>
@@ -206,8 +206,8 @@
     </footer>
 </div>
 <?php
-    $this->endBody() ?>
+$this->endBody() ?>
 </body>
 </html>
 <?php
-    $this->endPage() ?>
+$this->endPage() ?>

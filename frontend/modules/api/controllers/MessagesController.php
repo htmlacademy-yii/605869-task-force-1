@@ -1,71 +1,71 @@
 <?php
 
-    namespace frontend\modules\api\controllers;
+namespace frontend\modules\api\controllers;
 
-    use DateTime;
-    use Exception;
-    use frontend\models\Message;
-    use Yii;
-    use yii\helpers\Json;
-    use yii\web\BadRequestHttpException;
-    use yii\web\Controller;
-    use yii\web\Response;
+use DateTime;
+use Exception;
+use frontend\models\Message;
+use Yii;
+use yii\helpers\Json;
+use yii\web\BadRequestHttpException;
+use yii\web\Controller;
+use yii\web\Response;
 
-    class MessagesController extends Controller
+class MessagesController extends Controller
+{
+    public $enableCsrfValidation = false;
+
+    /**
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function actionGet(int $id)
     {
-        public $enableCsrfValidation = false;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
-        /**
-         * @param int $id
-         * @return array
-         * @throws Exception
-         */
-        public function actionGet(int $id)
-        {
-            Yii::$app->response->format = Response::FORMAT_JSON;
+        /** @var Message[] $messages */
+        $messages = Message::find()->where(['task_id' => $id])->all();
 
-            /** @var Message[] $messages */
-            $messages = Message::find()->where(['task_id' => $id])->all();
-
-            $data = [];
-            foreach ($messages as $message) {
-                $data[] = [
-                    'message' => $message->message,
-                    'published_at' => (new DateTime($message->dt_add))->format('Y-m-d H:i:s'),
-                    'is_mine' => $message->sender_id == Yii::$app->user->getId(),
-                ];
-            }
-
-            return $data;
-        }
-
-        /**
-         * @param int $id
-         * @return array
-         * @throws BadRequestHttpException
-         */
-        public function actionAdd(int $id)
-        {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            Yii::$app->response->statusCode = 201;
-
-            $body = Json::decode(Yii::$app->request->rawBody);
-
-            if (!isset($body['message'])) {
-                throw new BadRequestHttpException();
-            }
-
-            $model = new Message();
-            $model->task_id = $id;
-            $model->sender_id = Yii::$app->user->getId();
-            $model->message = $body['message'];
-            $model->save();
-
-            return [
-                'id' => $model->id,
-                'message' => $model->message,
-                'published_at' => (new DateTime())->format('Y-m-d H:i:s'),
-                'is_mine' => true,
+        $data = [];
+        foreach ($messages as $message) {
+            $data[] = [
+                'message' => $message->message,
+                'published_at' => (new DateTime($message->dt_add))->format('Y-m-d H:i:s'),
+                'is_mine' => $message->sender_id == Yii::$app->user->getId(),
             ];
         }
+
+        return $data;
     }
+
+    /**
+     * @param int $id
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function actionAdd(int $id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->statusCode = 201;
+
+        $body = Json::decode(Yii::$app->request->rawBody);
+
+        if (!isset($body['message'])) {
+            throw new BadRequestHttpException();
+        }
+
+        $model = new Message();
+        $model->task_id = $id;
+        $model->sender_id = Yii::$app->user->getId();
+        $model->message = $body['message'];
+        $model->save();
+
+        return [
+            'id' => $model->id,
+            'message' => $model->message,
+            'published_at' => (new DateTime())->format('Y-m-d H:i:s'),
+            'is_mine' => true,
+        ];
+    }
+}

@@ -1,21 +1,21 @@
 <?php
 
-    use yii\helpers\Html;
-    use frontend\assets\AppAsset;
-    use frontend\assets\TaskForceAsset;
-    use yii\web\View;
+use yii\helpers\Html;
+use frontend\assets\AppAsset;
+use frontend\assets\TaskForceAsset;
+use yii\web\View;
 
-    /**
-     * @var View $this
-     * @var string $content
-     */
+/**
+ * @var View $this
+ * @var string $content
+ */
 
-    AppAsset::register($this);
-    TaskForceAsset::register($this);
+AppAsset::register($this);
+TaskForceAsset::register($this);
 
 ?>
 <?php
-    $this->beginPage() ?>
+$this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
@@ -23,14 +23,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
-        $this->registerCsrfMetaTags() ?>
+    $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php
-        $this->head() ?>
+    $this->head() ?>
 </head>
 <body>
 <?php
-    $this->beginBody() ?>
+$this->beginBody() ?>
 
 <div class="table-layout">
     <header class="page-header">
@@ -131,8 +131,8 @@
 </div>
 
 <?php
-    $this->endBody() ?>
+$this->endBody() ?>
 </body>
 </html>
 <?php
-    $this->endPage() ?>
+$this->endPage() ?>
