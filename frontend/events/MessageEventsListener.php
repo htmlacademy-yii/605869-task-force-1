@@ -5,6 +5,7 @@ namespace frontend\events;
 use frontend\models\Message;
 use frontend\models\Notification;
 use yii\base\Event;
+use yii\helpers\Html;
 
 class MessageEventsListener
 {
@@ -15,7 +16,7 @@ class MessageEventsListener
 
         $notification = new Notification();
         $notification->user_id = $message->task->customer_id;
-        $notification->title = $message->task->name;
+        $notification->title = Html::encode($message->task->name);
         $notification->icon = 'message';
         $notification->description = 'Новое сообщение в чате';
         $notification->task_id = $message->task_id;
